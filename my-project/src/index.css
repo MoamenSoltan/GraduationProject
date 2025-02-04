@@ -1,0 +1,41 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* styles.css or index.css */
+body {
+    font-family: 'Cairo', sans-serif; /* Default font */
+  }
+
+.textField {
+    border: 1px solid rgba(14, 12, 12, 0.1); 
+  border-radius: 6px; 
+  outline: none;
+  padding: 8px; 
+}
+
+.custom-button {
+    background-color: #0096C1; /* bg-[#0096C1] */
+    margin-top: 40px; /* mt-10 (10 * 4px = 40px) */
+    color: white; /* text-white */
+    font-weight: 800; /* font-extrabold */
+    font-size: 20px; /* text-[20px] */
+    padding: 8px 16px; /* py-2 px-4 (py-2 = 8px, px-4 = 16px) */
+    border-radius: 6px; /* rounded-md */
+    border: none; /* Optional: Remove default button border */
+    cursor: pointer; /* Optional: Make it look clickable */
+    transition: all 0.3s ease-in-out;
+    width: 100%;
+  }
+  .custom-button:hover {
+    transform: scale(1.05); /* hover:scale-105 */
+  }
+  .main-text {
+    font-weight: 800; /* font-extrabold */
+    font-size: 24px;
+  }
+  .sub-text {
+    font-weight: 400; /* font-normal */
+  font-size: 18px; /* text-lg (Tailwind text-lg = 18px) */
+  color: rgba(14, 12, 12, 0.7); /* text-[#0E0C0CB2] (B2 in hex = 70% opacity) */
+  }
