@@ -1,8 +1,13 @@
 import React from 'react'
+import ProgressBar from '../../components/ProgressBar'
 
 const Step4 = () => {
   return (
-    <div>Step4</div>
+    <div>
+       <div className='w-full mt-10 flex justify-center'>
+       <ProgressBar />
+       </div>
+    </div>
   )
 }
 

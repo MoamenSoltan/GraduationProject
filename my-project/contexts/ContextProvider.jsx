@@ -1,20 +1,30 @@
 
 import React, { useContext, useState } from "react"
+import { useLocation } from "react-router"
 const stateContext=React.createContext()
 
 export const ContextProvider = ({children})=>{
   const [user, setUser] = useState({
     email : "",
     password : "",
-    name:"moamen"
+    name:""
 
   })
+
+  const [meter, setMeter] = useState(1)
+  const incrementMeter= ()=>{
+    setMeter((prev)=>prev+1)
+  }
+  const decrementMeter= ()=>{
+    setMeter((prev)=>prev-1)
+  }
  
 
   const Placeholder = "App_Name"
    return (
     <stateContext.Provider value={{
-        Placeholder,user,setUser
+        Placeholder,user,setUser,
+        meter,incrementMeter,setMeter,decrementMeter
     }}>
         {children}
     </stateContext.Provider>
