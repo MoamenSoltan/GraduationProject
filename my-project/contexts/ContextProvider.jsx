@@ -7,7 +7,16 @@ export const ContextProvider = ({children})=>{
   const [user, setUser] = useState({
     email : "",
     password : "",
-    name:""
+    firstName: "",
+    lastName: "",
+    dateOfBirth: "", // Ensure it's initially empty
+    gender: "",
+    phoneNumber: "+20",//check later
+    address: "",
+    city:"",
+    country:"",
+    
+   
 
   })
 

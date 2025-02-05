@@ -2,6 +2,7 @@ import React from 'react'
 import Check from '../../data/check.svg'
 import { useStateContext } from '../../contexts/ContextProvider'
 import { Link, useNavigate } from 'react-router'
+import { motion } from 'motion/react'
 
 const Splash = () => {
     const navigate=useNavigate()
@@ -10,7 +11,12 @@ const Splash = () => {
     
 
   return (
-   <div className='flex w-full  justify-center items-start mt-28'>
+   <motion.div
+   initial={{ opacity: 0, scale: 0.9 }}
+   animate={{ opacity: 1, scale: 1 }}
+   exit={{ opacity: 0, scale: 0.9 }}
+   transition={{ duration: 0.5 }}
+    className='flex w-full  justify-center items-start mt-28'>
      <div className='flex w-[30%]  justify-center items-center flex-col gap-5 '>
         <img src={Check} className='w-[100px] h-[100px]' alt="check" />
         <h1 className='main-text'>Welcome to our <span className='underline'>{Placeholder}</span> community! </h1>
@@ -20,7 +26,7 @@ const Splash = () => {
 
         
     </div>
-   </div>
+   </motion.div>
   )
 }
 

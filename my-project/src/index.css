@@ -27,7 +27,20 @@ body {
     transition: all 0.3s ease-in-out;
     
   }
-  .custom-button:hover {
+  .secondary-button {
+    background-color: #f1f1f1; /* bg-[#0096C1] */
+    margin-top: 40px; /* mt-10 (10 * 4px = 40px) */
+    color: black; /* text-white */
+    font-weight: 800; /* font-extrabold */
+    font-size: 20px; /* text-[20px] */
+    padding: 8px 16px; /* py-2 px-4 (py-2 = 8px, px-4 = 16px) */
+    border-radius: 6px; /* rounded-md */
+    border: none; /* Optional: Remove default button border */
+    cursor: pointer; /* Optional: Make it look clickable */
+    transition: all 0.3s ease-in-out;
+    
+  }
+  .custom-button:hover,.secondary-button:hover {
     transform: scale(1.05); /* hover:scale-105 */
   }
   .main-text {
@@ -38,4 +51,9 @@ body {
     font-weight: 400; /* font-normal */
   font-size: 18px; /* text-lg (Tailwind text-lg = 18px) */
   color: rgba(14, 12, 12, 0.7); /* text-[#0E0C0CB2] (B2 in hex = 70% opacity) */
+  }
+  .error-text {
+    font-weight: 400; /* font-normal */
+    font-size: 18px; /* text-lg (Tailwind text-lg = 18px) */
+    color: rgba(255, 0, 0, 0.7);
   }
