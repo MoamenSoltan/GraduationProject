@@ -104,6 +104,7 @@ const Step3 = () => {
           <div className="flex flex-col w-full mt-5">
             <label htmlFor="major" className="text-lg">Preferred Major</label>
             <select name="major" id="major" className="textField" value={user.preferredMajor} onChange={(e)=>{setUser({...user,preferredMajor:e.target.value})}}>
+            <option value="">Choose Major</option>
               <option value="CS">Computer Science</option>
               <option value="IT">Information Technology</option>
               <option value="IS">Information Systems</option>

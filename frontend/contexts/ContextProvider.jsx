@@ -23,7 +23,7 @@ export const ContextProvider = ({children})=>{
     IDNumber: "",
     IDPhoto:null,
     personalPhoto :null,
-    status: "accepted", 
+    status: "", 
     
    
 
