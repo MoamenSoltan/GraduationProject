@@ -15,6 +15,15 @@ export const ContextProvider = ({children})=>{
     address: "",
     city:"",
     country:"",
+    highSchoolName: "",
+    highSchoolGPA:"",
+    highSchoolCertificate: null,
+    facultyApplied: "FCI",
+    preferredMajor: "",
+    IDNumber: "",
+    IDPhoto:null,
+    personalPhoto :null,
+    status: "accepted", 
     
    
 
