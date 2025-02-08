@@ -6,7 +6,7 @@ const ProgressBar = () => {
   const { meter } = useStateContext();
 
   return (
-    <motion.div className="flex w-[50%] gap-2">
+    <motion.div className="flex md:w-[50%] md:p-0 p-4 w-full gap-2">
       {[...Array(5)].map((_, index) => (
         <React.Fragment key={index}>
           {/* Progress Bar */}

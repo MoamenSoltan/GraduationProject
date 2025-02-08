@@ -72,7 +72,7 @@ const Step3 = () => {
         <ProgressBar />
       </div>
 
-      <form className="w-[50%] m-auto" onSubmit={handleSubmit}>
+      <form className="md:w-[50%] md:p-0 p-4 m-auto" onSubmit={handleSubmit}>
         <h1 className="mt-[50px] main-text"> Education Background</h1>
         <p className="sub-text mb-10">
           in this section , you can provide previous academic records
@@ -91,7 +91,7 @@ const Step3 = () => {
           </div>
 
           <div className="flex flex-col  w-full mt-5">
-            <label htmlFor="file" className="text-lg">High school Certificate</label>
+            <label htmlFor="file" className="">High school Certificate</label>
             <input type="file" name="file" className="textField file:mr-4 file:rounded-full file:border-0 file:bg-[] file:px-4 file:py-2 file:text-sm file:font-semibold file:text-black hover:file:text-white hover:file:scale-105 hover:file:transition-all hover:file:cursor-pointer hover:file:bg-[#0096C1]"  onChange={handleFile} />
 
           

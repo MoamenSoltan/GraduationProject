@@ -91,7 +91,7 @@ const Step2 = () => {
         <ProgressBar />
       </div>
 
-      <form onSubmit={handleSubmit} className="w-[50%] m-auto">
+      <form onSubmit={handleSubmit} className="md:w-[50%] md:p-0 p-4 m-auto">
         <h1 className="mt-[50px] main-text"> Contact & Address Details</h1>
         <p className="sub-text mb-10">
           in this section , you can provide your contact and address details

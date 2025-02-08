@@ -50,7 +50,7 @@ const Registration = () => {
     exit={{ opacity: 0, scale: 0.9 }}
     transition={{ duration: 1 }}
     className=" flex w-full h-screen items-center justify-center gap-10 flex-row">
-      <div className="w-[402px] h-[570px]">
+      <div className="w-[402px] p-4 md:p-0 h-[570px]">
         <h1 className="main-text mb-3">Welcome to {Placeholder}</h1>
         <p className="sub-text">All your educational needs in one place</p>
         <form onSubmit={handleSubmit} className="flex flex-col gap-2 mt-10">
@@ -69,7 +69,7 @@ const Registration = () => {
 
       <div className="">
 
-        <img src={Hero} className="w-[402px] h-[570px] rounded-2xl" />
+        <img src={Hero} className="md:w-[402px] md:h-[570px] w-0 rounded-2xl" />
       </div>
     </motion.div>
   );

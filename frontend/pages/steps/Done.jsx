@@ -15,11 +15,11 @@ const Done = () => {
     exit={{ opacity: 0, scale: 0.9 }}
     transition={{ duration: 0.5 }}
      className='flex w-full mt-[30vh] justify-center items-center '>
-      <div className='flex w-[30%]  justify-center items-center flex-col gap-5 '>
+      <div className='flex md:w-[80%] md:p-0 p-2 text-center  justify-center items-center flex-col gap-5 '>
          <img src={Check} className='w-[100px] h-[100px]' alt="check" />
          <h1 className='main-text'>Your information has been successfully submitted.</h1>
          
-         <p className='sub-text'> Our admins will review your data, and you will receive an email with further instructions. Please check your inbox regularly.</p>
+         <p className='sub-text '> Our admins will review your data, and you will receive an email with further instructions. Please check your inbox regularly.</p>
          
  
          

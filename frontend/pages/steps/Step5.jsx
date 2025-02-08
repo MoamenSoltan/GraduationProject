@@ -49,7 +49,7 @@ const Step5 = () => {
        <ProgressBar />
        </div>
 
-       <div className='w-[50%] mt-[7%] m-auto flex-col flex items-center justify-center'>
+       <div className='md:w-[55%] text-center md:p-0 p-4 mt-[7%] m-auto flex-col flex items-center justify-center'>
       <img src={Check} className='w-[100px] h-[100px]' alt="check" />
        <h1 className='text-center main-text'>You are almost done!</h1>
        <p className='sub-text'>by pressing the button below , you agree to our terms and conditions</p>

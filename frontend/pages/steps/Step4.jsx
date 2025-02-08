@@ -52,20 +52,20 @@ const Step4 = () => {
         <ProgressBar />
       </div>
 
-      <form className="w-[50%] m-auto" onSubmit={handleSubmit}>
+      <form className="md:w-[50%]  md:p-0 w-full p-4 m-auto" onSubmit={handleSubmit}>
         <h1 className="mt-[50px] main-text"> Required Document Upload</h1>
         <p className="sub-text mb-10">
           in this section , you can upload all essential documents
         </p>
 
-        <div className="w-full grid grid-cols-2 gap-5">
+        <div className="w-full grid  gap-5">
           <div className="flex flex-col w-full mt-5">
             <label htmlFor="ID" className="text-lg">
               ID Number
             </label>
             <input
               type="text"
-              className="textField"
+              className="flex-1 textField "
               value={user.IDNumber}
               onChange={(e) => {
                 setUser({ ...user, IDNumber: e.target.value });

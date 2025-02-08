@@ -90,7 +90,7 @@ const Step1 = () => {
         <ProgressBar />
       </div>
 
-      <div className="ml-[25%] mt-[50px]">
+      <div className="md:ml-[25%] mx-auto w-[80%]  mt-[50px]">
         <h1 className="main-text">Account Information</h1>
         <p className="sub-text">
           In this section, you can provide personal information for your
@@ -98,7 +98,7 @@ const Step1 = () => {
         </p>
       </div>
 
-      <form onSubmit={handleSubmit} className="flex flex-col ml-[25%] w-[50%] gap-2 mt-10">
+      <form onSubmit={handleSubmit} className="flex flex-col md:ml-[25%] md:w-[50%] mx-auto w-[80%] gap-2 mt-10">
         <div className="flex flex-row gap-10 w-full">
           <div className="w-[40%]">
             <label htmlFor="firstName" className="text-lg">
