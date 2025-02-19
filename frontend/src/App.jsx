@@ -39,11 +39,12 @@ function App() {
           <Route path="/status" element={<Status />} />
 
           {/* or make a dashboard component , whithin this component add more dashboards */}
-          <Route path="/studentDashboard" element={<StudentDashboard />} />
-          <Route path="/instructorDashboard" element={<InstructorDashboard />} />
-          <Route path="/adminDashboard" element={<AdminDashboard />} />
-          
-
+          <Route path="/studentDashboard/*" element={<StudentDashboard />} />
+          <Route path="/instructorDashboard/*" element={<InstructorDashboard />} />
+          <Route path="/adminDashboard/*" element={<AdminDashboard />} />
+          {/* 
+          /* means that there are nested routes
+           */}
 
 
 

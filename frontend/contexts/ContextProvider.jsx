@@ -23,11 +23,13 @@ export const ContextProvider = ({children})=>{
     IDNumber: "",
     IDPhoto:null,
     personalPhoto :null,
-    status: "", 
+    status: "accepted", 
     
    
 
   })
+  const [activeMenu, setActiveMenu] = useState(false)
+  const [profile, setProfile] = useState(false)
 
   const [meter, setMeter] = useState(1)
   const incrementMeter= ()=>{
@@ -42,7 +44,7 @@ export const ContextProvider = ({children})=>{
    return (
     <stateContext.Provider value={{
         Placeholder,user,setUser,
-        meter,incrementMeter,setMeter,decrementMeter
+        meter,incrementMeter,setMeter,decrementMeter,activeMenu,setActiveMenu,profile,setProfile
     }}>
         {children}
     </stateContext.Provider>
