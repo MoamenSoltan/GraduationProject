@@ -9,7 +9,7 @@ const SideBar = () => {
   const normalLink='flex items-center gap-5 pl-4 pt-3 pb-2.5 rounded-lg text-gray-600  dark:hover:text-black hover:bg-light-gray text-md m-2 '
 
   return (
-    <div className="  overflow-auto md:overflow-hidden ml-3 h-screen md:hover:overflow-auto pb-10 shadow-md ">
+    <div className="  overflow-auto md:overflow-hidden  h-screen md:hover:overflow-auto pb-10 shadow-md ">
      
       {activeMenu && (
         <>

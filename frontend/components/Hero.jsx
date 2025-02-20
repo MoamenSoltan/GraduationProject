@@ -3,7 +3,7 @@ import hero from "../data/hero3.png"
 
 const Hero = () => {
   return (
-    <div className='w-[80%] h-[40vh] shadow-md  mt-10 p-10 flex justify-between flex-row items-center rounded-xl bg-main-bg'>
+    <div className=' h-[36vh] shadow-md  mt-10 p-10 flex justify-between flex-row items-center rounded-xl bg-main-bg'>
         <div className='flex flex-col w-full  justify-center'>
             <div>
                 <p className='text-white text-lg font-semibold'>

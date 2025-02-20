@@ -10,6 +10,8 @@ import Events from "./sideBar/Events";
 import Instructors from "./sideBar/Instructors";
 import Help from "./sideBar/Help";
 import Payment from "./sideBar/Payment";
+import Announcements from "./sideBar/Announcements";
+
 import NavBar from "../components/NavBar";
 
 
@@ -36,6 +38,8 @@ const StudentDashboard = () => {
       <Route path="/"  element={<Analytics/>}/>
 
         <Route path="/Analytics"  element={<Analytics/>}/>
+        <Route path="/Announcements"  element={<Announcements/>}/>
+
         <Route path="/Registration"  element={<Registration/>}/>
         <Route path="/Courses"  element={<Courses/>}/>
         <Route path="/Payment"  element={<Payment/>}/>

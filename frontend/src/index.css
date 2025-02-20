@@ -62,6 +62,11 @@ body {
   font-size: 18px; /* text-lg (Tailwind text-lg = 18px) */
   color: rgba(14, 12, 12, 0.7); /* text-[#0E0C0CB2] (B2 in hex = 70% opacity) */
   }
+  .sub-text-2 {
+    font-size: 1.25rem /* 20px */;
+    line-height: 1.75rem /* 28px */;
+    font-weight: 600;
+  }
   .error-text {
     font-weight: 400; /* font-normal */
     font-size: 18px; /* text-lg (Tailwind text-lg = 18px) */
