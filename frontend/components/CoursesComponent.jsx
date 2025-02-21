@@ -4,7 +4,7 @@ import { coursesData } from '../data/dummy';
 import CoursesCard from './CoursesCard';
 import { MdLibraryBooks } from 'react-icons/md'; // New Icon for Empty State
 
-const Courses = () => {
+const Courses = ({preview}) => {
   return (
     <div className="flex flex-col items-center justify-center w-full mt-5">
       {/* Header */}
@@ -18,7 +18,20 @@ const Courses = () => {
       {/* TODO: implement pagination with API */}
       {/* Courses List */}
       <div className="flex flex-wrap gap-4 w-full mr-auto mt-5">
-        {coursesData && coursesData.length > 0 ? (
+        {coursesData && coursesData.length > 0&& preview ? (
+          coursesData.slice(0,3).map((course) => (
+            <CoursesCard
+              key={course.id}
+              name={course.name}
+              code={course.code}
+              schedule={course.schedule}
+              credits={course.credits}
+              instructor={course.instructor}
+              studentsEnrolled={course.studentsEnrolled}
+              type={course.type}
+            />
+          ))
+        ) :coursesData && coursesData.length > 0&& preview===false ? (
           coursesData.map((course) => (
             <CoursesCard
               key={course.id}
@@ -28,6 +41,8 @@ const Courses = () => {
               credits={course.credits}
               instructor={course.instructor}
               studentsEnrolled={course.studentsEnrolled}
+              type={course.type}
+              
             />
           ))
         ) : (

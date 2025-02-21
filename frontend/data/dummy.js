@@ -90,6 +90,7 @@ export const announcementsData = [
   ];
   
   export const coursesData = [
+    // First Year Courses
     {
       id: 1,
       name: "Introduction to Computer Science",
@@ -97,28 +98,162 @@ export const announcementsData = [
       instructor: "Dr. John Doe",
       schedule: "Mon & Wed, 10:00 AM - 11:30 AM",
       credits: 3,
-      studentsEnrolled: 120,
+      studentsEnrolled: 150,
+      type: "Required",
+      year: "FirstYear"
     },
     {
       id: 2,
+      name: "Mathematics for Computing",
+      code: "MATH104",
+      instructor: "Prof. Alice Johnson",
+      schedule: "Tue & Thu, 9:00 AM - 10:30 AM",
+      credits: 4,
+      studentsEnrolled: 130,
+      type: "Required",
+      year: "FirstYear"
+    },
+    {
+      id: 3,
+      name: "Introduction to AI",
+      code: "AI100",
+      instructor: "Dr. Alan Turing",
+      schedule: "Fri, 2:00 PM - 4:00 PM",
+      credits: 2,
+      studentsEnrolled: 90,
+      type: "Optional",
+      year: "FirstYear"
+    },
+  
+    // Second Year Courses
+    {
+      id: 4,
       name: "Data Structures & Algorithms",
       code: "CS202",
       instructor: "Prof. Jane Smith",
       schedule: "Tue & Thu, 2:00 PM - 3:30 PM",
       credits: 4,
-      studentsEnrolled: 85,
+      studentsEnrolled: 110,
+      type: "Required",
+      year: "SecondYear"
     },
     {
-      id: 3,
+      id: 5,
+      name: "Operating Systems",
+      code: "CS204",
+      instructor: "Dr. Richard Stallman",
+      schedule: "Mon & Wed, 11:00 AM - 12:30 PM",
+      credits: 3,
+      studentsEnrolled: 85,
+      type: "Required",
+      year: "SecondYear"
+    },
+    {
+      id: 6,
+      name: "Web Development Basics",
+      code: "WD200",
+      instructor: "Prof. Tim Berners-Lee",
+      schedule: "Fri, 10:00 AM - 12:00 PM",
+      credits: 2,
+      studentsEnrolled: 70,
+      type: "Recommended",
+      year: "SecondYear"
+    },
+  
+    // Third Year Courses
+    {
+      id: 7,
       name: "Machine Learning Fundamentals",
       code: "AI305",
       instructor: "Dr. Alan Turing",
       schedule: "Fri, 1:00 PM - 3:00 PM",
       credits: 3,
-      studentsEnrolled: 60,
+      studentsEnrolled: 75,
+      type: "Required",
+      year: "ThirdYear"
     },
-    
+    {
+      id: 8,
+      name: "Database Management Systems",
+      code: "CS310",
+      instructor: "Prof. Edgar Codd",
+      schedule: "Mon & Wed, 3:00 PM - 4:30 PM",
+      credits: 3,
+      studentsEnrolled: 90,
+      type: "Required",
+      year: "ThirdYear"
+    },
+    {
+      id: 9,
+      name: "Cybersecurity Basics",
+      code: "SEC301",
+      instructor: "Dr. Kevin Mitnick",
+      schedule: "Thu, 4:00 PM - 6:00 PM",
+      credits: 2,
+      studentsEnrolled: 50,
+      type: "Recommended",
+      year: "ThirdYear"
+    },
+    {
+      id: 10,
+      name: "Cloud Computing Fundamentals",
+      code: "CC315",
+      instructor: "Dr. Werner Vogels",
+      schedule: "Wed, 10:00 AM - 12:00 PM",
+      credits: 3,
+      studentsEnrolled: 65,
+      type: "Optional",
+      year: "ThirdYear"
+    },
+  
+    // Fourth Year Courses
+    {
+      id: 11,
+      name: "Advanced Artificial Intelligence",
+      code: "AI450",
+      instructor: "Dr. Andrew Ng",
+      schedule: "Tue & Thu, 1:00 PM - 2:30 PM",
+      credits: 4,
+      studentsEnrolled: 60,
+      type: "Required",
+      year: "FourthYear"
+    },
+    {
+      id: 12,
+      name: "Software Engineering Principles",
+      code: "SE401",
+      instructor: "Prof. Martin Fowler",
+      schedule: "Mon & Wed, 10:30 AM - 12:00 PM",
+      credits: 3,
+      studentsEnrolled: 80,
+      type: "Required",
+      year: "FourthYear"
+    },
+    {
+      id: 13,
+      name: "Big Data Analytics",
+      code: "BD420",
+      instructor: "Dr. Jeff Dean",
+      schedule: "Fri, 3:00 PM - 5:00 PM",
+      credits: 2,
+      studentsEnrolled: 40,
+      type: "Recommended",
+      year: "FourthYear"
+    },
+    {
+      id: 14,
+      name: "Blockchain and Cryptography",
+      code: "BC432",
+      instructor: "Dr. Vitalik Buterin",
+      schedule: "Thu, 2:00 PM - 4:00 PM",
+      credits: 3,
+      studentsEnrolled: 55,
+      type: "Optional",
+      year: "FourthYear"
+    }
   ];
+  
+  
 
   export const instructorsData = [
     {

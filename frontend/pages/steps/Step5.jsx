@@ -27,7 +27,9 @@ const Step5 = () => {
 
 
 
-      navigate("/registration/done")
+      // navigate("/registration/done")
+      navigate("/status/")
+
     
     }
     // navigate(`/dashboard/${user.id}`)

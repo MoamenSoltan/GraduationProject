@@ -1,7 +1,7 @@
 import React from "react";
 import Hero from "../../components/Hero";
 import Announcements from "../../components/Announcements";
-import Courses from "../../components/Courses";
+import Courses from "../../components/CoursesComponent";
 import Instructors from "../../components/Instructors";
 import Payment from "../../components/Payment";
 
@@ -15,13 +15,14 @@ const Analytics = () => {
         <div className="flex flex-col items-center justify-center w-[70%] ">
           {/* announcements */}
           <div className="flex gap-1 w-full  ">
-            <Announcements/>
+            <Announcements preview={true}/>
           </div>
 
           {/* courses */}
 
           <div className="flex gap-1 w-full">
-            <Courses/>
+            
+            <Courses preview={true}/>
           </div>
         </div>
 

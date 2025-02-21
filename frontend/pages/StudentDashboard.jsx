@@ -29,7 +29,7 @@ const StudentDashboard = () => {
                   </div>
               
               }
-               <div className='fixed md:static bg-[#FAFBFB]  navbar w-full'>
+               <div className=' top-0  bg-[#FAFBFB]  navbar w-full'>
                   <NavBar/>
                 </div>
 
@@ -41,7 +41,7 @@ const StudentDashboard = () => {
         <Route path="/Announcements"  element={<Announcements/>}/>
 
         <Route path="/Registration"  element={<Registration/>}/>
-        <Route path="/Courses"  element={<Courses/>}/>
+        <Route path="/Courses/:year?"  element={<Courses/>}/>
         <Route path="/Payment"  element={<Payment/>}/>
         <Route path="/Events"  element={<Events/>}/>
         <Route path="/Instructors"  element={<Instructors/>}/>
@@ -53,3 +53,10 @@ const StudentDashboard = () => {
 };
 
 export default StudentDashboard;
+
+
+/**url patameters steps
+ * 1- add /:year?  to route
+ * 2- useParams
+ * 3-
+ */
