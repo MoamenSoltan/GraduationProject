@@ -16,6 +16,14 @@ import AdminDashboard from "../pages/AdminDashboard"
  * step 5 //bracket notation for loops , if we use user.key itll look for a value of key which doesnt exist (user.key is used for accessing known properties , bracket notation when the property is stored in a variable (in a loop))
  * 
  * --/ always use formData for api calls
+ * 
+ * 
+ * conditional styling notes :
+ * //style={{ width:activeMenu?"":""}}
+// ${activeMenu?"ml-[300px]":""} `
+
+
+revise courses component for better url parameters usage
  */
 
 function App() {

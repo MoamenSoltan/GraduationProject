@@ -24,7 +24,7 @@ const StudentDashboard = () => {
          {
                 (activeMenu)&&
                 
-                  <div className='w-[300px] fixed sidebar bg-white'>
+                  <div className='md:w-[300px] fixed sidebar bg-white'>
                     <SideBar/>
                   </div>
               

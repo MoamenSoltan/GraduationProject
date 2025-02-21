@@ -6,6 +6,9 @@ import { MdKeyboardArrowUp } from 'react-icons/md'
 import { useStateContext } from '../contexts/ContextProvider'
 import person from "../data/avatar.jpg"
 
+//style={{ width:activeMenu?"":""}}
+// ${activeMenu?"ml-[300px]":""} `
+
 
 const NavBar = () => {
     const {activeMenu,setActiveMenu,profile,setProfile}=useStateContext()
@@ -13,12 +16,12 @@ const NavBar = () => {
         //TODO: API call here to fetch profile info , or fetch required data upon login
     },[])
   return (
-    <div className='flex px-10 items-center justify-between shadow-sm  p-2 bg-[#FAFBFB]  '>
-        <button onClick={()=>{setActiveMenu(prev=>!prev)}} className={`hover:bg-gray-200 p-2 text-xl rounded-full hover:cursor-pointer ${activeMenu?"ml-[300px]":""} `}>
+    <div  className='flex px-10 items-center justify-between shadow-sm  p-2 bg-[#FAFBFB]  '>
+        <button onClick={()=>{setActiveMenu(prev=>!prev)}} className={`hover:bg-gray-200 p-2 text-xl rounded-full hover:cursor-pointer ${activeMenu?"md:ml-[300px] ml-[160px]":""} `}>
         <AiOutlineMenu/>
         </button>
 
-        <button onClick={()=>{setProfile(prev=>!prev)}} className='hover:bg-gray-200 p-2 w-[250px] rounded-md flex flex-row justify-center items-center gap-2'>
+        <button onClick={()=>{setProfile(prev=>!prev)}} className='hover:bg-gray-200 p-2 md:w-[250px] rounded-md flex flex-row justify-center items-center gap-2'>
             <div className='border-2 rounded-full border-[#0096C1] '>
             <img src={person} className='w-10 rounded-full ' alt="person" />
             </div>
