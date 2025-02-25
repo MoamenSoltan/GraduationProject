@@ -1,18 +1,11 @@
+# create schema graduation_project;
 use graduation_project;
 create table roles(
     id int primary key auto_increment not null,
     role_name enum('ADMIN','STUDENT','INSTRUCTOR') default 'STUDENT'
 );
 
-create table users
-(
-    id  int primary key auto_increment not null,
-    first_name varchar(255)    not null,
-    last_name  varchar(255)    not null,
-    gender ENUM('MALE','FEMALE') ,
-    email      varchar(255)    not null unique,
-    password   varchar(255)    not null
-);
+
 CREATE TABLE `submission_request` (
    `id` INTEGER PRIMARY KEY AUTO_INCREMENT,
    `first_name` VARCHAR(255) NOT NULL,
@@ -31,12 +24,21 @@ CREATE TABLE `submission_request` (
    `country` VARCHAR(255),
    `city` VARCHAR(255),
    `address` VARCHAR(255),
-   `admission_status` ENUM('Pending', 'Accepted', 'Rejected') DEFAULT 'Pending',
-   `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-   `user_id` INTEGER NULL,
-   FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON DELETE CASCADE
+   `admission_status` ENUM('PENDING', 'ACCEPTED', 'REJECTED') DEFAULT 'PENDING',
+   `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+create table users
+(
+    id  int primary key auto_increment not null,
+    first_name varchar(255)    not null,
+    last_name  varchar(255)    not null,
+    gender ENUM('MALE','FEMALE') ,
+    email      varchar(255)    not null unique,
+    password   varchar(255)    not null,
+    submission_request_id int ,
+    foreign key (submission_request_id) references submission_request(id)
+);
 
 create table department
 (
