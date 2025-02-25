@@ -24,6 +24,21 @@ body {
   padding: 8px; 
 }
 
+.e-dlg-center-center, .e-quick-popup-wrapper.e-device{
+  z-index: 1000000 !important;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-thumb {
+  background-color: rgb(216, 216, 216);
+  border-radius: 40px;
+}
+::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+
 .custom-button {
     background-color: #0096C1; /* bg-[#0096C1] */
     margin-top: 40px; /* mt-10 (10 * 4px = 40px) */
