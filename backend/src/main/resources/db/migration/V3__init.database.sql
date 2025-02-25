@@ -1,9 +1,8 @@
 CREATE TABLE user_roles (
-    user_role_id INT PRIMARY KEY AUTO_INCREMENT,
     user_id INT NOT NULL,
     role_id INT NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
+    primary key (user_id, role_id),
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
     FOREIGN KEY (role_id) REFERENCES roles(id) ON DELETE CASCADE
 );
