@@ -113,7 +113,7 @@ export const announcementsData = [
       instructor: "Prof. Jane Smith",
       schedule: "Tue & Thu, 2:00 PM - 3:30 PM",
       credits: 4,
-      studentsEnrolled: 160,
+      studentsEnrolled: 170,
       maxStudents : 300,
       type: "Required",
       year: "SecondYear"
