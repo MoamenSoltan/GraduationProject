@@ -98,7 +98,7 @@ export const announcementsData = [
       instructor: "Dr. John Doe",
       schedule: "Mon & Wed, 10:00 AM - 11:30 AM",
       credits: 3,
-      studentsEnrolled: 30,
+      studentsEnrolled: 150,
       maxStudents : 200,
       type: "Required",
       year: "FirstYear"
@@ -113,7 +113,7 @@ export const announcementsData = [
       instructor: "Prof. Jane Smith",
       schedule: "Tue & Thu, 2:00 PM - 3:30 PM",
       credits: 4,
-      studentsEnrolled: 20,
+      studentsEnrolled: 170,
       maxStudents : 300,
       type: "Required",
       year: "SecondYear"
@@ -127,7 +127,7 @@ export const announcementsData = [
       instructor: "Dr. Alan Turing",
       schedule: "Fri, 1:00 PM - 3:00 PM",
       credits: 3,
-      studentsEnrolled: 10,
+      studentsEnrolled: 75,
       maxStudents : 80,
 
       type: "Required",
