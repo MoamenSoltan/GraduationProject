@@ -48,7 +48,7 @@ function App() {
      
       <BrowserRouter>
         <Routes>
-          {/* <Route path="/" element={<Registration />} /> */}
+          <Route path="/" element={<Registration />} />
           <Route path="/registration" element={<Registration />} />
           {/* Add more routes here */}
           <Route path="/registration/splash" element={<Splash />} />
@@ -62,7 +62,7 @@ function App() {
 
           {/* or make a dashboard component , whithin this component add more dashboards */}
           <Route path="/studentDashboard/*" element={<StudentDashboard />} />
-          <Route path="/" element={<StudentDashboard />} />
+          {/* <Route path="/" element={<StudentDashboard />} /> */}
 
           <Route path="/instructorDashboard/*" element={<InstructorDashboard />} />
           <Route path="/adminDashboard/*" element={<AdminDashboard />} />
