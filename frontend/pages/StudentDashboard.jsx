@@ -38,7 +38,7 @@ const StudentDashboard = () => {
       <Route path="/"  element={<Analytics/>}/>
 
         <Route path="/Analytics"  element={<Analytics/>}/>
-        <Route path="/Announcements"  element={<Announcements/>}/>
+        <Route path="/Announcements/:type?"  element={<Announcements/>}/>
 
         <Route path="/Registration"  element={<Registration/>}/>
         <Route path="/Courses/:year?"  element={<Courses/>}/>
