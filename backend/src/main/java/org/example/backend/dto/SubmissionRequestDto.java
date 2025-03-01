@@ -1,63 +1,30 @@
-package org.example.backend.entity;
+package org.example.backend.dto;
 
-import jakarta.persistence.*;
-import org.example.backend.enums.AdmissionStatus;
-import org.example.backend.enums.RoleType;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.time.LocalDateTime;
 
-@Entity
-@Table(name = "submission_request")
-//@Getter
-//@Setter
-public class SubmissionRequest {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+public class SubmissionRequestDto {
 
-    @Column(nullable = false)
     private String firstName;
-
-    @Column(nullable = false)
     private String lastName;
-
-    @Column(nullable = false, unique = true)
     private String email;
-
-    @Column(nullable = false)
     private String password;
-
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private RoleType userType;
+    private String userType;
     private Integer academicYear;
     private String highSchoolName;
     private String graduationYear;
     private Double highSchoolGpa;
-    private String highSchoolCertificate;
+    private MultipartFile highSchoolCertificate;
+    private MultipartFile idPhoto;
+    private MultipartFile personalPhoto;
     private String phoneNumber;
-    private String idPhoto;
-    private String personalPhoto;
     private String country;
     private String city;
     private String address;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private AdmissionStatus admissionStatus;
-    @Column(updatable = false)
-    private LocalDateTime createdAt = LocalDateTime.now();
-
-
-    //
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
 
     public String getFirstName() {
         return firstName;
@@ -91,11 +58,11 @@ public class SubmissionRequest {
         this.password = password;
     }
 
-    public RoleType getUserType() {
+    public String getUserType() {
         return userType;
     }
 
-    public void setUserType(RoleType userType) {
+    public void setUserType(String userType) {
         this.userType = userType;
     }
 
@@ -131,12 +98,28 @@ public class SubmissionRequest {
         this.highSchoolGpa = highSchoolGpa;
     }
 
-    public String getHighSchoolCertificate() {
+    public MultipartFile getHighSchoolCertificate() {
         return highSchoolCertificate;
     }
 
-    public void setHighSchoolCertificate(String highSchoolCertificate) {
+    public void setHighSchoolCertificate(MultipartFile highSchoolCertificate) {
         this.highSchoolCertificate = highSchoolCertificate;
+    }
+
+    public MultipartFile getIdPhoto() {
+        return idPhoto;
+    }
+
+    public void setIdPhoto(MultipartFile idPhoto) {
+        this.idPhoto = idPhoto;
+    }
+
+    public MultipartFile getPersonalPhoto() {
+        return personalPhoto;
+    }
+
+    public void setPersonalPhoto(MultipartFile personalPhoto) {
+        this.personalPhoto = personalPhoto;
     }
 
     public String getPhoneNumber() {
@@ -145,22 +128,6 @@ public class SubmissionRequest {
 
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
-    }
-
-    public String getIdPhoto() {
-        return idPhoto;
-    }
-
-    public void setIdPhoto(String idPhoto) {
-        this.idPhoto = idPhoto;
-    }
-
-    public String getPersonalPhoto() {
-        return personalPhoto;
-    }
-
-    public void setPersonalPhoto(String personalPhoto) {
-        this.personalPhoto = personalPhoto;
     }
 
     public String getCountry() {
@@ -185,21 +152,5 @@ public class SubmissionRequest {
 
     public void setAddress(String address) {
         this.address = address;
-    }
-
-    public AdmissionStatus getAdmissionStatus() {
-        return admissionStatus;
-    }
-
-    public void setAdmissionStatus(AdmissionStatus admissionStatus) {
-        this.admissionStatus = admissionStatus;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
     }
 }

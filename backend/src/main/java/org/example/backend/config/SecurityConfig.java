@@ -1,6 +1,9 @@
 package org.example.backend.config;
 
 import org.example.backend.config.JWt.JwtFilter;
+import org.example.backend.config.JWt.JwtService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -15,6 +18,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.servlet.HandlerExceptionResolver;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -22,15 +26,23 @@ import java.util.Collections;
 @Configuration
 public class SecurityConfig {
     private final CustomUserDetailsService userDetailsService;
-    private final JwtFilter jwtFilter;
 
-    public SecurityConfig(CustomUserDetailsService userDetailsService, JwtFilter jwtFilter) {
+    @Autowired
+    @Qualifier("handlerExceptionResolver")
+    private HandlerExceptionResolver handlerExceptionResolver;
+
+    public SecurityConfig(CustomUserDetailsService userDetailsService) {
         this.userDetailsService = userDetailsService;
-        this.jwtFilter = jwtFilter;
+
     }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity security) throws Exception {
+    public JwtFilter getJwtFilter(JwtService jwtService) {
+        return new JwtFilter(handlerExceptionResolver,jwtService,userDetailsService);
+    }
+
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity security,JwtService jwtService) throws Exception {
         security
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -39,7 +51,7 @@ public class SecurityConfig {
                         .requestMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
                         .anyRequest().authenticated()
                 )
-                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(getJwtFilter(jwtService), UsernamePasswordAuthenticationFilter.class)
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()));
 
         return security.build();

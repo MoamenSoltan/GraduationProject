@@ -1,19 +1,18 @@
 package org.example.backend.controller;
 
 
-
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.example.backend.config.JWt.JwtService;
-import org.example.backend.dto.LoginRequest;
-import org.example.backend.dto.UserDto;
+import org.example.backend.dto.SubmissionRequestDto;
+import org.example.backend.util.AuthResponse;
+import org.example.backend.util.LoginRequest;
 import org.example.backend.entity.SubmissionRequest;
-import org.example.backend.entity.User;
-import org.example.backend.repository.UserRepository;
 import org.example.backend.service.SubmissionRequestService;
 import org.example.backend.service.UserService;
-import org.example.backend.util.AdmissionStatus;
-import org.example.backend.util.RoleType;
-import org.springframework.security.access.prepost.PostAuthorize;
-import org.springframework.security.access.prepost.PreAuthorize;
+import org.example.backend.enums.AdmissionStatus;
+import org.example.backend.enums.RoleType;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -21,7 +20,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 
 @RestController
@@ -43,34 +44,51 @@ public class AuthController {
 
 
     @PostMapping("/login")
-    public String loginOrRegister(@RequestBody LoginRequest request) {
+    public ResponseEntity<AuthResponse> login(@RequestBody LoginRequest request) {
         String email = request.getEmail();
         String password = request.getPassword();
 
-        Authentication authentication = manager.authenticate(
-                new UsernamePasswordAuthenticationToken(email, password)
-        );
 
 
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        UserDetails userDetails= (UserDetails) authentication.getPrincipal();
-        return "login successful : "+jwtService.generateToken(userDetails);
+            Authentication authentication = manager.authenticate(
+                    new UsernamePasswordAuthenticationToken(email, password)
+            );
+
+
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            String token = jwtService.generateToken(userDetails);
+            String message = "user login successful";
+            return new ResponseEntity<>(new AuthResponse(token, message), HttpStatus.ACCEPTED);
+
     }
 
     @PostMapping("/register")
-    public String register(@RequestBody SubmissionRequest request) {
-        request.setPassword(passwordEncoder.encode(request.getPassword()));
-        request.setUserType(RoleType.STUDENT);
-        request.setAcademicYear(1);
-        request.setAdmissionStatus(AdmissionStatus.PENDING);
-        request.setCreatedAt(LocalDateTime.now());
-        requestService.saveSubmissionRequest(request);
+    public ResponseEntity<?> register( @RequestPart("submissionRequestDto") String jsonDto,
+                                       @RequestPart("idPhoto") MultipartFile idPhoto,
+                                       @RequestPart("personalPhoto") MultipartFile personalPhoto,
+                                       @RequestPart("highSchoolCertificate") MultipartFile highSchoolCertificate) throws IOException {
 
+        ObjectMapper objectMapper=new ObjectMapper();
+        SubmissionRequestDto dto = objectMapper.readValue(jsonDto, SubmissionRequestDto.class);
+        System.out.println(dto);
+
+        dto.setPassword(passwordEncoder.encode(dto.getPassword()));
+        dto.setIdPhoto(idPhoto);
+        dto.setPersonalPhoto(personalPhoto);
+        dto.setHighSchoolCertificate(highSchoolCertificate);
+        SubmissionRequest request =requestService.saveSubmissionRequest(dto);
+
+        System.out.println(dto.getPassword());
         // when admin approval the submission
         // var auth =new UserPasswordAuthenticationToken(saveUser.getemail(),password);
         //SecurityContextHolder.getContext().setAuthentication(auth);
         // return authresponse with token information
-        return "sign completed";
+
+        System.out.println("saved submission");
+        return ResponseEntity.ok(request);
+
+
     }
 
     @GetMapping("/data")
@@ -80,4 +98,6 @@ public class AuthController {
         System.out.println("authentication : "+a.getName());
         return "data";
     }
+
+
 }

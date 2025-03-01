@@ -3,7 +3,7 @@ package org.example.backend.service;
 import org.example.backend.dto.UserDto;
 import org.example.backend.entity.User;
 import org.example.backend.repository.UserRepository;
-import org.example.backend.util.GenderType;
+import org.example.backend.enums.GenderType;
 import org.springframework.stereotype.Service;
 
 @Service

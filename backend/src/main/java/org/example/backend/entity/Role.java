@@ -1,9 +1,7 @@
 package org.example.backend.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
-import org.example.backend.util.RoleType;
+import org.example.backend.enums.RoleType;
 
 import java.util.List;
 

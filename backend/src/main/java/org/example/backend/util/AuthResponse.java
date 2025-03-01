@@ -1,9 +1,17 @@
-package org.example.backend.dto;
+package org.example.backend.util;
 
 public class AuthResponse {
 
     private String token;
     private String message;
+
+    public AuthResponse() {
+    }
+
+    public AuthResponse(String token, String message) {
+        this.token = token;
+        this.message = message;
+    }
 
     public String getToken() {
         return token;

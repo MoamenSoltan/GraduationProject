@@ -1,0 +1,4 @@
+bad credentials : authentication failed 401
+access denied : authorization failed 403
+invalid JWT Signature : invalid 403
+token expired

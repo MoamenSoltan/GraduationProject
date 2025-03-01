@@ -4,11 +4,10 @@ import org.example.backend.entity.SubmissionRequest;
 import org.example.backend.entity.User;
 import org.example.backend.repository.SubmissionReqRepository;
 import org.example.backend.service.UserService;
-import org.example.backend.util.AdmissionStatus;
-import org.example.backend.util.GenderType;
+import org.example.backend.enums.AdmissionStatus;
+import org.example.backend.enums.GenderType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -39,6 +38,7 @@ public class AdminController {
         user.setPassword(request.getPassword());
         user.setGender(GenderType.MALE);
         user.setFirstName(request.getFirstName());
+//        user.setRoleList();
 
         userService.save(user);
 

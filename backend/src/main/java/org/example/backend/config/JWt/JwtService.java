@@ -18,7 +18,7 @@ import java.util.concurrent.TimeUnit;
 public class JwtService {
     @Value("${secret.key}")
     private  String secretKey ;
-    private final static long VALIDITY = TimeUnit.MINUTES.toMillis(30);
+    private final static long VALIDITY = TimeUnit.MINUTES.toMillis(1);
 
     private SecretKey getKey() {
         byte[] key = Base64.getDecoder().decode(secretKey);
@@ -27,7 +27,7 @@ public class JwtService {
 
     public String generateToken(UserDetails userDetails) {
         Map<String, Object> claims = new HashMap<>();
-        //claims.put("roles", userDetails.getAuthorities());
+        claims.put("roles", userDetails.getAuthorities());
         return Jwts.builder()
                 .claims(claims)
                 .subject(userDetails.getUsername())

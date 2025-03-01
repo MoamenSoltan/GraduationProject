@@ -1,4 +1,4 @@
-package org.example.backend.dto;
+package org.example.backend.util;
 
 public class LoginRequest {
     private String email;

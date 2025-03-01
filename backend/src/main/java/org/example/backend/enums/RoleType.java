@@ -1,4 +1,4 @@
-package org.example.backend.util;
+package org.example.backend.enums;
 
 public enum RoleType {
     ADMIN,
