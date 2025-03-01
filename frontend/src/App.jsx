@@ -12,6 +12,9 @@ import StudentDashboard from "../pages/StudentDashboard"
 import InstructorDashboard from "../pages/InstructorDashboard"
 import AdminDashboard from "../pages/AdminDashboard"
 /**
+ * space-x-2 is a Tailwind CSS utility class that adds horizontal spacing (margin) between direct children of a flex container.
+ * 
+ * 
  * 
  * step 5 //bracket notation for loops , if we use user.key itll look for a value of key which doesnt exist (user.key is used for accessing known properties , bracket notation when the property is stored in a variable (in a loop))
  * 
@@ -24,6 +27,17 @@ import AdminDashboard from "../pages/AdminDashboard"
 
 
 revise courses component for better url parameters usage
+
+flex-wrap 
+array.filter 
+map
+array.includes //search
+parseInt
+slice
+
+courses page
+
+registration in sidebar for table advice
  */
 
 function App() {
@@ -48,6 +62,8 @@ function App() {
 
           {/* or make a dashboard component , whithin this component add more dashboards */}
           <Route path="/studentDashboard/*" element={<StudentDashboard />} />
+          {/* <Route path="/" element={<StudentDashboard />} /> */}
+
           <Route path="/instructorDashboard/*" element={<InstructorDashboard />} />
           <Route path="/adminDashboard/*" element={<AdminDashboard />} />
           {/* 

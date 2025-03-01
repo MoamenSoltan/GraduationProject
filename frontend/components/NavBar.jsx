@@ -16,7 +16,7 @@ const NavBar = () => {
         //TODO: API call here to fetch profile info , or fetch required data upon login
     },[])
   return (
-    <div  className='flex px-10 items-center justify-between shadow-sm  p-2 bg-[#FAFBFB]  '>
+    <div  className='flex  px-10 z-50 items-center justify-between shadow-sm  p-2 bg-[#FAFBFB]  '>
         <button onClick={()=>{setActiveMenu(prev=>!prev)}} className={`hover:bg-gray-200 p-2 text-xl rounded-full hover:cursor-pointer ${activeMenu?"md:ml-[300px] ml-[160px]":""} `}>
         <AiOutlineMenu/>
         </button>
