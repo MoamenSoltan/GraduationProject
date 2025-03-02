@@ -3,6 +3,7 @@ package org.example.backend.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.example.backend.enums.GenderType;
 import org.springframework.web.multipart.MultipartFile;
 
 
@@ -24,7 +25,15 @@ public class SubmissionRequestDto {
     private String country;
     private String city;
     private String address;
+    private GenderType gender;
 
+    public GenderType getGender() {
+        return gender;
+    }
+
+    public void setGender(GenderType gender) {
+        this.gender = gender;
+    }
 
     public String getFirstName() {
         return firstName;

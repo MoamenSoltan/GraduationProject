@@ -14,6 +14,7 @@ import org.example.backend.enums.RoleType;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -43,17 +44,27 @@ public class AuthController {
     }
 
 
-    @PostMapping("/login")
+
     public ResponseEntity<AuthResponse> login(@RequestBody LoginRequest request) {
         String email = request.getEmail();
         String password = request.getPassword();
 
+        Authentication authentication=null;
 
-
-            Authentication authentication = manager.authenticate(
+        try {
+            System.out.println(passwordEncoder.matches("123456", "$2a$10$Ot6z0syoqqNlX9xqv4q4FuF1oW9HetCTmeb/HeNFYyutk8uFelZQO"));
+             authentication = manager.authenticate(
                     new UsernamePasswordAuthenticationToken(email, password)
             );
+            if (authentication.isAuthenticated()) {
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+            }
+        } catch (BadCredentialsException e) {
+            System.out.println("Invalid Credentials: " + e.getMessage());
+        }
 
+//        System.out.println(authentication.isAuthenticated());
+//        System.out.println(authentication.getName());
 
             SecurityContextHolder.getContext().setAuthentication(authentication);
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();
@@ -61,6 +72,26 @@ public class AuthController {
             String message = "user login successful";
             return new ResponseEntity<>(new AuthResponse(token, message), HttpStatus.ACCEPTED);
 
+    }
+    @PostMapping("/login")
+    public ResponseEntity<?> loginn(@RequestBody LoginRequest request) {
+        String email = request.getEmail();
+        String password = request.getPassword();
+        try {
+            Authentication authentication = manager.authenticate(
+                    new UsernamePasswordAuthenticationToken(email, password)
+            );
+            if (authentication.isAuthenticated()) {
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+                UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+                String token = jwtService.generateToken(userDetails);
+                String message = "User login successful";
+                return new ResponseEntity<>(new AuthResponse(token, message), HttpStatus.ACCEPTED);
+            }
+        } catch (BadCredentialsException e) {
+            return new ResponseEntity<>("Invalid credentials", HttpStatus.UNAUTHORIZED);
+        }
+        return new ResponseEntity<>("Authentication failed", HttpStatus.UNAUTHORIZED);
     }
 
     @PostMapping("/register")
@@ -79,7 +110,7 @@ public class AuthController {
         dto.setHighSchoolCertificate(highSchoolCertificate);
         SubmissionRequest request =requestService.saveSubmissionRequest(dto);
 
-        System.out.println(dto.getPassword());
+       // System.out.println(dto.getPassword());
         // when admin approval the submission
         // var auth =new UserPasswordAuthenticationToken(saveUser.getemail(),password);
         //SecurityContextHolder.getContext().setAuthentication(auth);

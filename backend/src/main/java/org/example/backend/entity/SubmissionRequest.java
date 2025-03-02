@@ -2,14 +2,14 @@ package org.example.backend.entity;
 
 import jakarta.persistence.*;
 import org.example.backend.enums.AdmissionStatus;
+import org.example.backend.enums.GenderType;
 import org.example.backend.enums.RoleType;
 
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "submission_request")
-//@Getter
-//@Setter
+
 public class SubmissionRequest {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,6 +30,9 @@ public class SubmissionRequest {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private RoleType userType;
+    @Enumerated(EnumType.STRING)
+    private GenderType gender;
+
     private Integer academicYear;
     private String highSchoolName;
     private String graduationYear;
@@ -41,6 +44,8 @@ public class SubmissionRequest {
     private String country;
     private String city;
     private String address;
+
+
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -201,5 +206,13 @@ public class SubmissionRequest {
 
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public GenderType getGender() {
+        return gender;
+    }
+
+    public void setGender(GenderType gender) {
+        this.gender = gender;
     }
 }

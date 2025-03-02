@@ -1,8 +1,11 @@
 package org.example.backend.mapper;
 
 import org.example.backend.dto.SubmissionRequestDto;
+import org.example.backend.entity.Student;
 import org.example.backend.entity.SubmissionRequest;
+import org.example.backend.entity.User;
 import org.example.backend.enums.AdmissionStatus;
+import org.example.backend.enums.FeesStatus;
 import org.example.backend.enums.RoleType;
 import org.springframework.stereotype.Component;
 
@@ -27,6 +30,42 @@ public class SubmissionRequestMapper {
         request.setUserType(RoleType.STUDENT);
         request.setAdmissionStatus(AdmissionStatus.PENDING);
         request.setCreatedAt(LocalDateTime.now());
+        request.setGender(dto.getGender());
         return request;
+    }
+
+    public Student mapToStudent(SubmissionRequest request)
+    {
+        User user = new User();
+        user.setEmail(request.getEmail());
+        user.setLastName(request.getLastName());
+        user.setFirstName(request.getFirstName());
+        user.setPassword(request.getPassword());
+        user.setGender(request.getGender());
+
+
+        Student student = new Student();
+
+        student.setSubmissionRequest(request);
+        student.setUser(user);
+//        student.setSubmissionRequest();
+        student.setAcademicYear(1);
+        student.setFeesStatus(FeesStatus.pending);
+        student.setGpa(0.0);
+
+
+        return student;
+    }
+
+    public User mapToUser(SubmissionRequest  request)
+    {
+        User user = new User();
+        user.setEmail(request.getEmail());
+        user.setLastName(request.getLastName());
+        user.setFirstName(request.getFirstName());
+        user.setPassword(request.getPassword());
+        user.setGender(request.getGender());
+
+        return user;
     }
 }
