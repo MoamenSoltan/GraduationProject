@@ -6,7 +6,7 @@ create table roles(
 );
 
 
-CREATE TABLE `submission_request` (
+CREATE TABLE submission_request (
    `id` INTEGER PRIMARY KEY AUTO_INCREMENT,
    `first_name` VARCHAR(255) NOT NULL,
    `last_name` VARCHAR(255) NOT NULL,
@@ -35,9 +35,8 @@ create table users
     last_name  varchar(255)    not null,
     gender ENUM('MALE','FEMALE') ,
     email      varchar(255)    not null unique,
-    password   varchar(255)    not null,
-    submission_request_id int ,
-    foreign key (submission_request_id) references submission_request(id)
+    password   varchar(255)    not null
+
 );
 
 create table department
@@ -52,22 +51,26 @@ create table department
 
 create table students(
     student_id int primary key auto_increment,
+    user_id int  ,
     academic_year int,
     gpa double,
     department_id int,
     fees_status enum('paid','pending'),
     created_at timestamp ,
+    submission_request_id int ,
+    foreign key (submission_request_id) references submission_request(id),
     foreign key (department_id) references department(department_id),
-    foreign key (student_id) references users(id)
+    foreign key (user_id) references users(id)
 
 );
 
 CREATE table instructors(
     instructor_id int primary key auto_increment,
+    user_id int  ,
     department_id int,
     created_at timestamp ,
     foreign key (department_id) references department(department_id),
-    foreign key (instructor_id) references users(id)
+    foreign key (user_id) references users(id)
 );
 
 CREATE TABLE `semester` (

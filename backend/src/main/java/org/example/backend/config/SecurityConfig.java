@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -49,16 +50,25 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/login", "/auth/register").permitAll()
                         .requestMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
+                        .requestMatchers("/auth/data").hasAuthority("ROLE_STUDENT")
                         .anyRequest().authenticated()
                 )
+
                 .addFilterBefore(getJwtFilter(jwtService), UsernamePasswordAuthenticationFilter.class)
-                .cors(cors -> cors.configurationSource(corsConfigurationSource()));
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+                .exceptionHandling(e -> e
+                        .accessDeniedHandler((request, response, accessDeniedException) -> {
+                            response.setStatus(HttpStatus.FORBIDDEN.value());
+                            response.setContentType("application/json");
+                            response.getWriter().write("{\"status\": 403, \"error\": \"Forbidden\", \"message\": \"Access to the resource is prohibited.\"}");
+                        }));
 
         return security.build();
     }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
+
         return new BCryptPasswordEncoder();
     }
 

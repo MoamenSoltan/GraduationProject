@@ -1,10 +1,12 @@
 package org.example.backend;
 
-import org.example.backend.service.RoleService;
+import org.example.backend.entity.Department;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @SpringBootApplication
 public class
@@ -14,15 +16,15 @@ BackendApplication {
 
         SpringApplication.run(BackendApplication.class, args);
 
+
     }
 
-    @Bean
-    CommandLineRunner commandLineRunner(RoleService roleService)
-    {
-        return args -> {
-            // Initialize roles
-            roleService.getAllRoles().forEach(System.out::println);
-        };
-    }
+  // @Bean
+//   CommandLineRunner commandLineRunner(PasswordEncoder encoder)
+//    {
+//        return args -> {
+//            System.out.println(encoder.encode("123"));
+//        };
+//    }
 
 }

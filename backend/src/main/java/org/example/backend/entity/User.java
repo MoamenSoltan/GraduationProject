@@ -1,16 +1,16 @@
 package org.example.backend.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.example.backend.enums.GenderType;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Table(name = "users")
-@Setter
-@Getter
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,12 +26,21 @@ public class User {
     @Enumerated(EnumType.STRING)
     private GenderType gender;
     // other fields and relationships
-    @OneToOne
-    @JoinColumn(name = "submission_request_id")
-    private SubmissionRequest submissionRequest;
+
 
     @ManyToMany(mappedBy = "users",fetch = FetchType.EAGER)
+    @JsonIgnore
     private List<Role> roleList;
+    @OneToOne(mappedBy = "user")
+    private Department department;
+
+    public Department getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(Department department) {
+        this.department = department;
+    }
 
     public int getId() {
         return id;
@@ -81,13 +90,6 @@ public class User {
         this.gender = gender;
     }
 
-    public SubmissionRequest getSubmissionRequest() {
-        return submissionRequest;
-    }
-
-    public void setSubmissionRequest(SubmissionRequest submissionRequest) {
-        this.submissionRequest = submissionRequest;
-    }
 
     public List<Role> getRoleList() {
         return roleList;
@@ -96,4 +98,15 @@ public class User {
     public void setRoleList(List<Role> roleList) {
         this.roleList = roleList;
     }
+
+    public void addRole(Role role) {
+        if (roleList == null) {
+            roleList = new ArrayList<>();
+        }
+        if (!roleList.contains(role)) {  // Prevent duplicates
+            roleList.add(role);
+            role.getUsers().add(this);
+        }
+    }
+
 }

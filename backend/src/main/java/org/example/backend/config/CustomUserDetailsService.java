@@ -1,6 +1,7 @@
 package org.example.backend.config;
 
 import org.example.backend.entity.User;
+import org.example.backend.exception.ResourceNotFound;
 import org.example.backend.repository.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -18,7 +19,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         User user = userRepository.getUserByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found "+email));
+                .orElseThrow(() -> new ResourceNotFound("user","email",email));
         return new CustomUserDetails(user);
     }
 }

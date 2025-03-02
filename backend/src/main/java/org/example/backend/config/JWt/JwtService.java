@@ -18,7 +18,7 @@ import java.util.concurrent.TimeUnit;
 public class JwtService {
     @Value("${secret.key}")
     private  String secretKey ;
-    private final static long VALIDITY = TimeUnit.MINUTES.toMillis(1);
+    private final static long VALIDITY = TimeUnit.MINUTES.toMillis(30);
 
     private SecretKey getKey() {
         byte[] key = Base64.getDecoder().decode(secretKey);
