@@ -4,6 +4,7 @@ import org.example.backend.entity.Role;
 import org.example.backend.entity.Student;
 import org.example.backend.entity.SubmissionRequest;
 import org.example.backend.enums.AdmissionStatus;
+import org.example.backend.enums.DepartmentName;
 import org.example.backend.mapper.SubmissionRequestMapper;
 import org.example.backend.repository.DepartmentRepository;
 import org.example.backend.repository.RoleRepository;
@@ -32,7 +33,7 @@ public class StudentService {
         request.setAdmissionStatus(AdmissionStatus.ACCEPTED);
         Student student = requestMapper.mapToStudent(request);
         student.setCreatedAt(LocalDateTime.now());
-        student.setDepartment(departmentRepository.getGeneralDepartment());
+        student.setDepartment(departmentRepository.getGeneralDepartment(DepartmentName.general));
         Role role = roleRepository.getStudentRole();
         student.getUser().addRole(role);
 

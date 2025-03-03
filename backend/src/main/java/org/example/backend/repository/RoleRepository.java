@@ -7,4 +7,9 @@ import org.springframework.data.jpa.repository.Query;
 public interface RoleRepository extends JpaRepository<Role,Integer> {
     @Query("select r from Role r where r.id=3")
     Role getStudentRole();
+
+    @Query("select r from Role r where r.id=2")
+    Role getInstructorRole();
+
+
 }

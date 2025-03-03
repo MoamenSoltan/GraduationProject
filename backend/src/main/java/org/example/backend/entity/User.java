@@ -31,16 +31,15 @@ public class User {
     @ManyToMany(mappedBy = "users",fetch = FetchType.EAGER)
     @JsonIgnore
     private List<Role> roleList;
-    @OneToOne(mappedBy = "user")
-    private Department department;
 
-    public Department getDepartment() {
-        return department;
-    }
 
-    public void setDepartment(Department department) {
-        this.department = department;
-    }
+//    public Department getDepartment() {
+//        return department;
+//    }
+//
+//    public void setDepartment(Department department) {
+//        this.department = department;
+//    }
 
     public int getId() {
         return id;

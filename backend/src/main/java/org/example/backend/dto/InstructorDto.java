@@ -1,17 +1,33 @@
 package org.example.backend.dto;
 
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import org.example.backend.entity.Department;
+import org.example.backend.entity.User;
+import org.example.backend.enums.DepartmentName;
 import org.example.backend.enums.GenderType;
 
-
-public class UserDto {
+public class InstructorDto {
     private String email;
     private String password;
     private String firstName;
     private String lastName;
     private GenderType gender;
+    private DepartmentName departmentName;
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
     public String getFirstName() {
         return firstName;
@@ -37,27 +53,11 @@ public class UserDto {
         this.gender = gender;
     }
 
-    public String getEmail() {
-        return email;
+    public DepartmentName getDepartmentName() {
+        return departmentName;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    @Override
-    public String toString() {
-        return "UserDto{" +
-                "email='" + email + '\'' +
-                ", password='" + password + '\'' +
-                '}';
+    public void setDepartmentName(DepartmentName departmentName) {
+        this.departmentName = departmentName;
     }
 }
