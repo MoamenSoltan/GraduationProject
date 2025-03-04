@@ -1,8 +1,11 @@
 package org.example.backend.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+import org.example.backend.entity.Instructor;
 import org.example.backend.enums.DepartmentName;
 
 import java.time.LocalDateTime;
@@ -10,6 +13,8 @@ import java.util.List;
 
 @Entity
 @Table(name = "department")
+@Setter
+@Getter
 public class Department {
 
     @Id
@@ -17,63 +22,31 @@ public class Department {
     private int departmentId;
 
     @Enumerated(EnumType.STRING)
-    private DepartmentName departmentName=DepartmentName.general;
+    private DepartmentName departmentName = DepartmentName.general;
+
     private LocalDateTime createdAt;
-    @OneToOne
+
+    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name = "head_of_department_id")
-    private User user;
-    @OneToMany(mappedBy = "department")
-    @JsonBackReference
-    private List<Instructor> instructors;
-    @OneToMany(mappedBy = "department",fetch = FetchType.LAZY)
     @JsonIgnore
-    private List<Student> students;
+    @JsonManagedReference
+    private Instructor headOfDepartment;
 
-    public int getDepartmentId() {
-        return departmentId;
-    }
+    @OneToMany(mappedBy = "department", fetch = FetchType.LAZY)
+    @JsonManagedReference
+    private List<Instructor> instructors;
 
-    public void setDepartmentId(int departmentId) {
-        this.departmentId = departmentId;
-    }
-
-    public DepartmentName getDepartmentName() {
-        return departmentName;
-    }
-
-    public void setDepartmentName(DepartmentName departmentName) {
-        this.departmentName = departmentName;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public List<Instructor> getInstructors() {
-        return instructors;
-    }
-
-    public void setInstructors(List<Instructor> instructors) {
-        this.instructors = instructors;
-    }
-
-    public List<Student> getStudents() {
-        return students;
-    }
-
-    public void setStudents(List<Student> students) {
-        this.students = students;
-    }
+//    @JsonIgnore // Prevent serialization loop via setter
+//    public void setHeadOfDepartment(Instructor instructor) {
+//        if (this.headOfDepartment == instructor) {
+//            return;
+//        }
+//        if (this.headOfDepartment != null) {
+//            this.headOfDepartment.setManagedDepartment(null);
+//        }
+//        this.headOfDepartment = instructor;
+//        if (instructor != null && instructor.getManagedDepartment() != this) {
+//            instructor.setManagedDepartment(this);
+//        }
+//    }
 }

@@ -25,6 +25,7 @@ CREATE TABLE submission_request (
    `city` VARCHAR(255),
    `address` VARCHAR(255),
    `admission_status` ENUM('PENDING', 'ACCEPTED', 'REJECTED') DEFAULT 'PENDING',
+    ,gender ENUM('MALE', 'FEMALE'),
    `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -39,13 +40,21 @@ create table users
 
 );
 
+CREATE TABLE user_roles (
+                            user_id INT NOT NULL,
+                            role_id INT NOT NULL,
+
+                            primary key (user_id, role_id),
+                            FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+                            FOREIGN KEY (role_id) REFERENCES roles(id) ON DELETE CASCADE
+);
+
 create table department
 (
     department_id int primary key auto_increment,
     department_name enum('CS','IT','IS','general') default 'general',
     head_of_department_id int ,
-    created_at timestamp ,
-    foreign key (head_of_department_id) references users(id)
+    created_at timestamp
 
 );
 
@@ -69,9 +78,13 @@ CREATE table instructors(
     user_id int  ,
     department_id int,
     created_at timestamp ,
-    foreign key (department_id) references department(department_id),
-    foreign key (user_id) references users(id)
+    foreign key (department_id) references department(department_id) on delete set null ,
+    foreign key (user_id) references users(id) on delete cascade
 );
+
+ALTER TABLE department
+    ADD CONSTRAINT fk_head_of_department
+        FOREIGN KEY (head_of_department_id) REFERENCES instructors(instructor_id) ON DELETE SET NULL;
 
 CREATE TABLE `semester` (
       `semester_id` INTEGER PRIMARY KEY AUTO_INCREMENT,
@@ -80,7 +93,7 @@ CREATE TABLE `semester` (
       `start_date` DATE NOT NULL,
       `end_date` DATE NOT NULL,
       `is_active` BOOLEAN DEFAULT FALSE,
-    `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 create table courses(
     course_id int primary key auto_increment,
@@ -100,13 +113,14 @@ create table courses(
 );
 
 CREATE TABLE `student_course` (
-    `id` INTEGER PRIMARY KEY AUTO_INCREMENT,
+
     `student_id` INTEGER NOT NULL,
     `course_id` INTEGER NOT NULL,
     `semester_id` INTEGER NOT NULL,
     `grade` DOUBLE,
     `enrollment_date` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
+    primary key (student_id,course_id,semester_id),
     FOREIGN KEY (`student_id`) REFERENCES `students`(`student_id`) ON DELETE CASCADE,
     FOREIGN KEY (`course_id`) REFERENCES `courses`(`course_id`) ON DELETE CASCADE,
     FOREIGN KEY (`semester_id`) REFERENCES `semester`(`semester_id`) ON DELETE CASCADE

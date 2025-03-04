@@ -1,6 +1,6 @@
 package org.example.backend.service;
 
-import org.example.backend.dto.UserDto;
+import org.example.backend.dto.UserDTO;
 import org.example.backend.entity.Role;
 import org.example.backend.entity.SubmissionRequest;
 import org.example.backend.entity.User;
@@ -30,7 +30,7 @@ public class UserService {
          return userRepository.findUsersByEmail(email);
     }
 
-    public User save(UserDto userDto)
+    public User save(UserDTO userDto)
     {
         User user =new User();
         user.setEmail(userDto.getEmail());

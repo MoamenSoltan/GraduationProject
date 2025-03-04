@@ -1,44 +1,46 @@
 package org.example.backend.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+import org.example.backend.entity.Department;
 
 @Entity
 @Table(name = "instructors")
+@Setter
+@Getter
 public class Instructor {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int instructorId;
+
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
     private User user;
-    @ManyToOne(cascade = CascadeType.ALL)
+
+    @ManyToOne
     @JoinColumn(name = "department_id")
-    @JsonManagedReference
+    @JsonBackReference
     private Department department;
 
-    public int getInstructorId() {
-        return instructorId;
-    }
+    @OneToOne(mappedBy = "headOfDepartment",cascade = {CascadeType.MERGE,CascadeType.PERSIST})
+    @JsonBackReference
+    private Department managedDepartment;
 
-    public void setInstructorId(int instructorId) {
-        this.instructorId = instructorId;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public Department getDepartment() {
-        return department;
-    }
-
-    public void setDepartment(Department department) {
-        this.department = department;
-    }
+//    @JsonIgnore // Prevent serialization loop via setter
+//    public void setManagedDepartment(Department department) {
+//        if (this.managedDepartment == department) {
+//            return;
+//        }
+//        if (this.managedDepartment != null) {
+//            this.managedDepartment.setHeadOfDepartment(null);
+//        }
+//        this.managedDepartment = department;
+//        if (department != null && department.getHeadOfDepartment() != this) {
+//            department.setHeadOfDepartment(this);
+//        }
+//    }
 }
