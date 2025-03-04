@@ -13,7 +13,10 @@ const Announcements = ({preview}) => {
           See More
         </Link>
       </div>
-      {/* TODO: implement pagination with API */}
+      {/* TODO: implement pagination with API 
+  //TODO: API Call here , or called before and fetched from context
+      */}
+      {/* in api call , use a state to store the data and then use that state to render the cards , otherwise the fetched data will only be available on parent function */}
 
       {/* Announcements List */}
       <div className="flex flex-wrap gap-4 w-full mr-auto mt-5">

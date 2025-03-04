@@ -79,7 +79,7 @@ export const announcementsData = [
     },
     {
       id: 3,
-      title: "Midterm Exam ScheduleScheduleScheduleScheduleScheduleScheduleSchedule",
+      title: "Midterm Exam Schedule",
       description: "The midterm exams will start from March 5. Check the student portal for your detailed exam schedule.",
       date: "2025-03-05",
       time: "8:00 AM",

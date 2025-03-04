@@ -10,7 +10,7 @@ const Announcements = () => {
   const { type } = useParams(); // Get type from URL
   const navigate = useNavigate();
   
-
+  //TODO: API Call here , or called before and fetched from context
   const filteredAnnouncements = type
     ? announcementsData.filter((announcement) => announcement.type === type)
     : announcementsData;

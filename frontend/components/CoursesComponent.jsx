@@ -15,7 +15,10 @@ const Courses = ({preview}) => {
         </Link>
       </div>
 
-      {/* TODO: implement pagination with API */}
+      {/* TODO: implement pagination with API 
+  //TODO: API Call here , or called before and fetched from context
+      */}
+      {/*  get call  , store in state here or as needed , if the method is to be used multiple time , define it in context , and use it here in useEffect  */}
       {/* Courses List */}
       <div className="flex flex-wrap gap-4 w-full mr-auto mt-5">
         {coursesData && coursesData.length > 0&& preview ? (
