@@ -1,5 +1,6 @@
 package org.example.backend.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import org.example.backend.enums.RoleType;
 
@@ -19,12 +20,8 @@ public class Role {
     @Column(name = "role_name")
     private RoleType roleName;
 
-    @ManyToMany
-    @JoinTable(
-            name = "user_roles",
-            joinColumns = @JoinColumn(name = "role_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id")
-    )
+    @ManyToMany(mappedBy = "roleList")
+    @JsonBackReference
     private List<User> users;
 
 

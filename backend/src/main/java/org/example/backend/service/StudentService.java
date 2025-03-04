@@ -33,7 +33,7 @@ public class StudentService {
         request.setAdmissionStatus(AdmissionStatus.ACCEPTED);
         Student student = requestMapper.mapToStudent(request);
         student.setCreatedAt(LocalDateTime.now());
-        student.setDepartment(departmentRepository.getGeneralDepartment(DepartmentName.general));
+        student.setDepartment(departmentRepository.getGeneralDepartment(DepartmentName.general).get());
         Role role = roleRepository.getStudentRole();
         student.getUser().addRole(role);
 

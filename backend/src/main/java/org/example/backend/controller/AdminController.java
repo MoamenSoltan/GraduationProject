@@ -1,12 +1,14 @@
 package org.example.backend.controller;
 
-import org.example.backend.dto.InstructorDto;
+import org.example.backend.dto.InstructorDTO;
 import org.example.backend.entity.Instructor;
 import org.example.backend.entity.Student;
 import org.example.backend.entity.SubmissionRequest;
 import org.example.backend.entity.User;
 import org.example.backend.enums.AdmissionStatus;
+import org.example.backend.enums.DepartmentName;
 import org.example.backend.exception.ResourceNotFound;
+import org.example.backend.mapper.InstructorMapper;
 import org.example.backend.repository.SubmissionReqRepository;
 import org.example.backend.service.InstructorService;
 import org.example.backend.service.StudentService;
@@ -30,12 +32,14 @@ public class AdminController {
     private final StudentService studentService;
     private final InstructorService instructorService;
     private final PasswordEncoder passwordEncoder;
+    private final InstructorMapper instructorMapper;
 
-    public AdminController(SubmissionReqRepository reqRepository, StudentService studentService, InstructorService instructorService, PasswordEncoder passwordEncoder) {
+    public AdminController(SubmissionReqRepository reqRepository, StudentService studentService, InstructorService instructorService, PasswordEncoder passwordEncoder, InstructorMapper instructorMapper) {
         this.reqRepository = reqRepository;
         this.studentService = studentService;
         this.instructorService = instructorService;
         this.passwordEncoder = passwordEncoder;
+        this.instructorMapper = instructorMapper;
     }
 
 
@@ -91,15 +95,29 @@ public class AdminController {
     }
 
     @PostMapping("/instructor")
-    public ResponseEntity<Instructor> addInstructor(@RequestBody InstructorDto instructorDto)
+    public ResponseEntity<InstructorDTO> addInstructor(@RequestBody InstructorDTO instructorDto)
     {
         instructorDto.setPassword(passwordEncoder.encode(instructorDto.getPassword()));
 
         Instructor instructor = instructorService.insertInstructor(instructorDto);
 
-        Authentication authentication= SecurityContextHolder.getContext().getAuthentication();
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+//        Authentication authentication= SecurityContextHolder.getContext().getAuthentication();
+//        SecurityContextHolder.getContext().setAuthentication(authentication);
+        InstructorDTO responseDto = instructorMapper.mapToDto(instructor);
+        return ResponseEntity.ok(responseDto);
+    }
 
-        return ResponseEntity.ok(instructor);
+    @GetMapping("/instructor")
+    public ResponseEntity<List<Instructor>> getAllInstructors()
+    {
+        List<Instructor> instructors = instructorService.getAllInstructors();
+        return ResponseEntity.ok(instructors);
+    }
+
+    @PostMapping("/test")
+    public ResponseEntity<String> addHeadOfDepartment(@RequestHeader String email, @RequestHeader DepartmentName departmentName){
+        System.out.println("email : "+email + "  deparment name : " + departmentName);
+        String response = instructorService.insertHeadOfDepartment(email, departmentName);
+        return ResponseEntity.ok(response);
     }
 }
