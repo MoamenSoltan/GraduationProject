@@ -24,7 +24,15 @@ export const ContextProvider = ({children})=>{
     IDPhoto:null,
     personalPhoto :null,
     status: "accepted", 
-    
+    //below is optional for testing profile management
+    grade:"first Year",
+    completedHours: 72,
+    currentGPA:3,
+    currentCourses: ["Distributed systems","Robotics","Game dev","NLP","IR","Artificial intelligence"],
+    university:"FCI",
+    major:"CS",
+    studentCode:"4210403"
+
    
 
   })

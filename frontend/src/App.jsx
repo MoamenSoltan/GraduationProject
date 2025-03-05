@@ -38,6 +38,11 @@ slice
 courses page
 
 registration in sidebar for table advice
+
+
+// conditional rendering based on route in studentDashboard
+
+flex-wrap essential for overflow , revise profile , courses div specifically
  */
 
 function App() {

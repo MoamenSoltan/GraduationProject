@@ -14,14 +14,27 @@ import Announcements from "./sideBar/Announcements";
 
 import NavBar from "../components/NavBar";
 
+import { useLocation } from "react-router";
+import Profile from "./Profile";
 
+// conditional rendering based on route 
 
 
 const StudentDashboard = () => {
   const {activeMenu, setActiveMenu} = useStateContext()
+  const location = useLocation();
+  
+  
+  // const hiddenRoutes=["/StudentDashboard/profile"]//array so that we can use.includes
+  // put full route because profile is nested
   return (
     <div>
-         {
+        {
+
+          // wrap in fragment
+          // !hiddenRoutes.includes(location.pathname) &&
+          <>
+           {
                 (activeMenu)&&
                 
                   <div className='md:w-[300px] fixed sidebar bg-white'>
@@ -32,6 +45,8 @@ const StudentDashboard = () => {
                <div className=' top-0  bg-[#FAFBFB]  navbar w-full'>
                   <NavBar/>
                 </div>
+          </>
+        }
 
 
       <Routes>
@@ -39,6 +54,7 @@ const StudentDashboard = () => {
 
         <Route path="/Analytics"  element={<Analytics/>}/>
         <Route path="/Announcements/:type?"  element={<Announcements/>}/>
+        <Route path="/Profile" element = {<Profile/>} />
 
         <Route path="/Registration"  element={<Registration/>}/>
         <Route path="/Courses/:year?"  element={<Courses/>}/>

@@ -5,13 +5,15 @@ import { MdKeyboardArrowUp } from 'react-icons/md'
 
 import { useStateContext } from '../contexts/ContextProvider'
 import person from "../data/avatar.jpg"
-
+import { useNavigate } from 'react-router'
 //style={{ width:activeMenu?"":""}}
 // ${activeMenu?"ml-[300px]":""} `
 
 
 const NavBar = () => {
-    const {activeMenu,setActiveMenu,profile,setProfile}=useStateContext()
+    const {activeMenu,setActiveMenu}=useStateContext()
+
+    const navigate = useNavigate()
     useEffect(()=>{
         //TODO: API call here to fetch profile info , or fetch required data upon login
     },[])
@@ -21,7 +23,7 @@ const NavBar = () => {
         <AiOutlineMenu/>
         </button>
 
-        <button onClick={()=>{setProfile(prev=>!prev)}} className='hover:bg-gray-200 p-2 md:w-[250px] rounded-md flex flex-row justify-center items-center gap-2'>
+        <button onClick={()=>{navigate("/StudentDashboard/profile")}} className='hover:bg-gray-200 p-2 md:w-[250px] rounded-md flex flex-row justify-center items-center gap-2'>
             <div className='border-2 rounded-full border-[#0096C1] '>
             <img src={person} className='w-10 rounded-full ' alt="person" />
             </div>
@@ -36,24 +38,24 @@ const NavBar = () => {
         </button>
         {
             // TODO: here lies data to be fetched from API
-            profile && (
-                <div className='absolute top-[80px] right-[40px] w-[250px] bg-[#fff] rounded-md shadow-md p-4 text-center'>
-                    <h2 className='sub-text'> Profile</h2>  
-                  <p className='sub-text'>Data to be fetched from API</p>
-                  <p className='sub-text'>Data to be fetched from API</p>
+            // profile && (
+            //     <div className='absolute top-[80px] right-[40px] w-[250px] bg-[#fff] rounded-md shadow-md p-4 text-center'>
+            //         <h2 className='sub-text'> Profile</h2>  
+            //       <p className='sub-text'>Data to be fetched from API</p>
+            //       <p className='sub-text'>Data to be fetched from API</p>
 
-                  <p className='sub-text'>Data to be fetched from API</p>
+            //       <p className='sub-text'>Data to be fetched from API</p>
 
-                  <p className='sub-text'>Data to be fetched from API</p>
+            //       <p className='sub-text'>Data to be fetched from API</p>
 
-                  <p className='sub-text'>Data to be fetched from API</p>
-                  <button onClick={()=>{setProfile(prev=>!prev)}} className='   mt-10 hover:scale-105 transition-all border-t-2 border-black'>
-                    <MdKeyboardArrowUp className='w-5 h-5'/>
-                  </button>
+            //       <p className='sub-text'>Data to be fetched from API</p>
+            //       <button onClick={()=>{setProfile(prev=>!prev)}} className='   mt-10 hover:scale-105 transition-all border-t-2 border-black'>
+            //         <MdKeyboardArrowUp className='w-5 h-5'/>
+            //       </button>
 
 
-                </div>
-            )
+            //     </div>
+            // )
         }
 
 
