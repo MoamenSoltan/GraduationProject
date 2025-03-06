@@ -1,26 +1,24 @@
 package org.example.backend.controller;
 
-import org.example.backend.dto.InstructorDTO;
-import org.example.backend.entity.Instructor;
+import org.example.backend.dto.*;
 import org.example.backend.entity.Student;
 import org.example.backend.entity.SubmissionRequest;
 import org.example.backend.entity.User;
-import org.example.backend.enums.AdmissionStatus;
-import org.example.backend.enums.DepartmentName;
 import org.example.backend.exception.ResourceNotFound;
-import org.example.backend.mapper.InstructorMapper;
 import org.example.backend.repository.SubmissionReqRepository;
+import org.example.backend.service.CourseService;
 import org.example.backend.service.InstructorService;
+import org.example.backend.service.SemesterService;
 import org.example.backend.service.StudentService;
-import org.example.backend.service.UserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,14 +30,18 @@ public class AdminController {
     private final StudentService studentService;
     private final InstructorService instructorService;
     private final PasswordEncoder passwordEncoder;
-    private final InstructorMapper instructorMapper;
+    private final SemesterService semesterService;
+    private final CourseService courseService;
+    private static final Logger logger = LoggerFactory.getLogger(AdminController.class);
 
-    public AdminController(SubmissionReqRepository reqRepository, StudentService studentService, InstructorService instructorService, PasswordEncoder passwordEncoder, InstructorMapper instructorMapper) {
+    public AdminController(SubmissionReqRepository reqRepository, StudentService studentService, InstructorService instructorService, PasswordEncoder passwordEncoder, SemesterService service, CourseService courseService) {
         this.reqRepository = reqRepository;
         this.studentService = studentService;
         this.instructorService = instructorService;
         this.passwordEncoder = passwordEncoder;
-        this.instructorMapper = instructorMapper;
+
+        this.semesterService = service;
+        this.courseService = courseService;
     }
 
 
@@ -95,29 +97,53 @@ public class AdminController {
     }
 
     @PostMapping("/instructor")
-    public ResponseEntity<InstructorDTO> addInstructor(@RequestBody InstructorDTO instructorDto)
+    public ResponseEntity<InstructorResponseDTO> addInstructor(@RequestBody InstructorRequestDTO instructorDto)
     {
         instructorDto.setPassword(passwordEncoder.encode(instructorDto.getPassword()));
 
-        Instructor instructor = instructorService.insertInstructor(instructorDto);
+        InstructorResponseDTO responseDto = instructorService.createInstructor(instructorDto);
 
-//        Authentication authentication= SecurityContextHolder.getContext().getAuthentication();
-//        SecurityContextHolder.getContext().setAuthentication(authentication);
-        InstructorDTO responseDto = instructorMapper.mapToDto(instructor);
         return ResponseEntity.ok(responseDto);
     }
 
     @GetMapping("/instructor")
-    public ResponseEntity<List<Instructor>> getAllInstructors()
+    public ResponseEntity<List<InstructorResponseDTO>> getAllInstructors()
     {
-        List<Instructor> instructors = instructorService.getAllInstructors();
+        List<InstructorResponseDTO> instructors = instructorService.getAllInstructors();
         return ResponseEntity.ok(instructors);
     }
 
-    @PostMapping("/test")
-    public ResponseEntity<String> addHeadOfDepartment(@RequestHeader String email, @RequestHeader DepartmentName departmentName){
-        System.out.println("email : "+email + "  deparment name : " + departmentName);
-        String response = instructorService.insertHeadOfDepartment(email, departmentName);
+    @GetMapping("/test")
+    public ResponseEntity<String> getUserAuth(Principal principal){
+        var auth = SecurityContextHolder.getContext().getAuthentication();
+//        HttpServletRequest request
+//        var user = request.getUserPrincipal();
+
+        String response = "User: " + principal.getName() + ", Role: " + auth.getAuthorities();
+//        authentication.getDetails()
         return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/semester")
+    public ResponseEntity<SemesterResponseDTO> createSemester(@RequestBody SemesterRequestDTO dto) {
+        logger.info("Received request payload: {}", dto);
+        SemesterResponseDTO response = semesterService.createSemester(dto);
+        return ResponseEntity.ok(response);
+    }
+    @GetMapping("/semester")
+    public ResponseEntity<List<SemesterResponseDTO>> getAllSemesters() {
+        List<SemesterResponseDTO> semesters = semesterService.getAllSemesters();
+        return ResponseEntity.ok(semesters);
+    }
+
+    @PostMapping("/course")
+    public ResponseEntity<CourseResponseDTO> createCourse(@RequestBody CourseRequestDTO dto) {
+        CourseResponseDTO response = courseService.createCourse(dto);
+        return ResponseEntity.ok(response);
+    }
+    @GetMapping("/course")
+    public ResponseEntity<List<CourseResponseDTO>> getAllCourses() {
+        List<CourseResponseDTO> courses = courseService.getAllCourses();
+        return ResponseEntity.ok(courses);
     }
 }

@@ -3,8 +3,11 @@ package org.example.backend.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.example.backend.enums.CourseType;
+import org.example.backend.enums.CourseYear;
+
 import java.time.LocalDateTime;
-import java.util.List;
+
 
 @Entity
 @Table(name = "courses")
@@ -22,6 +25,24 @@ public class Course {
     @Column(name = "course_description")
     private String description;
     private LocalDateTime createdAt=LocalDateTime.now();
+
+    @Column(name = "max_students")
+    private int maxStudents = 200;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "year")
+    private CourseYear year;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "type")
+    private CourseType type;
+
+    @Column(name = "schedule")
+    private String schedule;
+
+    @Column(name = "student_enrolled")
+    private int studentEnrolled = 0;
+
     //relations between entity
     @ManyToOne
     @JoinColumn(name = "department_id")

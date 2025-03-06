@@ -4,6 +4,16 @@ package org.example.backend.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.example.backend.config.JWt.JwtService;
 import org.example.backend.dto.SubmissionRequestDto;
+import org.example.backend.entity.Instructor;
+import org.example.backend.entity.Student;
+import org.example.backend.entity.User;
+import org.example.backend.exception.ResourceNotFound;
+import org.example.backend.mapper.InstructorMapper;
+import org.example.backend.mapper.StudentMapper;
+import org.example.backend.repository.InstructorRepository;
+import org.example.backend.repository.StudentRepository;
+import org.example.backend.repository.UserRepository;
+import org.example.backend.service.AuthService;
 import org.example.backend.util.AuthResponse;
 import org.example.backend.util.LoginRequest;
 import org.example.backend.entity.SubmissionRequest;
@@ -17,6 +27,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -29,69 +40,27 @@ import java.time.LocalDateTime;
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
-    private final UserService userService;
     private final PasswordEncoder passwordEncoder;
     private final SubmissionRequestService requestService;
-    private final AuthenticationManager manager;
-    private final JwtService jwtService;
+   private final AuthService authService;
 
-    public AuthController(UserService userService, PasswordEncoder passwordEncoder, SubmissionRequestService requestService, AuthenticationManager manager, JwtService jwtService) {
-        this.userService = userService;
+
+    public AuthController(PasswordEncoder passwordEncoder, SubmissionRequestService requestService, AuthService authService) {
         this.passwordEncoder = passwordEncoder;
         this.requestService = requestService;
-        this.manager = manager;
-        this.jwtService = jwtService;
+        this.authService = authService;
     }
 
 
 
-    public ResponseEntity<AuthResponse> login(@RequestBody LoginRequest request) {
-        String email = request.getEmail();
-        String password = request.getPassword();
 
-        Authentication authentication=null;
-
-        try {
-            System.out.println(passwordEncoder.matches("123456", "$2a$10$Ot6z0syoqqNlX9xqv4q4FuF1oW9HetCTmeb/HeNFYyutk8uFelZQO"));
-             authentication = manager.authenticate(
-                    new UsernamePasswordAuthenticationToken(email, password)
-            );
-            if (authentication.isAuthenticated()) {
-                SecurityContextHolder.getContext().setAuthentication(authentication);
-            }
-        } catch (BadCredentialsException e) {
-            System.out.println("Invalid Credentials: " + e.getMessage());
-        }
-
-//        System.out.println(authentication.isAuthenticated());
-//        System.out.println(authentication.getName());
-
-            SecurityContextHolder.getContext().setAuthentication(authentication);
-            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-            String token = jwtService.generateToken(userDetails);
-            String message = "user login successful";
-            return new ResponseEntity<>(new AuthResponse(token, message), HttpStatus.ACCEPTED);
-
-    }
     @PostMapping("/login")
-    public ResponseEntity<?> loginn(@RequestBody LoginRequest request) {
+    public ResponseEntity<?> login(@RequestBody LoginRequest request) {
         String email = request.getEmail();
         String password = request.getPassword();
-        try {
-            Authentication authentication = manager.authenticate(
-                    new UsernamePasswordAuthenticationToken(email, password)
-            );
-            if (authentication.isAuthenticated()) {
-                SecurityContextHolder.getContext().setAuthentication(authentication);
-                UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-                String token = jwtService.generateToken(userDetails);
-                String message = "User login successful";
-                return new ResponseEntity<>(new AuthResponse(token, message), HttpStatus.ACCEPTED);
-            }
-        } catch (BadCredentialsException e) {
-            return new ResponseEntity<>("Invalid credentials", HttpStatus.UNAUTHORIZED);
-        }
-        return new ResponseEntity<>("Authentication failed", HttpStatus.UNAUTHORIZED);
+        AuthResponse response=  authService.login(email,password);
+
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/register")

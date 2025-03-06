@@ -24,7 +24,7 @@ CREATE TABLE submission_request (
    `country` VARCHAR(255),
    `city` VARCHAR(255),
    `address` VARCHAR(255),
-   `admission_status` ENUM('PENDING', 'ACCEPTED', 'REJECTED') DEFAULT 'PENDING',
+   `admission_status` ENUM('PENDING', 'ACCEPTED', 'REJECTED') DEFAULT 'PENDING'
     ,gender ENUM('MALE', 'FEMALE'),
    `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

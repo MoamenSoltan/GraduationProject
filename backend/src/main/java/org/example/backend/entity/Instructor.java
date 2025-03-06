@@ -30,17 +30,5 @@ public class Instructor {
     @JsonBackReference
     private Department managedDepartment;
 
-//    @JsonIgnore // Prevent serialization loop via setter
-//    public void setManagedDepartment(Department department) {
-//        if (this.managedDepartment == department) {
-//            return;
-//        }
-//        if (this.managedDepartment != null) {
-//            this.managedDepartment.setHeadOfDepartment(null);
-//        }
-//        this.managedDepartment = department;
-//        if (department != null && department.getHeadOfDepartment() != this) {
-//            department.setHeadOfDepartment(this);
-//        }
-//    }
+
 }

@@ -16,6 +16,7 @@ public class Semester {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int semesterId;
     private Integer yearLevel;
+    @Enumerated(EnumType.STRING)
     private SemesterName semesterName;
     private LocalDateTime startDate;
     private LocalDateTime endDate;

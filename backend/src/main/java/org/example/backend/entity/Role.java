@@ -2,6 +2,8 @@ package org.example.backend.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 import org.example.backend.enums.RoleType;
 
 import java.util.ArrayList;
@@ -9,8 +11,8 @@ import java.util.List;
 
 @Entity
 @Table(name = "roles")
-//@Setter
-//@Getter
+@Setter
+@Getter
 
 public class Role {
     @Id
@@ -34,29 +36,7 @@ public class Role {
                 '}';
     }
 
-    public int getId() {
-        return id;
-    }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public RoleType getRoleName() {
-        return roleName;
-    }
-
-    public void setRoleName(RoleType roleName) {
-        this.roleName = roleName;
-    }
-
-    public List<User> getUsers() {
-        return users;
-    }
-
-    public void setUsers(List<User> users) {
-        this.users = users;
-    }
 
     public void addUser(User user) {
         if (this.users == null) {

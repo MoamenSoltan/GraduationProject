@@ -1,0 +1,92 @@
+ public ResponseEntity<AuthResponse> login(@RequestBody LoginRequest request) {
+        String email = request.getEmail();
+        String password = request.getPassword();
+
+        Authentication authentication=null;
+
+        try {
+            System.out.println(passwordEncoder.matches("123456", "$2a$10$Ot6z0syoqqNlX9xqv4q4FuF1oW9HetCTmeb/HeNFYyutk8uFelZQO"));
+             authentication = manager.authenticate(
+                    new UsernamePasswordAuthenticationToken(email, password)
+            );
+            if (authentication.isAuthenticated()) {
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+            }
+        } catch (BadCredentialsException e) {
+            System.out.println("Invalid Credentials: " + e.getMessage());
+        }
+
+//        System.out.println(authentication.isAuthenticated());
+//        System.out.println(authentication.getName());
+
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            String token = jwtService.generateToken(userDetails);
+            String message = "user login successful";
+            return new ResponseEntity<>(new AuthResponse(token, message,new Object()), HttpStatus.ACCEPTED);
+
+    }
+
+
+
+    ///String email = request.getEmail();
+               String password = request.getPassword();
+               try {
+                   Authentication authentication = manager.authenticate(
+                           new UsernamePasswordAuthenticationToken(email, password)
+                   );
+                   if (authentication.isAuthenticated()) {
+                       SecurityContextHolder.getContext().setAuthentication(authentication);
+                       UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+                       String token = jwtService.generateToken(userDetails);
+
+                       User user = userRepository.getUserByEmail(email)
+                               .orElseThrow(()-> new ResourceNotFound("User", "Email",email));
+
+
+                       var roles =userDetails.getAuthorities();
+                       boolean isAdmin = roles.stream()
+                               .anyMatch(role -> role.toString().equals("ROLE_ADMIN"));
+                       System.out.println("user roles : "+roles);
+
+                       System.out.println("roles : "+isAdmin);
+
+                       if(isAdmin)
+                       {
+                           System.out.println("donnnnee");
+                           return new ResponseEntity<>(new AuthResponse(token, "message",authentication.getPrincipal()), HttpStatus.ACCEPTED);
+                       }
+
+
+                       //if(userDetails.getAuthorities().)
+                       Object result = null;
+                       Student student =studentRepository.findByUser(user)
+                               .orElseThrow(()-> new ResourceNotFound("User", "Email",email));
+
+                       if(student!=null)
+                       {
+                           result  = StudentMapper.toStudentResponseDTO(student);
+                       }else
+                       {
+                           Instructor instructor = instructorRepository.findByUser(user)
+                                   .orElseThrow(()-> new ResourceNotFound("User", "Email",email));
+                           if (instructor != null) {
+                               result  = InstructorMapper.entityToResponseDTO(instructor);
+                           }
+                       }
+
+
+
+
+
+
+
+
+
+                       String message = "User login successful";
+                       return new ResponseEntity<>(new AuthResponse(token, message,result), HttpStatus.ACCEPTED);
+                   }
+               } catch (BadCredentialsException e) {
+                   return new ResponseEntity<>("Invalid credentials", HttpStatus.UNAUTHORIZED);
+               }
+               return new ResponseEntity<>("Authentication failed", HttpStatus.UNAUTHORIZED);
