@@ -2,40 +2,19 @@ package org.example.backend.controller;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.example.backend.config.JWt.JwtService;
 import org.example.backend.dto.SubmissionRequestDto;
-import org.example.backend.entity.Instructor;
-import org.example.backend.entity.Student;
-import org.example.backend.entity.User;
-import org.example.backend.exception.ResourceNotFound;
-import org.example.backend.mapper.InstructorMapper;
-import org.example.backend.mapper.StudentMapper;
-import org.example.backend.repository.InstructorRepository;
-import org.example.backend.repository.StudentRepository;
-import org.example.backend.repository.UserRepository;
 import org.example.backend.service.AuthService;
 import org.example.backend.util.AuthResponse;
 import org.example.backend.util.LoginRequest;
 import org.example.backend.entity.SubmissionRequest;
 import org.example.backend.service.SubmissionRequestService;
-import org.example.backend.service.UserService;
-import org.example.backend.enums.AdmissionStatus;
-import org.example.backend.enums.RoleType;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
 
 @RestController
 @RequestMapping("/auth")
