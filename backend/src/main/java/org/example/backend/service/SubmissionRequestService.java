@@ -1,5 +1,7 @@
 package org.example.backend.service;
 
+import org.example.backend.dto.SubmissionImages;
+import org.example.backend.dto.SubmissionInfoRequestDTO;
 import org.example.backend.dto.SubmissionRequestDto;
 import org.example.backend.entity.SubmissionRequest;
 import org.example.backend.entity.User;
@@ -8,6 +10,7 @@ import org.example.backend.enums.RoleType;
 import org.example.backend.mapper.SubmissionRequestMapper;
 import org.example.backend.repository.SubmissionReqRepository;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -21,11 +24,15 @@ public class SubmissionRequestService {
     private final SubmissionReqRepository reqRepository;
     private final SubmissionRequestMapper submissionRequestMapper;
     public final FileService fileService;
+    private final PasswordEncoder passwordEncoder;
+    private final SubmissionReqRepository submissionReqRepository;
 
-    public SubmissionRequestService(SubmissionReqRepository reqRepository, SubmissionRequestMapper submissionRequestMapper, FileService fileService) {
+    public SubmissionRequestService(SubmissionReqRepository reqRepository, SubmissionRequestMapper submissionRequestMapper, FileService fileService, PasswordEncoder passwordEncoder, SubmissionReqRepository submissionReqRepository) {
         this.reqRepository = reqRepository;
         this.submissionRequestMapper = submissionRequestMapper;
         this.fileService = fileService;
+        this.passwordEncoder = passwordEncoder;
+        this.submissionReqRepository = submissionReqRepository;
     }
 
 
@@ -57,6 +64,23 @@ public class SubmissionRequestService {
     }
 
 
+    public String save(SubmissionInfoRequestDTO infoRequestDTO, SubmissionImages images) throws IOException {
+        infoRequestDTO.setPassword(passwordEncoder.encode(infoRequestDTO.getPassword()));
+        SubmissionRequest request = SubmissionRequestMapper.toEntity(infoRequestDTO);
+
+        String idPhotoPath=fileService.uploadFile(images.getIdPhoto());
+        String personalPhotoPath = fileService.uploadFile(images.getPersonalPhoto());
+        String certificatePath = fileService.uploadFile(images.getHighSchoolCertificate());
+
+        request.setPersonalPhoto(personalPhotoPath);
+        request.setIdPhoto(idPhotoPath);
+        request.setHighSchoolCertificate(certificatePath);
+
+        submissionReqRepository.save(request);
+
+        return "submission saved ";
+
+    }
 
 
 

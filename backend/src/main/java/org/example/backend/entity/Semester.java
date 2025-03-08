@@ -12,11 +12,8 @@ import java.time.LocalDateTime;
 @Setter
 @Getter
 public class Semester {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int semesterId;
-    private Integer yearLevel;
-    private SemesterName semesterName;
+    @EmbeddedId
+    private SemesterId semesterId;
     private LocalDateTime startDate;
     private LocalDateTime endDate;
     @Column(name = "is_active", columnDefinition = "BOOLEAN DEFAULT FALSE")

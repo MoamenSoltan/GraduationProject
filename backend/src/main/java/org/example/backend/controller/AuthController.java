@@ -1,125 +1,55 @@
 package org.example.backend.controller;
 
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.example.backend.config.JWt.JwtService;
-import org.example.backend.dto.SubmissionRequestDto;
+import org.example.backend.dto.SubmissionImages;
+import org.example.backend.dto.SubmissionInfoRequestDTO;
+import org.example.backend.service.AuthService;
 import org.example.backend.util.AuthResponse;
 import org.example.backend.util.LoginRequest;
-import org.example.backend.entity.SubmissionRequest;
 import org.example.backend.service.SubmissionRequestService;
-import org.example.backend.service.UserService;
-import org.example.backend.enums.AdmissionStatus;
-import org.example.backend.enums.RoleType;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
 
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
-    private final UserService userService;
-    private final PasswordEncoder passwordEncoder;
     private final SubmissionRequestService requestService;
-    private final AuthenticationManager manager;
-    private final JwtService jwtService;
+   private final AuthService authService;
 
-    public AuthController(UserService userService, PasswordEncoder passwordEncoder, SubmissionRequestService requestService, AuthenticationManager manager, JwtService jwtService) {
-        this.userService = userService;
-        this.passwordEncoder = passwordEncoder;
+
+    public AuthController( SubmissionRequestService requestService, AuthService authService) {
         this.requestService = requestService;
-        this.manager = manager;
-        this.jwtService = jwtService;
+        this.authService = authService;
     }
 
 
-
-    public ResponseEntity<AuthResponse> login(@RequestBody LoginRequest request) {
-        String email = request.getEmail();
-        String password = request.getPassword();
-
-        Authentication authentication=null;
-
-        try {
-            System.out.println(passwordEncoder.matches("123456", "$2a$10$Ot6z0syoqqNlX9xqv4q4FuF1oW9HetCTmeb/HeNFYyutk8uFelZQO"));
-             authentication = manager.authenticate(
-                    new UsernamePasswordAuthenticationToken(email, password)
-            );
-            if (authentication.isAuthenticated()) {
-                SecurityContextHolder.getContext().setAuthentication(authentication);
-            }
-        } catch (BadCredentialsException e) {
-            System.out.println("Invalid Credentials: " + e.getMessage());
-        }
-
-//        System.out.println(authentication.isAuthenticated());
-//        System.out.println(authentication.getName());
-
-            SecurityContextHolder.getContext().setAuthentication(authentication);
-            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-            String token = jwtService.generateToken(userDetails);
-            String message = "user login successful";
-            return new ResponseEntity<>(new AuthResponse(token, message), HttpStatus.ACCEPTED);
-
-    }
     @PostMapping("/login")
-    public ResponseEntity<?> loginn(@RequestBody LoginRequest request) {
+    public ResponseEntity<?> login(@RequestBody LoginRequest request) {
         String email = request.getEmail();
         String password = request.getPassword();
-        try {
-            Authentication authentication = manager.authenticate(
-                    new UsernamePasswordAuthenticationToken(email, password)
-            );
-            if (authentication.isAuthenticated()) {
-                SecurityContextHolder.getContext().setAuthentication(authentication);
-                UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-                String token = jwtService.generateToken(userDetails);
-                String message = "User login successful";
-                return new ResponseEntity<>(new AuthResponse(token, message), HttpStatus.ACCEPTED);
-            }
-        } catch (BadCredentialsException e) {
-            return new ResponseEntity<>("Invalid credentials", HttpStatus.UNAUTHORIZED);
-        }
-        return new ResponseEntity<>("Authentication failed", HttpStatus.UNAUTHORIZED);
+        AuthResponse response=  authService.login(email,password);
+
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> register( @RequestPart("submissionRequestDto") String jsonDto,
-                                       @RequestPart("idPhoto") MultipartFile idPhoto,
-                                       @RequestPart("personalPhoto") MultipartFile personalPhoto,
-                                       @RequestPart("highSchoolCertificate") MultipartFile highSchoolCertificate) throws IOException {
+    public ResponseEntity<?> register(
+            @ModelAttribute("info") SubmissionInfoRequestDTO info,
+            @ModelAttribute("images") SubmissionImages images
+    )
+    {
+        String saved;
+        try {
+            saved= requestService.save(info,images);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
-        ObjectMapper objectMapper=new ObjectMapper();
-        SubmissionRequestDto dto = objectMapper.readValue(jsonDto, SubmissionRequestDto.class);
-        System.out.println(dto);
-
-        dto.setPassword(passwordEncoder.encode(dto.getPassword()));
-        dto.setIdPhoto(idPhoto);
-        dto.setPersonalPhoto(personalPhoto);
-        dto.setHighSchoolCertificate(highSchoolCertificate);
-        SubmissionRequest request =requestService.saveSubmissionRequest(dto);
-
-       // System.out.println(dto.getPassword());
-        // when admin approval the submission
-        // var auth =new UserPasswordAuthenticationToken(saveUser.getemail(),password);
-        //SecurityContextHolder.getContext().setAuthentication(auth);
-        // return authresponse with token information
-
-        System.out.println("saved submission");
-        return ResponseEntity.ok(request);
-
-
+        return ResponseEntity.ok(saved);
     }
 
     @GetMapping("/data")

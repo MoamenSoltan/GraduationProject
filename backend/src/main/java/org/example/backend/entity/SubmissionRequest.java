@@ -1,6 +1,8 @@
 package org.example.backend.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 import org.example.backend.enums.AdmissionStatus;
 import org.example.backend.enums.GenderType;
 import org.example.backend.enums.RoleType;
@@ -9,7 +11,8 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "submission_request")
-
+@Setter
+@Getter
 public class SubmissionRequest {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -54,165 +57,5 @@ public class SubmissionRequest {
     private LocalDateTime createdAt = LocalDateTime.now();
 
 
-    //
 
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public RoleType getUserType() {
-        return userType;
-    }
-
-    public void setUserType(RoleType userType) {
-        this.userType = userType;
-    }
-
-    public Integer getAcademicYear() {
-        return academicYear;
-    }
-
-    public void setAcademicYear(Integer academicYear) {
-        this.academicYear = academicYear;
-    }
-
-    public String getHighSchoolName() {
-        return highSchoolName;
-    }
-
-    public void setHighSchoolName(String highSchoolName) {
-        this.highSchoolName = highSchoolName;
-    }
-
-    public String getGraduationYear() {
-        return graduationYear;
-    }
-
-    public void setGraduationYear(String graduationYear) {
-        this.graduationYear = graduationYear;
-    }
-
-    public Double getHighSchoolGpa() {
-        return highSchoolGpa;
-    }
-
-    public void setHighSchoolGpa(Double highSchoolGpa) {
-        this.highSchoolGpa = highSchoolGpa;
-    }
-
-    public String getHighSchoolCertificate() {
-        return highSchoolCertificate;
-    }
-
-    public void setHighSchoolCertificate(String highSchoolCertificate) {
-        this.highSchoolCertificate = highSchoolCertificate;
-    }
-
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
-
-    public String getIdPhoto() {
-        return idPhoto;
-    }
-
-    public void setIdPhoto(String idPhoto) {
-        this.idPhoto = idPhoto;
-    }
-
-    public String getPersonalPhoto() {
-        return personalPhoto;
-    }
-
-    public void setPersonalPhoto(String personalPhoto) {
-        this.personalPhoto = personalPhoto;
-    }
-
-    public String getCountry() {
-        return country;
-    }
-
-    public void setCountry(String country) {
-        this.country = country;
-    }
-
-    public String getCity() {
-        return city;
-    }
-
-    public void setCity(String city) {
-        this.city = city;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public AdmissionStatus getAdmissionStatus() {
-        return admissionStatus;
-    }
-
-    public void setAdmissionStatus(AdmissionStatus admissionStatus) {
-        this.admissionStatus = admissionStatus;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public GenderType getGender() {
-        return gender;
-    }
-
-    public void setGender(GenderType gender) {
-        this.gender = gender;
-    }
 }

@@ -11,4 +11,8 @@ import java.util.Optional;
 public interface DepartmentRepository extends JpaRepository<Department,Integer> {
     @Query("select d from Department d where d.departmentName=:departmentName")
     Optional<Department> getGeneralDepartment(@Param("departmentName")DepartmentName departmentName);
+
+    @Query("select d from Department d where d.departmentName=:departmentName")
+    Optional<Department> findByDepartmentName(DepartmentName departmentName);
+
 }

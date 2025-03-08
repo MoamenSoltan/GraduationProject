@@ -6,6 +6,7 @@ import lombok.Setter;
 import org.example.backend.enums.FeesStatus;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "students")
@@ -14,7 +15,7 @@ import java.time.LocalDateTime;
 public class Student  {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int studentId;
+    private Long studentId;
     private int academicYear;
     private double gpa;
     @OneToOne(cascade = CascadeType.ALL)
@@ -29,8 +30,8 @@ public class Student  {
 
     private LocalDateTime createdAt;
 
-
-
+    @OneToMany(mappedBy ="student")
+    private List<StudentCourse> studentCourse;
     @OneToOne
     @JoinColumn(name = "submission_request_id")
     private SubmissionRequest submissionRequest;

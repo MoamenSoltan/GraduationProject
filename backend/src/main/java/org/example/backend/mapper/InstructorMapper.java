@@ -1,53 +1,56 @@
 package org.example.backend.mapper;
 
 import org.example.backend.dto.DepartmentDTO;
-import org.example.backend.dto.InstructorDTO;
+import org.example.backend.dto.InstructorRequestDTO;
+import org.example.backend.dto.InstructorResponseDTO;
 import org.example.backend.entity.Instructor;
 import org.example.backend.entity.User;
-import org.example.backend.enums.GenderType;
-import org.springframework.stereotype.Component;
 
-@Component
+
 public class InstructorMapper {
 
-    public Instructor mapToInstructor(InstructorDTO dto) {
-        User user = new User();
-        user.setFirstName(dto.getFirstName());
-        user.setLastName(dto.getLastName());
-        user.setEmail(dto.getEmail());
-        user.setGender(GenderType.valueOf(dto.getGender().toUpperCase()));
-        user.setPassword(dto.getPassword());
+    public static Instructor requestToEntity(InstructorRequestDTO requestDTO)
+    {
+        Instructor instructor= new Instructor();
 
-        Instructor instructor = new Instructor();
+        User user = new User();
+        user.setEmail(requestDTO.getEmail());
+        user.setPassword(requestDTO.getPassword());
+        user.setFirstName(requestDTO.getFirstName());
+        user.setLastName(requestDTO.getLastName());
+        user.setGender(requestDTO.getGender());
+
         instructor.setUser(user);
+
         return instructor;
     }
 
-    // Optional: Add method to convert entity to DTO for response
-    public InstructorDTO mapToDto(Instructor instructor) {
-        InstructorDTO dto = new InstructorDTO();
-        dto.setInstructorId(instructor.getInstructorId());
-        dto.setFirstName(instructor.getUser().getFirstName());
-        dto.setLastName(instructor.getUser().getLastName());
-        dto.setEmail(instructor.getUser().getEmail());
-        dto.setGender(instructor.getUser().getGender().name());
-        dto.setDepartmentName(instructor.getDepartment().getDepartmentName());
-        dto.setHeadOfDepartment(instructor.getManagedDepartment() != null);
-
-        DepartmentDTO deptDto = new DepartmentDTO();
-        deptDto.setDepartmentId(instructor.getDepartment().getDepartmentId());
-        deptDto.setDepartmentName(instructor.getDepartment().getDepartmentName());
-        deptDto.setCreatedAt(instructor.getDepartment().getCreatedAt());
-        dto.setDepartment(deptDto);
-
-        if (instructor.getManagedDepartment() != null) {
-            DepartmentDTO managedDeptDto = new DepartmentDTO();
-            managedDeptDto.setDepartmentId(instructor.getManagedDepartment().getDepartmentId());
-            managedDeptDto.setDepartmentName(instructor.getManagedDepartment().getDepartmentName());
-            managedDeptDto.setCreatedAt(instructor.getManagedDepartment().getCreatedAt());
-            dto.setManagedDepartment(managedDeptDto);
+    public static InstructorResponseDTO  entityToResponseDTO(Instructor entity)
+    {
+        InstructorResponseDTO responseDTO = new InstructorResponseDTO();
+        responseDTO.setInstructorId(entity.getInstructorId());
+        if (entity.getUser() != null) {
+            responseDTO.setFirstName(entity.getUser().getFirstName());
+            responseDTO.setLastName(entity.getUser().getLastName());
+            responseDTO.setEmail(entity.getUser().getEmail());
+            responseDTO.setGender(entity.getUser().getGender());
         }
 
-        return dto;
+        if (entity.getDepartment() != null) {
+            DepartmentDTO departmentDTO = new DepartmentDTO();
+            departmentDTO.setDepartmentId(entity.getDepartment().getDepartmentId());
+            departmentDTO.setDepartmentName(entity.getDepartment().getDepartmentName());
+            responseDTO.setDepartment(departmentDTO);
+        }
+
+        if(entity.getManagedDepartment() != null)
+        {
+            DepartmentDTO managedDepartmentDTO = new DepartmentDTO();
+            managedDepartmentDTO.setDepartmentId(entity.getManagedDepartment().getDepartmentId());
+            managedDepartmentDTO.setDepartmentName(entity.getManagedDepartment().getDepartmentName());
+            responseDTO.setManagedDepartment(managedDepartmentDTO);
+        }
+
+        return responseDTO;
     }
 }
