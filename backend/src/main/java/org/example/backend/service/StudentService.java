@@ -40,7 +40,7 @@ public class StudentService {
        return studentRepository.save(student);
     }
 
-    public List<Student> getAllStudents() {
-        return studentRepository.findAll();
-    }
+//    public List<Student> getAllStudents() {
+//        return studentRepository.findAll();
+//    }
 }

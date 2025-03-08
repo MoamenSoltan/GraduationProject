@@ -15,6 +15,9 @@ public class StudentCourseId {
     @Column(name = "course_id")
     private Long courseId;
 
-    @Column(name = "semester_id")
-    private Long semesterId;
+    @Column(name = "semester_year_level")
+    private Integer yearLevel;       // Part of Semester composite key
+
+    @Column(name = "semester_name")
+    private String semesterName;
 }

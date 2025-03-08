@@ -6,11 +6,12 @@ import org.example.backend.enums.FeesStatus;
 import org.example.backend.enums.GenderType;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Setter
 @Getter
 public class StudentResponseDTO {
-    private Integer studentId;
+    private Long studentId;
     private Integer academicYear;
     private Double gpa;
     private Integer userId;
@@ -22,4 +23,5 @@ public class StudentResponseDTO {
     private FeesStatus feesStatus;
     private LocalDateTime createdAt;
     private SubmissionResponseDTO submissionResponseDTO;
+
 }

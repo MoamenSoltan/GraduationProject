@@ -2,10 +2,7 @@ package org.example.backend.service;
 
 import org.example.backend.dto.CourseRequestDTO;
 import org.example.backend.dto.CourseResponseDTO;
-import org.example.backend.entity.Course;
-import org.example.backend.entity.Department;
-import org.example.backend.entity.Instructor;
-import org.example.backend.entity.Semester;
+import org.example.backend.entity.*;
 import org.example.backend.exception.ResourceNotFound;
 import org.example.backend.mapper.CourseMapper;
 import org.example.backend.repository.CourseRepository;
@@ -39,9 +36,16 @@ public class CourseService {
                 .orElseThrow(() -> new ResourceNotFound("Department", "id", dto.getDepartmentId()));
         course.setDepartment(department);
 
-        Semester semester =semesterRepository.findById(dto.getSemesterId())
-                .orElseThrow(() -> new ResourceNotFound("Semester", "id", dto.getSemesterId()));
+        SemesterId semesterId = new SemesterId();
+        semesterId.setYearLevel(dto.getYearLevel());
+        semesterId.setSemesterName(dto.getSemesterName());
 
+        Semester semester = semesterRepository.findById(semesterId)
+                .orElseThrow(() -> new ResourceNotFound(
+                        "Semester",
+                        "yearLevel and semesterName",
+                        dto.getYearLevel() + " and " + dto.getSemesterName()
+                ));
         course.setSemester(semester);
 
         if(dto.getInstructorId()!=null)

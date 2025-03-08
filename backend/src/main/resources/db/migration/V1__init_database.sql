@@ -87,43 +87,44 @@ ALTER TABLE department
         FOREIGN KEY (head_of_department_id) REFERENCES instructors(instructor_id) ON DELETE SET NULL;
 
 CREATE TABLE `semester` (
-      `semester_id` INTEGER PRIMARY KEY AUTO_INCREMENT,
-      `year_level` INTEGER NOT NULL,
-      `semester_name` ENUM('Fall', 'Spring', 'Summer') NOT NULL,
-      `start_date` DATE NOT NULL,
-      `end_date` DATE NOT NULL,
-      `is_active` BOOLEAN DEFAULT FALSE,
-      `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                            `year_level` INTEGER NOT NULL,
+                            `semester_name` ENUM('Fall', 'Spring', 'Summer') NOT NULL,
+                            `start_date` DATE NOT NULL,
+                            `end_date` DATE NOT NULL,
+                            `is_active` BOOLEAN DEFAULT FALSE,
+                            `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                            PRIMARY KEY (year_level, semester_name)
 );
-create table courses(
-    course_id int primary key auto_increment,
-    course_name varchar(255) not null,
-    course_code varchar(255) not null,
-    credit int ,
-    department_id int,
-    semester_id int,
-    instructor_id int,
-    prerequisites_course_id int,
-    `course_description` TEXT,
-    `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    foreign key (department_id) references department(department_id),
-    foreign key (semester_id) references semester(semester_id),
-    foreign key (instructor_id) references instructors(instructor_id),
-    foreign key (prerequisites_course_id) references courses(course_id)
+
+CREATE TABLE `courses` (
+                           `course_id` INT PRIMARY KEY AUTO_INCREMENT,
+                           `course_name` VARCHAR(255) NOT NULL,
+                           `course_code` VARCHAR(255) unique NOT NULL,
+                           `credit` INT,
+                           `department_id` INT,
+                           `semester_year_level` INTEGER NOT NULL,
+                           `semester_name` ENUM('Fall', 'Spring', 'Summer') NOT NULL,
+                           `instructor_id` INT,
+                           `prerequisites_course_id` INT,
+                           `course_description` TEXT,
+                           `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                           FOREIGN KEY (`department_id`) REFERENCES `department`(`department_id`),
+                           FOREIGN KEY (`semester_year_level`, `semester_name`) REFERENCES `semester`(`year_level`, `semester_name`),
+                           FOREIGN KEY (`instructor_id`) REFERENCES `instructors`(`instructor_id`),
+                           FOREIGN KEY (`prerequisites_course_id`) REFERENCES `courses`(`course_id`)
 );
 
 CREATE TABLE `student_course` (
-
-    `student_id` INTEGER NOT NULL,
-    `course_id` INTEGER NOT NULL,
-    `semester_id` INTEGER NOT NULL,
-    `grade` DOUBLE,
-    `enrollment_date` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-
-    primary key (student_id,course_id,semester_id),
-    FOREIGN KEY (`student_id`) REFERENCES `students`(`student_id`) ON DELETE CASCADE,
-    FOREIGN KEY (`course_id`) REFERENCES `courses`(`course_id`) ON DELETE CASCADE,
-    FOREIGN KEY (`semester_id`) REFERENCES `semester`(`semester_id`) ON DELETE CASCADE
+                                  `student_id` INTEGER NOT NULL,
+                                  `course_id` INTEGER NOT NULL,
+                                  `semester_year_level` INTEGER NOT NULL,
+                                  `semester_name` ENUM('Fall', 'Spring', 'Summer') NOT NULL,
+                                  `degree` DOUBLE,
+                                  `enrollment_date` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                                  PRIMARY KEY (`student_id`, `course_id`, `semester_year_level`, `semester_name`),
+                                  FOREIGN KEY (`student_id`) REFERENCES `students`(`student_id`) ON DELETE CASCADE,
+                                  FOREIGN KEY (`course_id`) REFERENCES `courses`(`course_id`) ON DELETE CASCADE,
+                                  FOREIGN KEY (`semester_year_level`, `semester_name`) REFERENCES `semester`(`year_level`, `semester_name`) ON DELETE CASCADE
 );
 
 create table tasks(

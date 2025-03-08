@@ -1,9 +1,12 @@
 package org.example.backend.mapper;
 
-import org.example.backend.dto.DepartmentDTO;
-import org.example.backend.dto.StudentResponseDTO;
-import org.example.backend.dto.SubmissionResponseDTO;
+import org.example.backend.dto.*;
+import org.example.backend.entity.Course;
 import org.example.backend.entity.Student;
+import org.example.backend.entity.StudentCourse;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class StudentMapper {
 
@@ -47,6 +50,59 @@ public class StudentMapper {
             reqDto.setAddress(entity.getSubmissionRequest().getAddress());
             dto.setSubmissionResponseDTO(reqDto);
         }
+
+
+
         return dto;
+    }
+
+    public static StudentProfile toStudentProfile(Student student)
+    {
+        StudentProfile profile = new StudentProfile();
+        profile.setId(student.getStudentId());
+        profile.setGrade(student.getAcademicYear());
+        profile.setGpa(student.getGpa());
+
+
+        if (student.getUser() != null) {
+//            profile.setUserId(student.getUser().getId());
+            profile.setUsername(student.getUser().getFirstName()+" " + student.getUser().getLastName());
+            profile.setEmail(student.getUser().getEmail());
+
+
+        }
+
+        if (student.getDepartment() != null) {
+            profile.setDepartment(student.getDepartment().getDepartmentName());
+        }
+
+        if(student.getSubmissionRequest()!=null)
+        {
+            profile.setProfileImage(student.getSubmissionRequest().getPersonalPhoto());
+        }
+
+        if(student.getStudentCourse()!=null)
+        {
+            List<CourseDTO>  courseDTOS = new ArrayList<>();
+            int hours=0;
+            for(StudentCourse sc: student.getStudentCourse())
+            {
+                CourseDTO courseDTO = new CourseDTO();
+
+                courseDTO.setCourseId(sc.getCourse().getCourseId());
+                courseDTO.setCourseName(sc.getCourse().getCourseName());
+                courseDTO.setCourseCode(sc.getCourse().getCourseCode());
+                courseDTO.setGrade(sc.getCourse().getYear());
+
+                hours+=sc.getCourse().getCredit();
+
+                courseDTOS.add(courseDTO);
+            }
+            profile.setCourses(courseDTOS);
+            profile.setTotalCredit(hours);
+
+        }
+
+        return profile;
     }
 }

@@ -71,20 +71,27 @@ public class CourseMapper {
 
         if (entity.getPrerequisiteCourse()!=null)
         {
+            SemesterDTO semesterDTO=new SemesterDTO();
+            semesterDTO.setYearLevel(entity.getSemester().getSemesterId().getYearLevel());
+            semesterDTO.setSemesterName(String.valueOf(entity.getSemester().getSemesterId().getSemesterName()));
+            semesterDTO.setYear(entity.getSemester().getStartDate().getYear());
+
             CourseDTO courseDTO = new CourseDTO();
             courseDTO.setCourseId(entity.getPrerequisiteCourse().getCourseId());
             courseDTO.setCourseName(entity.getPrerequisiteCourse().getCourseName());
             courseDTO.setCourseCode(entity.getPrerequisiteCourse().getCourseCode());
-
+            courseDTO.setSemester(semesterDTO);
+            courseDTO.setGrade(entity.getYear());
+//            courseDTO.setSemester();
             dto.setPrerequisiteCourse(courseDTO);
         }
 
         if (entity.getSemester() != null) {
-            SemesterDTO semDto = new SemesterDTO();
-            semDto.setSemesterId(entity.getSemester().getSemesterId());
-            semDto.setSemesterName(String.valueOf(entity.getSemester().getSemesterName()));
-            semDto.setYearLevel(entity.getSemester().getYearLevel());
-            dto.setSemester(semDto);
+            SemesterDTO semesterDTO=new SemesterDTO();
+            semesterDTO.setYearLevel(entity.getSemester().getSemesterId().getYearLevel());
+            semesterDTO.setSemesterName(String.valueOf(entity.getSemester().getSemesterId().getSemesterName()));
+            semesterDTO.setYear(entity.getSemester().getStartDate().getYear());
+            dto.setSemester(semesterDTO);
         }
 
         return dto;

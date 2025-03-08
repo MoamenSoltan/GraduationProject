@@ -8,9 +8,8 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 public class SemesterResponseDTO {
-    private Integer semesterId;
-    private Integer yearLevel;
-    private SemesterName semesterName;
+    private Integer yearLevel;           // Part of composite key
+    private SemesterName semesterName;   // Part of composite key
     private LocalDateTime startDate;
     private LocalDateTime endDate;
     private Boolean isActive;

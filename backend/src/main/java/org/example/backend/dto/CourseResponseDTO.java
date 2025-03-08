@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @Getter
 public class CourseResponseDTO {
 
-    private Integer courseId;
+    private Long courseId;
     private String courseName;
     private String courseCode;
     private int credit;

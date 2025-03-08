@@ -1,16 +1,15 @@
 package org.example.backend.dto;
 
-
 import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.example.backend.enums.CourseType;
 import org.example.backend.enums.CourseYear;
+import org.example.backend.enums.SemesterName;
 
 @Setter
 @Getter
 public class CourseRequestDTO {
-
     @NotBlank(message = "Course name is required")
     @Size(max = 100, message = "Course name must not exceed 100 characters")
     private String courseName;
@@ -45,8 +44,11 @@ public class CourseRequestDTO {
 
     private Integer instructorId;  // Optional
 
-    private Integer prerequisiteCourseId;  // Optional
+    private Long prerequisiteCourseId;  // Optional
 
-    @NotNull(message = "Semester ID is required")
-    private Integer semesterId;
+    @NotNull(message = "Semester year level is required")
+    private Integer yearLevel;  // Part of composite key for Semester
+
+    @NotNull(message = "Semester name is required")
+    private SemesterName semesterName;  // Part of composite key for Semester
 }

@@ -14,8 +14,13 @@ public class StudentCourse {
 
     @EmbeddedId
     private StudentCourseId id;
-    private Double grade;
+    private Double degree;
     private LocalDateTime enrollmentDate;
+
+    public StudentCourse()
+    {
+        this.enrollmentDate=LocalDateTime.now();
+    }
     // relationship between entities
 
     @ManyToOne
@@ -29,7 +34,10 @@ public class StudentCourse {
     private Course course;
 
     @ManyToOne
-    @MapsId("semesterId") // Maps semesterId part of the composite key
-    @JoinColumn(name = "semester_id")
+    @MapsId("semesterId") // Maps to the composite key
+    @JoinColumns({
+            @JoinColumn(name = "semester_year_level", referencedColumnName = "year_level"),
+            @JoinColumn(name = "semester_name", referencedColumnName = "semester_name")
+    })
     private Semester semester;
 }

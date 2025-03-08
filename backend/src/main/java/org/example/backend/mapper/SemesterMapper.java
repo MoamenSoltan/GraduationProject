@@ -3,20 +3,26 @@ package org.example.backend.mapper;
 import org.example.backend.dto.SemesterRequestDTO;
 import org.example.backend.dto.SemesterResponseDTO;
 import org.example.backend.entity.Semester;
+import org.example.backend.entity.SemesterId;
 import org.example.backend.enums.SemesterName;
 
 import java.time.LocalDateTime;
 
 public class SemesterMapper {
-    // Mappers for Semester entity
-    public static Semester RequestToEntity(SemesterRequestDTO requestDTO)
-    {
+    // Map SemesterRequestDTO to Semester entity
+    public static Semester RequestToEntity(SemesterRequestDTO requestDTO) {
         Semester semester = new Semester();
 
+        // Set composite key (SemesterId)
+        SemesterId semesterId = new SemesterId();
+        semesterId.setYearLevel(requestDTO.getYearLevel());
         if (requestDTO.getSemesterName() != null) {
-            semester.setSemesterName(SemesterName.valueOf(requestDTO.getSemesterName().name()));
+            semesterId.setSemesterName(SemesterName.valueOf(requestDTO.getSemesterName().name()));
         }
-        semester.setYearLevel(requestDTO.getYearLevel());
+        semester.setSemesterId(semesterId);
+
+
+        // Set other fields
         semester.setStartDate(requestDTO.getStartDate());
         semester.setEndDate(requestDTO.getEndDate());
         semester.setIsActive(requestDTO.getIsActive());
@@ -25,13 +31,16 @@ public class SemesterMapper {
         return semester;
     }
 
-    public static SemesterResponseDTO EntityToResponse(Semester entity)
-    {
-
+    // Map Semester entity to SemesterResponseDTO
+    public static SemesterResponseDTO EntityToResponse(Semester entity) {
         SemesterResponseDTO dto = new SemesterResponseDTO();
-        dto.setSemesterId(entity.getSemesterId());
-        dto.setYearLevel(entity.getYearLevel());
-        dto.setSemesterName(entity.getSemesterName());
+
+        // Use composite key fields instead of a single semesterId
+        SemesterId id = entity.getSemesterId();
+        dto.setYearLevel(id.getYearLevel());
+        dto.setSemesterName(id.getSemesterName());
+
+        // Set other fields
         dto.setStartDate(entity.getStartDate());
         dto.setEndDate(entity.getEndDate());
         dto.setIsActive(entity.getIsActive());

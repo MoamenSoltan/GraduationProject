@@ -49,9 +49,10 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/login", "/auth/register").permitAll()
+                        .requestMatchers("/auth/login", "/auth/register","/test/**","/api/**").permitAll()
                         .requestMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
                         .requestMatchers("/auth/data").hasAuthority("ROLE_INSTRUCTOR")
+                        .requestMatchers("/student/**").hasAuthority("ROLE_STUDENT")
                         .anyRequest().authenticated()
                 )
 //                .httpBasic(Customizer.withDefaults())
