@@ -1,8 +1,7 @@
-package org.example.backend.dto;
+package org.example.backend.dto.semesterDto;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.example.backend.enums.CourseYear;
 
 @Setter
 @Getter

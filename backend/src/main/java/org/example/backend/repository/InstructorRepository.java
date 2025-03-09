@@ -10,7 +10,7 @@ import java.util.Optional;
 
 public interface InstructorRepository extends JpaRepository<Instructor,Integer> {
     @Query("select i from Instructor i where i.user.email=:email")
-    Instructor getByEmail(@Param("email") String email);
+    Optional<Instructor> getByEmail(@Param("email") String email);
 
     Optional<Instructor> findByUser(User user);
 

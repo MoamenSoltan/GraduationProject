@@ -1,4 +1,4 @@
-package org.example.backend.dto;
+package org.example.backend.dto.semesterDto;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;

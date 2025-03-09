@@ -1,7 +1,8 @@
-package org.example.backend.dto;
+package org.example.backend.dto.instructorDto;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.example.backend.dto.DepartmentDTO;
 import org.example.backend.enums.GenderType;
 
 @Setter

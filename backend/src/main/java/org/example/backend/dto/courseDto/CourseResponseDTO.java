@@ -1,7 +1,10 @@
-package org.example.backend.dto;
+package org.example.backend.dto.courseDto;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.example.backend.dto.DepartmentDTO;
+import org.example.backend.dto.instructorDto.InstructorDTO;
+import org.example.backend.dto.semesterDto.SemesterDTO;
 import org.example.backend.enums.CourseType;
 import org.example.backend.enums.CourseYear;
 

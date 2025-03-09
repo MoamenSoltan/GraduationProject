@@ -1,12 +1,9 @@
 package org.example.backend.service;
 
-import org.example.backend.dto.InstructorDTO;
-import org.example.backend.dto.InstructorRequestDTO;
-import org.example.backend.dto.InstructorResponseDTO;
+import org.example.backend.dto.instructorDto.InstructorRequestDTO;
+import org.example.backend.dto.instructorDto.InstructorResponseDTO;
 import org.example.backend.entity.Department;
 import org.example.backend.entity.Instructor;
-import org.example.backend.entity.Role;
-import org.example.backend.enums.DepartmentName;
 import org.example.backend.exception.ResourceNotFound;
 import org.example.backend.mapper.InstructorMapper;
 import org.example.backend.repository.DepartmentRepository;
@@ -15,7 +12,6 @@ import org.example.backend.repository.RoleRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;

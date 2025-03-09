@@ -1,7 +1,7 @@
 package org.example.backend.mapper;
 
-import org.example.backend.dto.SemesterRequestDTO;
-import org.example.backend.dto.SemesterResponseDTO;
+import org.example.backend.dto.semesterDto.SemesterRequestDTO;
+import org.example.backend.dto.semesterDto.SemesterResponseDTO;
 import org.example.backend.entity.Semester;
 import org.example.backend.entity.SemesterId;
 import org.example.backend.enums.SemesterName;

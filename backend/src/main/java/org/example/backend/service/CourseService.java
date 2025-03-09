@@ -1,7 +1,7 @@
 package org.example.backend.service;
 
-import org.example.backend.dto.CourseRequestDTO;
-import org.example.backend.dto.CourseResponseDTO;
+import org.example.backend.dto.courseDto.CourseRequestDTO;
+import org.example.backend.dto.courseDto.CourseResponseDTO;
 import org.example.backend.entity.*;
 import org.example.backend.exception.ResourceNotFound;
 import org.example.backend.mapper.CourseMapper;

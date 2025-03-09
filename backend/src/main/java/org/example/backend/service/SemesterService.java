@@ -1,7 +1,7 @@
 package org.example.backend.service;
 
-import org.example.backend.dto.SemesterRequestDTO;
-import org.example.backend.dto.SemesterResponseDTO;
+import org.example.backend.dto.semesterDto.SemesterRequestDTO;
+import org.example.backend.dto.semesterDto.SemesterResponseDTO;
 import org.example.backend.entity.Semester;
 import org.example.backend.entity.SemesterId;
 import org.example.backend.exception.ResourceNotFound;
@@ -9,7 +9,6 @@ import org.example.backend.mapper.SemesterMapper;
 import org.example.backend.repository.SemesterRepository;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 

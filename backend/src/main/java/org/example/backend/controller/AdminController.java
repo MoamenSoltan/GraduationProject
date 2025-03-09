@@ -1,21 +1,18 @@
 package org.example.backend.controller;
 
-import org.example.backend.dto.*;
-import org.example.backend.entity.Student;
-import org.example.backend.entity.SubmissionRequest;
-import org.example.backend.entity.User;
-import org.example.backend.exception.ResourceNotFound;
-import org.example.backend.repository.SubmissionReqRepository;
+import org.example.backend.dto.courseDto.CourseRequestDTO;
+import org.example.backend.dto.courseDto.CourseResponseDTO;
+import org.example.backend.dto.instructorDto.InstructorRequestDTO;
+import org.example.backend.dto.instructorDto.InstructorResponseDTO;
+import org.example.backend.dto.semesterDto.SemesterRequestDTO;
+import org.example.backend.dto.semesterDto.SemesterResponseDTO;
 import org.example.backend.service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import java.security.Principal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

@@ -1,17 +1,11 @@
-package org.example.backend.dto;
+package org.example.backend.dto.instructorDto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
-import org.example.backend.entity.Department;
-import org.example.backend.entity.Instructor;
-import org.example.backend.entity.User;
-import org.example.backend.enums.DepartmentName;
 import org.example.backend.enums.GenderType;
 
 @Setter

@@ -1,4 +1,4 @@
-package org.example.backend.dto;
+package org.example.backend.dto.submissionDto;
 
 import lombok.*;
 import org.example.backend.enums.GenderType;

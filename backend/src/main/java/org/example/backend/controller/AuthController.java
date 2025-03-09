@@ -1,15 +1,14 @@
 package org.example.backend.controller;
 
 
-import org.example.backend.dto.SubmissionImages;
-import org.example.backend.dto.SubmissionInfoRequestDTO;
+import org.example.backend.dto.submissionDto.SubmissionImages;
+import org.example.backend.dto.submissionDto.SubmissionInfoRequestDTO;
 import org.example.backend.service.AuthService;
 import org.example.backend.util.AuthResponse;
 import org.example.backend.util.LoginRequest;
 import org.example.backend.service.SubmissionRequestService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;

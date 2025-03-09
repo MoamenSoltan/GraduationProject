@@ -1,6 +1,11 @@
 package org.example.backend.mapper;
 
 import org.example.backend.dto.*;
+import org.example.backend.dto.courseDto.CourseDTO;
+import org.example.backend.dto.courseDto.CourseRequestDTO;
+import org.example.backend.dto.courseDto.CourseResponseDTO;
+import org.example.backend.dto.instructorDto.InstructorDTO;
+import org.example.backend.dto.semesterDto.SemesterDTO;
 import org.example.backend.entity.Course;
 import org.example.backend.enums.CourseType;
 import org.example.backend.enums.CourseYear;
