@@ -47,12 +47,13 @@ export const ContextProvider = ({children})=>{
     setMeter((prev)=>prev-1)
   }
  
+  const [auth, setAuth] = useState({})
 
   const Placeholder = "App_Name"
    return (
     <stateContext.Provider value={{
         Placeholder,user,setUser,
-        meter,incrementMeter,setMeter,decrementMeter,activeMenu,setActiveMenu,profile,setProfile
+        meter,incrementMeter,setMeter,decrementMeter,activeMenu,setActiveMenu,profile,setProfile,auth ,setAuth
     }}>
         {children}
     </stateContext.Provider>

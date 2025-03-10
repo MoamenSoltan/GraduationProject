@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes } from "react-router"
+import { BrowserRouter, Route, Routes, useNavigate } from "react-router"
 import Registration from "../pages/Registration"
 import Splash from "../pages/steps/Splash"
 import Step1 from "../pages/steps/Step1"
@@ -11,7 +11,12 @@ import Status from "../pages/Status"
 import StudentDashboard from "../pages/StudentDashboard"
 import InstructorDashboard from "../pages/InstructorDashboard"
 import AdminDashboard from "../pages/AdminDashboard"
+import { useStateContext } from "../contexts/ContextProvider"
+import { useEffect } from "react"
+import ProtectedRoutes from "../components/ProtectedRoutes"
 /**
+ * e-commerce app for better understanding of filtering and query parameters
+ * 
  * space-x-2 is a Tailwind CSS utility class that adds horizontal spacing (margin) between direct children of a flex container.
  * 
  * 
@@ -43,19 +48,30 @@ registration in sidebar for table advice
 // conditional rendering based on route in studentDashboard
 
 flex-wrap essential for overflow , revise profile , courses div specifically
+
+note on search params 
+
+
+
  */
 
 function App() {
- 
 
+
+  
   return (
     <div>
+
+      
      
       <BrowserRouter>
+     
         <Routes>
-          {/* <Route path="/" element={<Registration />} /> */}
+         
+         {/* public routes */}
+
+          <Route path="/" element={<Registration />} />
           <Route path="/registration" element={<Registration />} />
-          {/* Add more routes here */}
           <Route path="/registration/splash" element={<Splash />} />
           <Route path="/registration/step1" element={<Step1 />} />
           <Route path="/registration/step2" element={<Step2 />} />
@@ -65,12 +81,24 @@ function App() {
           <Route path="/registration/done" element={<Done />} />
           <Route path="/status" element={<Status />} />
 
-          {/* or make a dashboard component , whithin this component add more dashboards */}
-          <Route path="/studentDashboard/*" element={<StudentDashboard />} />
-          <Route path="/" element={<StudentDashboard />} />
+          
+          {/* protected routes  */}
+          <Route element={<ProtectedRoutes allowedRoles={['student']}/>}>
+            <Route path="/studentDashboard/*" element={<StudentDashboard />} />
+          </Route>
+          
 
-          <Route path="/instructorDashboard/*" element={<InstructorDashboard />} />
-          <Route path="/adminDashboard/*" element={<AdminDashboard />} />
+         <Route element={<ProtectedRoutes allowedRoles={['instructor']}/>}>
+            <Route path="/instructorDashboard/*" element={<InstructorDashboard />} />
+         </Route>
+
+         <Route element={<ProtectedRoutes allowedRoles={['admin']}/>}>
+            <Route path="/adminDashboard/*" element={<AdminDashboard />} />
+         </Route>
+          
+          
+          
+          
           {/* 
           /* means that there are nested routes
            */}

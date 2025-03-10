@@ -53,6 +53,8 @@ const StudentDashboard = () => {
       <Route path="/"  element={<Analytics/>}/>
 
         <Route path="/Analytics"  element={<Analytics/>}/>
+        {/* : means dynamic route , ? means optional , we could make a dynamic non optional */}
+        {/* in the url itself , eg /StudentDashboard/courses?type=default&order=asc , these are query parameters (key and value pairs) */}
         <Route path="/Announcements/:type?"  element={<Announcements/>}/>
         <Route path="/Profile" element = {<Profile/>} />
 
