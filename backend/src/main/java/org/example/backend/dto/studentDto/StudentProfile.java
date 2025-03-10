@@ -1,7 +1,8 @@
-package org.example.backend.dto;
+package org.example.backend.dto.studentDto;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.example.backend.dto.courseDto.CourseDTO;
 import org.example.backend.enums.DepartmentName;
 
 import java.util.List;

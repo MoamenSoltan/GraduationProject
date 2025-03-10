@@ -1,12 +1,13 @@
-package org.example.backend.dto;
+package org.example.backend.dto.studentDto;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.example.backend.dto.DepartmentDTO;
+import org.example.backend.dto.submissionDto.SubmissionResponseDTO;
 import org.example.backend.enums.FeesStatus;
 import org.example.backend.enums.GenderType;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Setter
 @Getter

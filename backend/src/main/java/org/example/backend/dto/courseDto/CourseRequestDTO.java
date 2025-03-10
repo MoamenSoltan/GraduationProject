@@ -1,4 +1,4 @@
-package org.example.backend.dto;
+package org.example.backend.dto.courseDto;
 
 import jakarta.validation.constraints.*;
 import lombok.Getter;

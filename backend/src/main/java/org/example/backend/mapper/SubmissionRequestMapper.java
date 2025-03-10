@@ -1,7 +1,7 @@
 package org.example.backend.mapper;
 
-import org.example.backend.dto.SubmissionInfoRequestDTO;
-import org.example.backend.dto.SubmissionRequestDto;
+import org.example.backend.dto.submissionDto.SubmissionInfoRequestDTO;
+import org.example.backend.dto.submissionDto.SubmissionRequestDto;
 import org.example.backend.entity.Student;
 import org.example.backend.entity.SubmissionRequest;
 import org.example.backend.entity.User;

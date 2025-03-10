@@ -23,9 +23,9 @@ public class StudentCoursesService {
         this.studentCourseRepository = studentCourseRepository;
     }
 
-    public void enrollStudentInCourse(StudentCourseRequestDTO requestDTO) {
-        Student student=studentRepository.findById(requestDTO.getStudentId())
-                .orElseThrow(() -> new ResourceNotFound("Student", "id", requestDTO.getStudentId()));;
+    public void enrollStudentInCourse(StudentCourseRequestDTO requestDTO,Student student) {
+//        Student student=studentRepository.findById(requestDTO.getStudentId())
+//                .orElseThrow(() -> new ResourceNotFound("Student", "id", requestDTO.getStudentId()));;
         SemesterId semesterId = new SemesterId();
         semesterId.setYearLevel(requestDTO.getYearLevel());
         semesterId.setSemesterName(requestDTO.getSemesterName());
@@ -40,7 +40,7 @@ public class StudentCoursesService {
         Course course = courseRepository.findById(requestDTO.getCourseId())
                 .orElseThrow(() -> new ResourceNotFound("Course", "id", requestDTO.getCourseId()));
         StudentCourseId id = new StudentCourseId();
-        id.setStudentId(requestDTO.getStudentId());
+        id.setStudentId(student.getStudentId());
         id.setCourseId(requestDTO.getCourseId());
         id.setYearLevel(requestDTO.getYearLevel());
         id.setSemesterName(requestDTO.getSemesterName().name());

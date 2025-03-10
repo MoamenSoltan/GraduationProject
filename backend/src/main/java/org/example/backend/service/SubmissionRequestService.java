@@ -1,21 +1,15 @@
 package org.example.backend.service;
 
-import org.example.backend.dto.SubmissionImages;
-import org.example.backend.dto.SubmissionInfoRequestDTO;
-import org.example.backend.dto.SubmissionRequestDto;
+import org.example.backend.dto.submissionDto.SubmissionImages;
+import org.example.backend.dto.submissionDto.SubmissionInfoRequestDTO;
+import org.example.backend.dto.submissionDto.SubmissionRequestDto;
 import org.example.backend.entity.SubmissionRequest;
-import org.example.backend.entity.User;
-import org.example.backend.enums.AdmissionStatus;
-import org.example.backend.enums.RoleType;
 import org.example.backend.mapper.SubmissionRequestMapper;
 import org.example.backend.repository.SubmissionReqRepository;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.IOException;
 
 @Service

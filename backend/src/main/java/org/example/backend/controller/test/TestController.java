@@ -1,7 +1,7 @@
 package org.example.backend.controller.test;
 
-import org.example.backend.dto.SubmissionImages;
-import org.example.backend.dto.SubmissionInfoRequestDTO;
+import org.example.backend.dto.submissionDto.SubmissionImages;
+import org.example.backend.dto.submissionDto.SubmissionInfoRequestDTO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;

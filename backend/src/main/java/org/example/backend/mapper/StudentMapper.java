@@ -1,7 +1,10 @@
 package org.example.backend.mapper;
 
 import org.example.backend.dto.*;
-import org.example.backend.entity.Course;
+import org.example.backend.dto.courseDto.CourseDTO;
+import org.example.backend.dto.studentDto.StudentProfile;
+import org.example.backend.dto.studentDto.StudentResponseDTO;
+import org.example.backend.dto.submissionDto.SubmissionResponseDTO;
 import org.example.backend.entity.Student;
 import org.example.backend.entity.StudentCourse;
 

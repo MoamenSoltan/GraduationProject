@@ -1,8 +1,8 @@
 package org.example.backend.mapper;
 
 import org.example.backend.dto.DepartmentDTO;
-import org.example.backend.dto.InstructorRequestDTO;
-import org.example.backend.dto.InstructorResponseDTO;
+import org.example.backend.dto.instructorDto.InstructorRequestDTO;
+import org.example.backend.dto.instructorDto.InstructorResponseDTO;
 import org.example.backend.entity.Instructor;
 import org.example.backend.entity.User;
 
