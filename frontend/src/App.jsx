@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes } from "react-router"
+import { BrowserRouter, Route, Routes, useNavigate } from "react-router"
 import Registration from "../pages/Registration"
 import Splash from "../pages/steps/Splash"
 import Step1 from "../pages/steps/Step1"
@@ -11,7 +11,11 @@ import Status from "../pages/Status"
 import StudentDashboard from "../pages/StudentDashboard"
 import InstructorDashboard from "../pages/InstructorDashboard"
 import AdminDashboard from "../pages/AdminDashboard"
+import { useStateContext } from "../contexts/ContextProvider"
+import { useEffect } from "react"
 /**
+ * e-commerce app for better understanding of filtering and query parameters
+ * 
  * space-x-2 is a Tailwind CSS utility class that adds horizontal spacing (margin) between direct children of a flex container.
  * 
  * 
@@ -43,15 +47,35 @@ registration in sidebar for table advice
 // conditional rendering based on route in studentDashboard
 
 flex-wrap essential for overflow , revise profile , courses div specifically
+
+note on search params 
+
+
+
  */
 
 function App() {
- 
 
+// useNavigate must be inside browserRouter , therefore wrapped in a component that only runs logic
+  const AuthRedirect = () => {
+    const { auth } = useStateContext();
+    const navigate = useNavigate();
+  
+    useEffect(() => {
+      if (!auth?.accessToken) {
+        // navigate('/registration');
+      }
+    }, [auth, navigate]);
+  
+    return null; // No UI, only runs logic
+  };
   return (
     <div>
+
+      
      
       <BrowserRouter>
+      <AuthRedirect/>
         <Routes>
           {/* <Route path="/" element={<Registration />} /> */}
           <Route path="/registration" element={<Registration />} />
