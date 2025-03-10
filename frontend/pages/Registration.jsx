@@ -4,10 +4,13 @@ import { motion } from "motion/react";
 
 import Hero from "../data/Hero.jpg";
 import { useNavigate } from "react-router";
+
+import { axiosPrivate } from "../api/axios";
 const Registration = () => {
   // const [email, setEmail] = useState("")
   // const [password, setPassword] = useState("")
    const [error, setError] = useState(null)
+   const [loading, setLoading] = useState(false)
 
   const { Placeholder,setUser,user } = useStateContext();
   const navigate = useNavigate()
@@ -31,18 +34,39 @@ const Registration = () => {
   };
 
 
-  const handleSubmit=(e)=>{
+  const handleSubmit=  (e)=>{
     e.preventDefault()
     const valid = validate()
     if(!valid) return;
-    e.preventDefault()
-    
     console.log(user);
-    navigate("/registration/splash")
-    
+
+    const login = async () => {
+      try {
+        if(loading)
+          return
+        setLoading(true)
+        const response = await axiosPrivate.post("/login",[user.email,user.password])
+        navigate('/studentDashboard')
+       
+      } catch (error) {
+        if (error.response.status===403||error.response.status===401){
+          navigate("/registration/splash")
+          console.log(error);
+          
+        }
+        else if(error.response.status===400){
+        console.log("an error occured",error);
+        
+      }
+      console.log(error);
+      
+    } finally {
+      setLoading(false)
+    }
 
   }
- 
+  login()
+}
   return (
     <motion.div
     initial={{ opacity: 0, scale: 0.9 }}

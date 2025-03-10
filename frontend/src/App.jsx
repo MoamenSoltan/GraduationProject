@@ -13,6 +13,7 @@ import InstructorDashboard from "../pages/InstructorDashboard"
 import AdminDashboard from "../pages/AdminDashboard"
 import { useStateContext } from "../contexts/ContextProvider"
 import { useEffect } from "react"
+import ProtectedRoutes from "../components/ProtectedRoutes"
 /**
  * e-commerce app for better understanding of filtering and query parameters
  * 
@@ -56,30 +57,21 @@ note on search params
 
 function App() {
 
-// useNavigate must be inside browserRouter , therefore wrapped in a component that only runs logic
-  const AuthRedirect = () => {
-    const { auth } = useStateContext();
-    const navigate = useNavigate();
+
   
-    useEffect(() => {
-      if (!auth?.accessToken) {
-        // navigate('/registration');
-      }
-    }, [auth, navigate]);
-  
-    return null; // No UI, only runs logic
-  };
   return (
     <div>
 
       
      
       <BrowserRouter>
-      <AuthRedirect/>
+     
         <Routes>
-          {/* <Route path="/" element={<Registration />} /> */}
+         
+         {/* public routes */}
+
+          <Route path="/" element={<Registration />} />
           <Route path="/registration" element={<Registration />} />
-          {/* Add more routes here */}
           <Route path="/registration/splash" element={<Splash />} />
           <Route path="/registration/step1" element={<Step1 />} />
           <Route path="/registration/step2" element={<Step2 />} />
@@ -89,12 +81,24 @@ function App() {
           <Route path="/registration/done" element={<Done />} />
           <Route path="/status" element={<Status />} />
 
-          {/* or make a dashboard component , whithin this component add more dashboards */}
-          <Route path="/studentDashboard/*" element={<StudentDashboard />} />
-          <Route path="/" element={<StudentDashboard />} />
+          
+          {/* protected routes  */}
+          <Route element={<ProtectedRoutes allowedRoles={['student']}/>}>
+            <Route path="/studentDashboard/*" element={<StudentDashboard />} />
+          </Route>
+          
 
-          <Route path="/instructorDashboard/*" element={<InstructorDashboard />} />
-          <Route path="/adminDashboard/*" element={<AdminDashboard />} />
+         <Route element={<ProtectedRoutes allowedRoles={['instructor']}/>}>
+            <Route path="/instructorDashboard/*" element={<InstructorDashboard />} />
+         </Route>
+
+         <Route element={<ProtectedRoutes allowedRoles={['admin']}/>}>
+            <Route path="/adminDashboard/*" element={<AdminDashboard />} />
+         </Route>
+          
+          
+          
+          
           {/* 
           /* means that there are nested routes
            */}
