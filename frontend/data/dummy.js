@@ -7,9 +7,13 @@ import { IoIosPerson } from "react-icons/io";
 import { FaHandsHelping } from "react-icons/fa";
 import { IoLogOutOutline } from "react-icons/io5";
 import { BsMegaphone } from "react-icons/bs";
+import { useStateContext } from "../contexts/ContextProvider";
 
 
 // icons as just the name , when using them in map , wrap with </> to make it a component
+
+
+
 export const links = [
     {
         name : "Analytics",
@@ -49,11 +53,7 @@ export const links = [
         icon : FaHandsHelping 
 
     },
-    {
-        name : "Logout",
-        icon : IoLogOutOutline 
-
-    }
+   
 ]
 
 export const announcementsData = [

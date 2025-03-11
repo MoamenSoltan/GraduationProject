@@ -94,7 +94,8 @@ public class SecurityConfig {
             CorsConfiguration corsConfiguration = new CorsConfiguration();
             corsConfiguration.setAllowedOrigins(Arrays.asList(
                     "http://localhost:3000",
-                    "http://localhost:4200"
+                    "http://localhost:4200",
+                    "http://localhost:5173"
             ));
             corsConfiguration.setAllowedMethods(Collections.singletonList("*"));
             corsConfiguration.setAllowCredentials(true);
