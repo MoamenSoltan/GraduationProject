@@ -16,7 +16,7 @@ const ProtectedRoutes = ({allowedRoles}) => {
       }
       console.log("current role :",auth?.user?.roles[0].toLowerCase());
       
-      if (!allowedRoles.includes(auth?.user?.roles[0])) {
+      if (allowedRoles.includes(auth?.user?.roles[0])) {
         navigate(`${auth?.user?.roles[0].toLowerCase()}Dashboard`,replace)
       }
   },[auth,allowedRoles])
