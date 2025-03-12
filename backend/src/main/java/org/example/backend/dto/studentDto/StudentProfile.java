@@ -19,5 +19,7 @@ public class StudentProfile {
     private DepartmentName department;
     private Double gpa;
     private int grade;
+    private String address;
+
 
 }
