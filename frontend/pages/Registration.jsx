@@ -51,17 +51,22 @@ const Registration = () => {
         const response = await axios.post("/auth/login", {
           email: user.email,
           password: user.password,
-        });
+        }, {headers: {"Content-Type":'application/json'},
+        withCredentials:true});
 
-        const accessToken = response.data.token;
+        const accessToken = response.data.accessToken;
         const message = response.data.message;
+        const userData = response.data.user
+        const role = userData.roles[0].toLowerCase()
+        console.log(response.data);
+        
 
         //TODO: replace with user with real data
-        setAuth({ user: { role: "student" }, accessToken, message });
+        setAuth({ user: userData, accessToken, message });
 
         console.log(auth);
 
-        navigate("/studentDashboard");
+        navigate(`/${role}Dashboard`);
 
         // navigate(`/${response?.data?.user?.role}Dashboard`);
         // TODO: replace with real data
@@ -76,10 +81,10 @@ const Registration = () => {
           console.warn("User not found, redirecting to registration...");
           navigate("/registration/splash");
         } else if (error.response.status === 400) {
-          console.error("Bad request:", error);
+          console.error("Bad request:", error.response.data);
           setError("Invalid request, please check your input.");
         } else {
-          console.error("Unexpected error:", error);
+          console.error("Unexpected error:", error.response.data);
           setError("Something went wrong. Please try again later.");
         }
 

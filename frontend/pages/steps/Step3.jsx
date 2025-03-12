@@ -28,7 +28,7 @@ const Step3 = () => {
   const navigate = useNavigate()
 
   const validate = ()=>{
-    if(!user.highSchoolName||!user.highSchoolGPA||!user.highSchoolCertificate)
+    if(!user.highSchoolName||!user.highSchoolGpa||!user.highSchoolCertificate)
     {
       setError("All fields are required");
       return false;
@@ -37,7 +37,7 @@ const Step3 = () => {
       setError("only png , jpeg and jpg files are allowed");
       return false;
     }
-    if(!GPARegex.test(user.highSchoolGPA)) {
+    if(!GPARegex.test(user.highSchoolGpa)) {
       setError("Invalid GPA , must be between 0.0 and 4.0");
       return false;
     }
@@ -87,7 +87,7 @@ const Step3 = () => {
 
           <div className="flex flex-col w-full mt-5">
             <label htmlFor="gpa" className="text-lg">High school GPA</label>
-            <input type="text" name="gpa" className="textField" value={user.highSchoolGPA} onChange={(e)=>{setUser({...user,highSchoolGPA:e.target.value})}} />
+            <input type="text" name="gpa" className="textField" value={user.highSchoolGpa} onChange={(e)=>{setUser({...user,highSchoolGpa:e.target.value})}} />
           </div>
 
           <div className="flex flex-col  w-full mt-5">

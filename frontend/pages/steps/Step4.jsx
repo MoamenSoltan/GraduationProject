@@ -15,13 +15,13 @@ const Step4 = () => {
   const validate = () => {
     if (
       !user.IDNumber ||
-      !user.IDPhoto ||
+      !user.IdPhoto ||
       !user.personalPhoto
     ) {
       setError("All fields are required");
       return false;
     }
-    if ( !fileRegex.test(user.IDPhoto.name)|| !fileRegex.test(user.personalPhoto.name)) {
+    if ( !fileRegex.test(user.IdPhoto.name)|| !fileRegex.test(user.personalPhoto.name)) {
       setError("only png , jpeg and jpg files are allowed");
       return false;
     }
@@ -83,7 +83,7 @@ const Step4 = () => {
                 onChange={(e) => {
                   const file = e.target.files[0];
                   if (file) {
-                    setUser({ ...user, IDPhoto: file });
+                    setUser({ ...user, IdPhoto: file });
                   }
                 }}
               />
