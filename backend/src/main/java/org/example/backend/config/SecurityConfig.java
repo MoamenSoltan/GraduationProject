@@ -27,6 +27,16 @@ import java.util.Collections;
 
 @Configuration
 public class SecurityConfig {
+    private static final String[] PUBLIC_URLS = {
+            "/auth/login", "/auth/register",
+            "/test/**", "/api/**",
+            "/v2/api-docs", "/v3/api-docs",
+            "/v3/api-docs/**", "/swagger-resources",
+            "/swagger-resources/**", "/configuration/ui",
+            "/configuration/security", "/swagger-ui/**",
+            "/webjars/**", "/swagger-ui.html"
+    };
+
     private final CustomUserDetailsService userDetailsService;
 
     @Autowired
@@ -49,7 +59,7 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/login", "/auth/register","/test/**","/api/**").permitAll()
+                        .requestMatchers(PUBLIC_URLS).permitAll()
                         .requestMatchers("/admin/**","/api/**").permitAll()
                         .requestMatchers("/auth/data").hasAuthority("ROLE_INSTRUCTOR")
                         .requestMatchers("/instructor/**").hasAuthority("ROLE_INSTRUCTOR")
