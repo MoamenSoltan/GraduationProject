@@ -21,6 +21,9 @@ const Done = () => {
          
          <p className='sub-text '> Our admins will review your data, and you will receive an email with further instructions. Please check your inbox regularly.</p>
          
+         <button onClick={()=>{navigate("/registeration")}} className="custom-button hover:scale-105 transition-all">
+          Back to login
+         </button>
  
          
      </div>

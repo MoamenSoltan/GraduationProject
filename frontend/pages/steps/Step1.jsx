@@ -159,12 +159,12 @@ const Step1 = () => {
               id="gender"
               value={user.gender}
               onChange={(e) => {
-                setUser({ ...user, gender: e.target.value });
+                setUser({ ...user, gender: e.target.value.toUpperCase() });
               }}
             >
               <option value="">Select Gender</option>
-              <option value="male">Male</option>
-              <option value="female">Female</option>
+              <option value="MALE">Male</option>
+              <option value="FEMALE">Female</option>
             </select>
           </div>
         </div>
