@@ -5,12 +5,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
+import java.nio.file.Paths;
 import java.util.UUID;
 
 @Service
 public class FileService {
     @Value("${file.upload}")
     private String UPLOAD_DIRECTORY;
+    @Value("${file.BASE_URL}")
+    private String BASE_URL;
 
     public String saveFile(MultipartFile file, String prefix) throws IOException {
         if (file != null && !file.isEmpty()) {
@@ -43,14 +46,19 @@ public class FileService {
             throw new IOException("File cannot be null or empty");
         }
 
-        String path = UPLOAD_DIRECTORY;
-        File directory = new File(path);
+        File directory = new File(UPLOAD_DIRECTORY);
         if (!directory.exists()) {
             directory.mkdirs();
         }
 
-        String uniqueFileName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
-        String fullPath = path + File.separator + uniqueFileName;
+        String originalFilename = file.getOriginalFilename();
+        if (originalFilename == null) {
+            throw new IOException("File name cannot be null");
+        }
+        String sanitizedFilename = originalFilename.replaceAll("\\s+", "_");
+        sanitizedFilename.replaceAll("[^a-zA-Z0-9._-]", "");
+        String uniqueFileName = UUID.randomUUID() + "_" + sanitizedFilename;
+        String fullPath = UPLOAD_DIRECTORY + File.separator + uniqueFileName;
 
         try (InputStream inputStream = file.getInputStream();
              FileOutputStream outputStream = new FileOutputStream(fullPath)) {
@@ -62,5 +70,9 @@ public class FileService {
         }
 
         return fullPath;
+    }
+
+    public  String getFileName(String filePath) {
+        return filePath != null ?BASE_URL+Paths.get(filePath).getFileName().toString() : null;
     }
 }

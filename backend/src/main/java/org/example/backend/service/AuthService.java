@@ -25,14 +25,16 @@ public class AuthService {
     private final UserRepository userRepository;
     private final StudentRepository studentRepository;
     private final InstructorRepository instructorRepository;
+    private final FileService fileService;
 
 
-    public AuthService(AuthenticationManager manager, JwtService jwtService, UserRepository userRepository, StudentRepository studentRepository, InstructorRepository instructorRepository) {
+    public AuthService(AuthenticationManager manager, JwtService jwtService, UserRepository userRepository, StudentRepository studentRepository, InstructorRepository instructorRepository, FileService fileService) {
         this.manager = manager;
         this.jwtService = jwtService;
         this.userRepository = userRepository;
         this.studentRepository = studentRepository;
         this.instructorRepository = instructorRepository;
+        this.fileService = fileService;
     }
 
     public boolean isAdmin(UserDetails userDetails)
@@ -59,40 +61,46 @@ public class AuthService {
 
     public AuthResponse login(String email, String password)
     {
-        var auth=isAuthenticated(email,password);
-        String token;
-        if(auth.isAuthenticated())
-        {
-            SecurityContextHolder.getContext().setAuthentication(auth);
-            UserDetails userDetails = (UserDetails) auth.getPrincipal();
-            token=jwtService.generateToken(userDetails);
-            User user = userRepository.getUserByEmail(email)
-                    .orElseThrow(() -> new RuntimeException("User not found with email: " + email));
+        User user = userRepository.getUserByEmail(email)
+                .orElse(null);
 
-            Object userData = null;
-            String message = "User login successful";
-
-            if (isAdmin(userDetails)) {
-                userData = user;
-            } else {
-                Student student = studentRepository.findByUser(user).orElse(null);
-                if (student != null) {
-                    userData = StudentMapper.toStudentResponseDTO(student);
-                } else {
-                    Instructor instructor = instructorRepository.findByUser(user).orElse(null);
-                    if (instructor != null) {
-                        userData = InstructorMapper.entityToResponseDTO(instructor);
-                    } else {
-                        throw new RuntimeException("User type not recognized");
-                    }
-                }
-            }
-
-            return new AuthResponse(token, message, userData);
-        } else {
-            throw new RuntimeException("Invalid credentials");
+        if (user == null) {
+            throw new BadCredentialsException("Invalid email or password.");
         }
 
+        var auth = isAuthenticated(email, password);
 
+        if (auth == null || !auth.isAuthenticated()) {
+            throw new BadCredentialsException("Invalid email or password.");
+        }
+
+        SecurityContextHolder.getContext().setAuthentication(auth);
+        UserDetails userDetails = (UserDetails) auth.getPrincipal();
+        String token = jwtService.generateToken(userDetails);
+
+        Object userData;
+        String message = "User login successful";
+
+        if (isAdmin(userDetails)) {
+            userData = StudentMapper.toUserDTO(user);
+        } else {
+            Student student = studentRepository.findByUser(user).orElse(null);
+            Instructor instructor = instructorRepository.findByUser(user).orElse(null);
+
+            if (student != null) {
+                student.getSubmissionRequest().setPersonalPhoto(fileService.getFileName(student.getSubmissionRequest().getPersonalPhoto()));
+                userData = StudentMapper.toStudentResponseDTO(student);
+
+            } else if (instructor != null) {
+                userData = InstructorMapper.entityToResponseDTO(instructor);
+            } else {
+                throw new RuntimeException("User type not recognized");
+            }
+        }
+
+        return new AuthResponse(token, message, userData,null);
     }
+
+
+
 }

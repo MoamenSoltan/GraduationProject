@@ -3,11 +3,14 @@ package org.example.backend.dto.studentDto;
 import lombok.Getter;
 import lombok.Setter;
 import org.example.backend.dto.DepartmentDTO;
+import org.example.backend.dto.RoleDTO;
+import org.example.backend.dto.courseDto.CourseDTO;
 import org.example.backend.dto.submissionDto.SubmissionResponseDTO;
 import org.example.backend.enums.FeesStatus;
 import org.example.backend.enums.GenderType;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Setter
 @Getter
@@ -24,5 +27,7 @@ public class StudentResponseDTO {
     private FeesStatus feesStatus;
     private LocalDateTime createdAt;
     private SubmissionResponseDTO submissionResponseDTO;
+    private List<String> roles;
+    private List<CourseDTO> courses;
 
 }

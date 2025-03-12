@@ -25,7 +25,7 @@ public class Course {
     private int credit;
     @Column(name = "course_description")
     private String description;
-    private LocalDateTime createdAt = LocalDateTime.of(2023, 5, 9, 0, 0, 0); // Year, Month, Day, Hour, Minute, Second
+    private LocalDateTime createdAt = LocalDateTime.now();// Year, Month, Day, Hour, Minute, Second
     @Column(name = "max_students")
     private int maxStudents = 200;
 

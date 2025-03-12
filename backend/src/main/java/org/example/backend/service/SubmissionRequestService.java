@@ -3,7 +3,9 @@ package org.example.backend.service;
 import org.example.backend.dto.submissionDto.SubmissionImages;
 import org.example.backend.dto.submissionDto.SubmissionInfoRequestDTO;
 import org.example.backend.dto.submissionDto.SubmissionRequestDto;
+import org.example.backend.dto.submissionDto.SubmissionResponseDTO;
 import org.example.backend.entity.SubmissionRequest;
+import org.example.backend.enums.AdmissionStatus;
 import org.example.backend.mapper.SubmissionRequestMapper;
 import org.example.backend.repository.SubmissionReqRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -11,6 +13,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -76,6 +81,19 @@ public class SubmissionRequestService {
 
     }
 
+    public List<SubmissionResponseDTO> getAllSubmissions(AdmissionStatus status)
+    {
+
+        List<SubmissionRequest> submissionRequests = submissionReqRepository.getSubmissionRequestByStatus(status);
+        List<SubmissionResponseDTO> responseDTOList = new ArrayList<>();
+
+        for (SubmissionRequest request : submissionRequests) {
+            responseDTOList.add(submissionRequestMapper.toResponseDTO(request));
+        }
+
+        return responseDTOList;
+
+    }
 
 
 

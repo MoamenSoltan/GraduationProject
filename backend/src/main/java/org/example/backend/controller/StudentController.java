@@ -51,7 +51,7 @@ public class StudentController {
 
         Student student = studentRepository.findByUser(user)
                 .orElseThrow(() -> new RuntimeException("Student not found"));
-        System.out.println("course code " +student.getStudentCourse().get(0).getCourse().getCourseCode());
+      //  System.out.println("course code " +student.getStudentCourse().get(0).getCourse().getCourseCode());
 
         return ResponseEntity.ok(StudentMapper.toStudentProfile(student));
     }

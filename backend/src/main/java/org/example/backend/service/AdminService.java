@@ -46,4 +46,15 @@ public class AdminService {
         studentRepository.save(student);
         return "Submission request approved successfully!";
     }
+
+    public String rejectSubmissionRequest(int id)
+    {
+        SubmissionRequest request = submissionReqRepository.findById(id)
+                .orElseThrow(()->new ResourceNotFound("SubmissionRequest", "id", id));
+        if(request.getAdmissionStatus()!= AdmissionStatus.PENDING)
+            return "This request is already approved or rejected!";
+        request.setAdmissionStatus(AdmissionStatus.REJECTED);
+        submissionReqRepository.save(request);
+        return "Submission request rejected successfully!";
+    }
 }

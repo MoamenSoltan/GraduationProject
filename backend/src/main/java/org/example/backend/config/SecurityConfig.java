@@ -50,7 +50,7 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/login", "/auth/register","/test/**","/api/**").permitAll()
-                        .requestMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
+                        .requestMatchers("/admin/**","/api/**").permitAll()
                         .requestMatchers("/auth/data").hasAuthority("ROLE_INSTRUCTOR")
                         .requestMatchers("/instructor/**").hasAuthority("ROLE_INSTRUCTOR")
                         .requestMatchers("/student/**").hasAuthority("ROLE_STUDENT")
@@ -58,13 +58,13 @@ public class SecurityConfig {
                 )
 //                .httpBasic(Customizer.withDefaults())
                 .addFilterBefore(getJwtFilter(jwtService), UsernamePasswordAuthenticationFilter.class)
-                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-                .exceptionHandling(e -> e
-                        .accessDeniedHandler((request, response, accessDeniedException) -> {
-                            response.setStatus(HttpStatus.FORBIDDEN.value());
-                            response.setContentType("application/json");
-                            response.getWriter().write("{\"status\": 403, \"error\": \"Forbidden\", \"message\": \"Access to the resource is prohibited.\"}");
-                        }));
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()));
+//                .exceptionHandling(e -> e
+//                        .accessDeniedHandler((request, response, accessDeniedException) -> {
+//                            response.setStatus(HttpStatus.FORBIDDEN.value());
+//                            response.setContentType("application/json");
+//                            response.getWriter().write("{\"status\": 403, \"error\": \"Forbidden\", \"message\": \"Access to the resource is prohibited.\"}");
+//                        }));
 
         return security.build();
     }

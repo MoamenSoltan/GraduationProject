@@ -1,11 +1,15 @@
 package org.example.backend.controller;
 
+import jakarta.validation.Valid;
+import org.example.backend.dto.courseDto.CourseDTO;
 import org.example.backend.dto.courseDto.CourseRequestDTO;
 import org.example.backend.dto.courseDto.CourseResponseDTO;
 import org.example.backend.dto.instructorDto.InstructorRequestDTO;
 import org.example.backend.dto.instructorDto.InstructorResponseDTO;
 import org.example.backend.dto.semesterDto.SemesterRequestDTO;
 import org.example.backend.dto.semesterDto.SemesterResponseDTO;
+import org.example.backend.enums.AdmissionStatus;
+import org.example.backend.enums.SemesterName;
 import org.example.backend.service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,8 +31,9 @@ public class AdminController {
     private final CourseService courseService;
     private static final Logger logger = LoggerFactory.getLogger(AdminController.class);
     private final AdminService adminService;
+    private final SubmissionRequestService submissionRequestService;
 
-    public AdminController(StudentService studentService, InstructorService instructorService, PasswordEncoder passwordEncoder, SemesterService service, CourseService courseService, AdminService adminService) {
+    public AdminController(StudentService studentService, InstructorService instructorService, PasswordEncoder passwordEncoder, SemesterService service, CourseService courseService, AdminService adminService, SubmissionRequestService submissionRequestService) {
         this.studentService = studentService;
         this.instructorService = instructorService;
         this.passwordEncoder = passwordEncoder;
@@ -36,6 +41,7 @@ public class AdminController {
         this.semesterService = service;
         this.courseService = courseService;
         this.adminService = adminService;
+        this.submissionRequestService = submissionRequestService;
     }
 
     @PostMapping("/approve/{id}")
@@ -47,13 +53,19 @@ public class AdminController {
         return ResponseEntity.ok(response);
     }
 
+    @PostMapping("/reject/{id}")
+    public ResponseEntity<?> rejectSubmissionRequest(@PathVariable int id)
+    {
+        Map<String ,String > response = new HashMap<>();
+        response.put("message", adminService.rejectSubmissionRequest(id));
+        return ResponseEntity.ok(response);
+    }
 
-//    @GetMapping("/students")
-//    public ResponseEntity<List<Student>> getAllStudent()
-//    {
-//        List<Student> students = studentService.getAllStudents();
-//        return ResponseEntity.ok(students);
-//    }
+    @GetMapping("/submissions")
+    public ResponseEntity<?> getAllSubmissions(@RequestParam(name = "status",required = false) AdmissionStatus status)
+    {
+        return ResponseEntity.ok(submissionRequestService.getAllSubmissions(status));
+    }
 
     @PostMapping("/instructor")
     public ResponseEntity<InstructorResponseDTO> addInstructor(@RequestBody InstructorRequestDTO instructorDto)
@@ -97,10 +109,42 @@ public class AdminController {
         return ResponseEntity.ok(courses);
     }
 
+    @DeleteMapping("/course/{id}")
+    public ResponseEntity<?> deleteCourse(@PathVariable Long id) {
+        String message = courseService.deleteCourse(id);
+        return ResponseEntity.ok(message);
+    }
+    @PutMapping("/course/{id}")
+    public ResponseEntity<CourseResponseDTO> updateCourse(@PathVariable Long id,
+                                                          @Valid @RequestBody CourseRequestDTO courseDTO) {
+        CourseResponseDTO updatedCourse = courseService.updateCourse(id, courseDTO);
+        return ResponseEntity.ok(updatedCourse);
+    }
+
+    public ResponseEntity<?> updateCourse(@Valid @RequestBody CourseRequestDTO courseDTO)
+    {
+        courseService.updateCourse(courseDTO);
+        return ResponseEntity.ok("course updated successfully");
+    }
     @GetMapping("/{yearLevel}/{semesterName}")
     public SemesterResponseDTO getSemester(
             @PathVariable Integer yearLevel,
             @PathVariable String semesterName) {
         return semesterService.getSemesterById(yearLevel, semesterName);
+    }
+
+    @PostMapping("/{yearLevel}/{semesterName}/{courseId}")
+    public ResponseEntity<?> assignCoursesToSemester(
+            @PathVariable Integer yearLevel,
+            @PathVariable SemesterName semesterName,
+            @PathVariable Long courseId
+    )
+    {
+        System.out.println("Received Request: Assign Course " + courseId + " to Semester " + yearLevel + " - " + semesterName);
+        CourseResponseDTO updatedCourse = courseService.assignCourseToSemester(yearLevel, semesterName, courseId);
+        System.out.println(updatedCourse.getCourseCode());
+
+
+        return ResponseEntity.ok(updatedCourse);
     }
 }
