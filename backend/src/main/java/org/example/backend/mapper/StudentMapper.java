@@ -7,6 +7,8 @@ import org.example.backend.dto.studentDto.StudentResponseDTO;
 import org.example.backend.dto.submissionDto.SubmissionResponseDTO;
 import org.example.backend.entity.Student;
 import org.example.backend.entity.StudentCourse;
+import org.example.backend.entity.User;
+import org.example.backend.util.FileResponse;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,6 +56,32 @@ public class StudentMapper {
             dto.setSubmissionResponseDTO(reqDto);
         }
 
+        if(entity.getUser().getRoleList()!=null){
+            List<String> roles = new ArrayList<>();
+            for(var role: entity.getUser().getRoleList()){
+                roles.add(String.valueOf(role.getRoleName()));
+            }
+            dto.setRoles(roles);
+        }
+
+        if(entity.getStudentCourse()!=null)
+        {
+
+            List<CourseDTO> courseDTOS =new ArrayList<>();
+            for (var course:entity.getStudentCourse())
+            {
+//                System.out.println("course : "+course.getCourse().getCourseCode());
+                CourseDTO courseDTO=new CourseDTO();
+                courseDTO.setCourseCode(course.getCourse().getCourseCode());
+                courseDTO.setCourseName(course.getCourse().getCourseName());
+                courseDTO.setCourseId(course.getCourse().getCourseId());
+                courseDTO.setGrade(course.getCourse().getYear());
+
+                courseDTOS.add(courseDTO);
+            }
+            dto.setCourses(courseDTOS);
+
+        }
 
 
         return dto;
@@ -81,10 +109,10 @@ public class StudentMapper {
 
         if(student.getSubmissionRequest()!=null)
         {
-            profile.setProfileImage(student.getSubmissionRequest().getPersonalPhoto());
+            profile.setProfileImage(new FileResponse().getFileName(student.getSubmissionRequest().getPersonalPhoto()));
         }
 
-        if(student.getStudentCourse()!=null)
+        if(student.getStudentCourse()!=null &&!student.getStudentCourse().isEmpty())
         {
             List<CourseDTO>  courseDTOS = new ArrayList<>();
             int hours=0;
@@ -105,7 +133,28 @@ public class StudentMapper {
             profile.setTotalCredit(hours);
 
         }
+        else {
+            profile.setCourses(new ArrayList<>());
+            profile.setTotalCredit(0);
+        }
 
         return profile;
+    }
+
+    public static UserDTO toUserDTO(User user) {
+        UserDTO userDTO = new UserDTO();
+        userDTO.setId(user.getId());
+        userDTO.setFirstName(user.getFirstName());
+        userDTO.setLastName(user.getLastName());
+        userDTO.setEmail(user.getEmail());
+        userDTO.setGender(String.valueOf(user.getGender()));
+
+        List<String> roles = new ArrayList<>();
+        for(var role: user.getRoleList()){
+            roles.add(String.valueOf(role.getRoleName()));
+        }
+
+        userDTO.setRoles(roles);
+        return userDTO;
     }
 }

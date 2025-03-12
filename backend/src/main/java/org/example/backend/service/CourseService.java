@@ -1,8 +1,10 @@
 package org.example.backend.service;
 
+import jakarta.validation.Valid;
 import org.example.backend.dto.courseDto.CourseRequestDTO;
 import org.example.backend.dto.courseDto.CourseResponseDTO;
 import org.example.backend.entity.*;
+import org.example.backend.enums.SemesterName;
 import org.example.backend.exception.ResourceNotFound;
 import org.example.backend.mapper.CourseMapper;
 import org.example.backend.repository.CourseRepository;
@@ -10,6 +12,7 @@ import org.example.backend.repository.DepartmentRepository;
 import org.example.backend.repository.InstructorRepository;
 import org.example.backend.repository.SemesterRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -20,12 +23,14 @@ public class CourseService {
     private final DepartmentRepository departmentRepository;
     private final InstructorRepository instructorRepository;
     private final SemesterRepository semesterRepository;
+    private final CourseRepository courseRepository;
 
-    public CourseService(CourseRepository courseRepo, DepartmentRepository departmentRepository, InstructorRepository instructorRepository, SemesterRepository semesterRepository) {
+    public CourseService(CourseRepository courseRepo, DepartmentRepository departmentRepository, InstructorRepository instructorRepository, SemesterRepository semesterRepository, CourseRepository courseRepository) {
         this.courseRepo = courseRepo;
         this.departmentRepository = departmentRepository;
         this.instructorRepository = instructorRepository;
         this.semesterRepository = semesterRepository;
+        this.courseRepository = courseRepository;
     }
 
     public CourseResponseDTO createCourse(CourseRequestDTO dto)
@@ -74,5 +79,143 @@ public class CourseService {
         return courses.stream()
                 .map(CourseMapper::toResponseDTO)
                 .collect(Collectors.toList());
+    }
+
+    public String deleteCourse(Long id) {
+        Course course = courseRepo.findById(id)
+                        .orElseThrow(()-> new ResourceNotFound("course", "id", id));
+        courseRepo.delete(course);
+
+        return "Course with id " + id + " deleted successfully";
+    }
+
+    @Transactional
+    public CourseResponseDTO updateCourse(@Valid CourseRequestDTO courseDTO) {
+        Course existingCourse = courseRepo.findByCode(courseDTO.getCourseCode())
+                .orElseThrow(() -> new ResourceNotFound("Course", "id", courseDTO.getCourseCode()));
+
+        // Step 2: Update basic course attributes
+        existingCourse.setCourseName(courseDTO.getCourseName());
+        existingCourse.setCourseCode(courseDTO.getCourseCode());
+        existingCourse.setCredit(courseDTO.getCredit());
+        existingCourse.setDescription(courseDTO.getDescription());
+        existingCourse.setMaxStudents(courseDTO.getMaxStudents());
+        existingCourse.setSchedule(courseDTO.getSchedule());
+        existingCourse.setType(courseDTO.getType());
+        existingCourse.setYear(courseDTO.getYear());
+
+        // Step 3: Update department if provided
+        if (courseDTO.getDepartmentId() != null) {
+            Department department = departmentRepository.findById(courseDTO.getDepartmentId())
+                    .orElseThrow(() -> new ResourceNotFound("Department", "id", courseDTO.getDepartmentId()));
+            existingCourse.setDepartment(department);
+        }
+
+        // Step 4: Update semester if provided
+        if (courseDTO.getYearLevel() != null && courseDTO.getSemesterName() != null) {
+            SemesterId semesterId = new SemesterId();
+            semesterId.setYearLevel(courseDTO.getYearLevel());
+            semesterId.setSemesterName(courseDTO.getSemesterName());
+
+            Semester semester = semesterRepository.findById(semesterId)
+                    .orElseThrow(() -> new ResourceNotFound("Semester", "yearLevel and semesterName",
+                            courseDTO.getYearLevel() + " and " + courseDTO.getSemesterName()));
+            existingCourse.setSemester(semester);
+        }
+
+        // Step 5: Update instructor if provided
+        if (courseDTO.getInstructorId() != null) {
+            Instructor instructor = instructorRepository.findById(courseDTO.getInstructorId())
+                    .orElseThrow(() -> new ResourceNotFound("Instructor", "id", courseDTO.getInstructorId()));
+            existingCourse.setInstructor(instructor);
+        }
+
+        // Step 6: Update prerequisite course if provided
+        if (courseDTO.getPrerequisiteCourseId() != null) {
+            Course prerequisiteCourse = courseRepo.findById(courseDTO.getPrerequisiteCourseId())
+                    .orElseThrow(() -> new ResourceNotFound("Course", "id", courseDTO.getPrerequisiteCourseId()));
+            existingCourse.setPrerequisiteCourse(prerequisiteCourse);
+        }
+
+        // Step 7: Save updated course
+        Course updatedCourse = courseRepo.save(existingCourse);
+
+        return CourseMapper.toResponseDTO(updatedCourse);
+    }
+
+    @Transactional
+    public CourseResponseDTO updateCourse(Long id , CourseRequestDTO  courseDTO)
+    {
+        Course existingCourse = courseRepo.findById(id)
+
+                .orElseThrow(() -> new ResourceNotFound("Course", "id", id));
+
+        // Step 2: Update basic course attributes
+        existingCourse.setCourseName(courseDTO.getCourseName());
+        existingCourse.setCourseCode(courseDTO.getCourseCode());
+        existingCourse.setCredit(courseDTO.getCredit());
+        existingCourse.setDescription(courseDTO.getDescription());
+        existingCourse.setMaxStudents(courseDTO.getMaxStudents());
+        existingCourse.setSchedule(courseDTO.getSchedule());
+        existingCourse.setType(courseDTO.getType());
+        existingCourse.setYear(courseDTO.getYear());
+
+        // Step 3: Update department if provided
+        if (courseDTO.getDepartmentId() != null) {
+            Department department = departmentRepository.findById(courseDTO.getDepartmentId())
+                    .orElseThrow(() -> new ResourceNotFound("Department", "id", courseDTO.getDepartmentId()));
+            existingCourse.setDepartment(department);
+        }
+
+        // Step 4: Update semester if provided
+        if (courseDTO.getYearLevel() != null && courseDTO.getSemesterName() != null) {
+            SemesterId semesterId = new SemesterId();
+            semesterId.setYearLevel(courseDTO.getYearLevel());
+            semesterId.setSemesterName(courseDTO.getSemesterName());
+
+            Semester semester = semesterRepository.findById(semesterId)
+                    .orElseThrow(() -> new ResourceNotFound("Semester", "yearLevel and semesterName",
+                            courseDTO.getYearLevel() + " and " + courseDTO.getSemesterName()));
+            existingCourse.setSemester(semester);
+        }
+
+        // Step 5: Update instructor if provided
+        if (courseDTO.getInstructorId() != null) {
+            Instructor instructor = instructorRepository.findById(courseDTO.getInstructorId())
+                    .orElseThrow(() -> new ResourceNotFound("Instructor", "id", courseDTO.getInstructorId()));
+            existingCourse.setInstructor(instructor);
+        }
+
+        // Step 6: Update prerequisite course if provided
+        if (courseDTO.getPrerequisiteCourseId() != null) {
+            Course prerequisiteCourse = courseRepo.findById(courseDTO.getPrerequisiteCourseId())
+                    .orElseThrow(() -> new ResourceNotFound("Course", "id", courseDTO.getPrerequisiteCourseId()));
+            existingCourse.setPrerequisiteCourse(prerequisiteCourse);
+        }
+
+        // Step 7: Save updated course
+        Course updatedCourse = courseRepo.save(existingCourse);
+
+        return CourseMapper.toResponseDTO(updatedCourse);
+    }
+
+    public CourseResponseDTO assignCourseToSemester(Integer yearLevel, SemesterName semesterName, Long courseId) {
+        SemesterId semesterId = new SemesterId();
+        semesterId.setYearLevel(yearLevel);
+        semesterId.setSemesterName(semesterName);
+        Semester semester = semesterRepository.findById(semesterId)
+                .orElseThrow(() -> new ResourceNotFound("Semester", "yearLevel and semesterName",
+                        yearLevel + " and " + semesterName));
+
+        Course course = courseRepository.findById(courseId)
+                .orElseThrow(() -> new ResourceNotFound("Course", "id", courseId));
+
+        course.setSemester(semester);
+
+
+        Course updatedCourse=courseRepository.save(course);
+
+        return CourseMapper.toResponseDTO(updatedCourse);
+
     }
 }

@@ -1,5 +1,9 @@
 package org.example.backend.config.JWt;
 
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.UnsupportedJwtException;
+import io.jsonwebtoken.security.SignatureException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -39,6 +43,16 @@ public class JwtFilter extends OncePerRequestFilter {
 
         if(authHeader==null ||!authHeader.startsWith("Bearer "))
         {
+//            response.setStatus(HttpServletResponse.SC_FORBIDDEN); // 403 Forbidden
+//            response.setContentType("application/json");
+//            response.getWriter().write("{"
+//                    + "\"type\": \"about:blank\","
+//                    + "\"title\": \"Forbidden\","
+//                    + "\"status\": 403,"
+//                    + "\"detail\": \"Missing authentication token. Please provide a valid JWT.\","
+//                    + "\"error\": \"JWT token missing\""
+//                    + "}");
+//            response.getWriter().flush();
             filterChain.doFilter(request,response);
             return;
 
@@ -65,8 +79,8 @@ public class JwtFilter extends OncePerRequestFilter {
 
             filterChain.doFilter(request, response);
         }
-        catch (Exception ex)
-        {
+        catch (ExpiredJwtException | MalformedJwtException | SignatureException |
+               UnsupportedJwtException | IllegalArgumentException ex) {
             handlerExceptionResolver.resolveException(request, response, null, ex);
         }
     }
