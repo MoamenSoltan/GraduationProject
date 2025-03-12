@@ -35,7 +35,7 @@ const useAxiosPrivate = () => {
                 if ((error?.response?.status === 401 || error?.response?.status === 403) && !prevRequest.sent) {
                     console.error("Token expired or invalid. Logging out...");
                     setAuth({}); // Clear auth state
-                    navigate("/login", { replace: true });
+                    navigate("/registration", { replace: true });
                     return Promise.reject(error);
                 }
 
