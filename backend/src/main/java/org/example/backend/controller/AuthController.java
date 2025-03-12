@@ -1,6 +1,8 @@
 package org.example.backend.controller;
 
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.example.backend.dto.submissionDto.SubmissionImages;
 import org.example.backend.dto.submissionDto.SubmissionInfoRequestDTO;
 import org.example.backend.service.AuthService;
@@ -15,6 +17,7 @@ import java.io.IOException;
 
 @RestController
 @RequestMapping("/auth")
+@Tag(name = "Authentication", description = "Endpoints related to user authentication and registration")
 public class AuthController {
     private final SubmissionRequestService requestService;
    private final AuthService authService;
@@ -26,6 +29,11 @@ public class AuthController {
     }
 
 
+
+    @Operation(
+            summary = "User login",
+            description = "Authenticates a user with their email and password and returns a JWT token."
+    )
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest request) {
         String email = request.getEmail();
@@ -35,6 +43,11 @@ public class AuthController {
         return ResponseEntity.ok(response);
     }
 
+    @Operation(
+            summary = "User registration",
+            description = "Registers a new user with their personal information and images. " +
+                    "The request should include form-data with 'info' as SubmissionInfoRequestDTO and 'images' as SubmissionImages."
+    )
     @PostMapping("/register")
     public ResponseEntity<?> register(
             @ModelAttribute("info") SubmissionInfoRequestDTO info,

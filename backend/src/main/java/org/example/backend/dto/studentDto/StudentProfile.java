@@ -20,6 +20,10 @@ public class StudentProfile {
     private Double gpa;
     private int grade;
     private String address;
+    private String city;
+    private String country;
+    private String firstName;
+    private String lastName;
 
 
 }

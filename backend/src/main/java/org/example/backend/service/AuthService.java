@@ -18,6 +18,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 public class AuthService {
     private final AuthenticationManager manager;
@@ -80,6 +83,7 @@ public class AuthService {
 
         Object userData;
         String message = "User login successful";
+        AuthResponse response =new AuthResponse();
 
         if (isAdmin(userDetails)) {
             userData = StudentMapper.toUserDTO(user);
@@ -88,17 +92,38 @@ public class AuthService {
             Instructor instructor = instructorRepository.findByUser(user).orElse(null);
 
             if (student != null) {
-                student.getSubmissionRequest().setPersonalPhoto(fileService.getFileName(student.getSubmissionRequest().getPersonalPhoto()));
-                userData = StudentMapper.toStudentResponseDTO(student);
+                response.setAccessToken(token);
+                response.setMessage(message);
+                response.setPersonalImage(fileService.getFileName(student.getSubmissionRequest().getPersonalPhoto()));
+                response.setFirstName(student.getUser().getFirstName());
+                response.setLastName(student.getUser().getLastName());
+                List<String> roles = new ArrayList<>();
+                for(var role: student.getUser().getRoleList()){
+                    roles.add(String.valueOf(role.getRoleName()));
+                }
+                response.setRoles(roles);
+                response.setEmail(student.getUser().getEmail());
+
+//                userData = StudentMapper.toStudentResponseDTO(student);
 
             } else if (instructor != null) {
-                userData = InstructorMapper.entityToResponseDTO(instructor);
+                response.setAccessToken(token);
+                response.setMessage(message);
+                response.setFirstName(instructor.getUser().getFirstName());
+                response.setLastName(instructor.getUser().getLastName());
+                List<String> roles = new ArrayList<>();
+                for(var role: instructor.getUser().getRoleList()){
+                    roles.add(String.valueOf(role.getRoleName()));
+                }
+                response.setRoles(roles);
+                response.setEmail(instructor.getUser().getEmail());
+//                userData = InstructorMapper.entityToResponseDTO(instructor);
             } else {
                 throw new RuntimeException("User type not recognized");
             }
         }
 
-        return new AuthResponse(token, message, userData,null);
+        return response;
     }
 
 

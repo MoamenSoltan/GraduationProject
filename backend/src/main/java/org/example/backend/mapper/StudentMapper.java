@@ -8,6 +8,7 @@ import org.example.backend.dto.submissionDto.SubmissionResponseDTO;
 import org.example.backend.entity.Student;
 import org.example.backend.entity.StudentCourse;
 import org.example.backend.entity.User;
+import org.example.backend.util.AuthResponse;
 import org.example.backend.util.FileResponse;
 
 import java.util.ArrayList;
@@ -93,12 +94,18 @@ public class StudentMapper {
         profile.setId(student.getStudentId());
         profile.setGrade(student.getAcademicYear());
         profile.setGpa(student.getGpa());
+        profile.setAddress(student.getSubmissionRequest().getAddress());
+        profile.setCity(student.getSubmissionRequest().getCity());
+        profile.setCountry(student.getSubmissionRequest().getCountry());
+
 
 
         if (student.getUser() != null) {
 //            profile.setUserId(student.getUser().getId());
             profile.setUsername(student.getUser().getFirstName()+" " + student.getUser().getLastName());
             profile.setEmail(student.getUser().getEmail());
+            profile.setLastName(student.getUser().getLastName());
+            profile.setFirstName(student.getUser().getFirstName());
 
 
         }
@@ -107,10 +114,7 @@ public class StudentMapper {
             profile.setDepartment(student.getDepartment().getDepartmentName());
         }
 
-        if(student.getSubmissionRequest()!=null)
-        {
-            profile.setProfileImage(new FileResponse().getFileName(student.getSubmissionRequest().getPersonalPhoto()));
-        }
+        profile.setProfileImage(new FileResponse().getFileName(student.getSubmissionRequest().getPersonalPhoto()));
 
         if(student.getStudentCourse()!=null &&!student.getStudentCourse().isEmpty())
         {
@@ -157,4 +161,6 @@ public class StudentMapper {
         userDTO.setRoles(roles);
         return userDTO;
     }
+
+
 }
