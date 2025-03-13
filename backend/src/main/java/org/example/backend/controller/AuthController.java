@@ -3,6 +3,9 @@ package org.example.backend.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import org.example.backend.dto.RefreshTokenRequest;
 import org.example.backend.dto.submissionDto.SubmissionImages;
 import org.example.backend.dto.submissionDto.SubmissionInfoRequestDTO;
 import org.example.backend.service.AuthService;
@@ -62,6 +65,19 @@ public class AuthController {
         }
 
         return ResponseEntity.ok(saved);
+    }
+
+
+    @PostMapping("/refresh_token")
+    public ResponseEntity<?> refreshToken(HttpServletRequest request, HttpServletResponse response)
+    {
+        return ResponseEntity.ok(authService.refreshToken(request,response));
+    }
+
+    @PostMapping("/refreshToken")
+    public ResponseEntity<?> refreshToken(@RequestBody RefreshTokenRequest refreshToken) {
+
+        return ResponseEntity.ok(authService.getNewAccessToken(refreshToken.getRefreshToken()));
     }
 
     @GetMapping("/data")
