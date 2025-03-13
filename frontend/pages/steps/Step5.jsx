@@ -1,13 +1,15 @@
-import React from 'react'
+import React, { useState } from 'react'
 import ProgressBar from '../../components/ProgressBar'
 import { motion } from 'motion/react'
 import Check from '../../data/check.svg'
 import { useStateContext } from '../../contexts/ContextProvider'
 import { useNavigate } from 'react-router'
 import axios from '../../api/axios'
+import toast from 'react-hot-toast'
 
 const Step5 = () => {
     const { user, setUser } = useStateContext();
+    const [loading, setLoading] = useState(false)
     const navigate = useNavigate();
 
     const handleSubmit = () => {
@@ -20,6 +22,9 @@ const Step5 = () => {
         // notes :
         // check field names with backend
         const register = async () => {
+            if(loading)
+                return
+            setLoading(true)
             try {
               console.log("Submitting User Data:", user);
 
@@ -31,6 +36,10 @@ const Step5 = () => {
                 navigate("/registration/done");
             } catch (error) {
                 console.log("An error occurred during registration:", error.response.data);
+                toast.error( error.response.data.detail)
+            }
+            finally {
+                setLoading(false)
             }
         };
         register();

@@ -8,7 +8,7 @@ const Courses = ({preview}) => {
   return (
     <div className="flex flex-col items-center justify-center w-full mt-5">
       {/* Header */}
-      <div className="flex flex-row justify-between mr-auto w-full">
+      <div className="flex flex-row justify-between mr-auto w-[85%]">
         <h2 className="text-xl font-semibold">Enrolled Courses</h2>
         <Link to="/studentDashboard/Courses" className="text-[#0096C1] sub-text-2">
           See More

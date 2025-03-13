@@ -70,38 +70,45 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useStateContext } from '../contexts/ContextProvider';
 import { Outlet } from 'react-router';
+import toast from 'react-hot-toast';
 
 const ProtectedRoutes = ({ allowedRoles }) => {
     const { auth } = useStateContext();
     const navigate = useNavigate();
     const location = useLocation();
-    const [loading, setLoading] = useState(true); // Prevents redirect before auth is stable
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        // Ensure we don't redirect before auth is checked
-        if (auth === undefined) return;
-
+        if (auth === undefined) return; // Prevent early redirects
         setLoading(false);
 
-        // If the user is not authenticated, redirect to registration
         if (!auth?.accessToken) {
+            console.warn("User is not authenticated, redirecting to /registration...");
+            toast.error("User logged out")
             navigate("/registration", { replace: true });
             return;
         }
 
-        // Extract user role
-        const userRole = auth?.user?.roles?.[0]?.toLowerCase();
+        const userRole = auth?.roles?.[0]?.toLowerCase(); // Extract role properly
+        if (!userRole) {
+            console.warn("No role found for user:", auth);
+            return;
+        }
+
+        console.log("User role:", userRole);
         const dashboardRoute = `/${userRole}Dashboard`;
 
-        console.log("Current role:", userRole);
-
-        // If user is in allowed roles and not already on their dashboard, redirect
-        if (allowedRoles.includes(auth?.user?.roles?.[0]) && location.pathname !== dashboardRoute) {
+        // Only redirect if user is not already inside their correct dashboard path
+        if (
+            allowedRoles.map(role => role.toLowerCase()).includes(userRole) &&
+            !location.pathname.startsWith(dashboardRoute) // Allow nested routes
+        ) {
+            console.log(`Redirecting user to: ${dashboardRoute}`);
             navigate(dashboardRoute, { replace: true });
         }
     }, [auth, allowedRoles, navigate, location.pathname]);
 
-    if (loading) return null; // Prevents flashing effect
+    if (loading) return null;
 
     return <Outlet />;
 };

@@ -7,7 +7,7 @@ import { IoIosNotificationsOff } from "react-icons/io";
 const Announcements = ({preview}) => {
   return (
     <div className="flex flex-col items-center justify-center w-full">
-      <div className="flex flex-row justify-between mr-auto w-full">
+      <div className="flex flex-row w-[85%] justify-between mr-auto ">
         <h2 className="text-xl font-semibold">Announcements</h2>
         <Link to="/studentDashboard/Announcements" className="text-[#0096C1] sub-text-2">
           See More

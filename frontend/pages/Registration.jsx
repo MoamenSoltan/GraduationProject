@@ -7,6 +7,7 @@ import { useNavigate } from "react-router";
 import axios from "../api/axios";
 import useAxiosPrivate from "../hooks/useAxiosPrivate";
 import { PulseLoader } from "react-spinners";
+import toast from "react-hot-toast";
 const Registration = () => {
   // const [email, setEmail] = useState("")
   // const [password, setPassword] = useState("")
@@ -53,20 +54,19 @@ const Registration = () => {
           password: user.password,
         }, {headers: {"Content-Type":'application/json'},
         withCredentials:true});
+        console.log("response :",response);
+        
 
-        const accessToken = response.data.accessToken;
-        const message = response.data.message;
-        const userData = response.data.user
-        const role = userData.roles[0].toLowerCase()
+        const {accessToken,email,firstName,lastName,message,personalImage,refreshToken,roles} = response.data
         console.log(response.data);
         
 
         //TODO: replace with user with real data
-        setAuth({ user: userData, accessToken, message });
+        setAuth({ ...response.data });
 
-        console.log(auth);
-
-        navigate(`/${role}Dashboard`);
+        // console.log("Authentication state : ",auth);
+        toast.success(response.data.message)
+        navigate(`/${roles[0].toLowerCase()}Dashboard`);
 
         // navigate(`/${response?.data?.user?.role}Dashboard`);
         // TODO: replace with real data
