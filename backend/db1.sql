@@ -144,3 +144,17 @@ insert into graduation_project.department values (1,'general',null,now()),
                                                  (2,'CS',null,now()),
                                                  (3,'IT',null,now()),
                                                  (4,'IS',null,now());
+
+CREATE TABLE refresh_tokens (
+                                id BIGINT PRIMARY KEY AUTO_INCREMENT,
+                                token VARCHAR(512) NOT NULL,
+                                user_id BIGINT NOT NULL,
+                                expiry_date TIMESTAMP NOT NULL,
+                                revoked BOOLEAN NOT NULL DEFAULT FALSE,
+                                CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+                                CONSTRAINT uk_token UNIQUE (token)
+);
+
+
+CREATE INDEX idx_refresh_token_user_id ON refresh_tokens(user_id);
+CREATE INDEX idx_refresh_token_expiry ON refresh_tokens(expiry_date);
