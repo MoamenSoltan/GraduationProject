@@ -6,13 +6,14 @@ import { MdKeyboardArrowUp } from 'react-icons/md'
 import { useStateContext } from '../contexts/ContextProvider'
 import person from "../data/avatar.jpg"
 import { useNavigate } from 'react-router'
+import { trimText } from '../utils/trim'
 //style={{ width:activeMenu?"":""}}
 // ${activeMenu?"ml-[300px]":""} `
 
 
 const NavBar = () => {
-    const {activeMenu,setActiveMenu}=useStateContext()
-
+    const {activeMenu,setActiveMenu,auth}=useStateContext()
+    const name=auth.firstName.concat(" ",auth.lastName)
     const navigate = useNavigate()
     useEffect(()=>{
         //TODO: API call here to fetch profile info , or fetch required data upon login
@@ -23,14 +24,14 @@ const NavBar = () => {
         <AiOutlineMenu/>
         </button>
 
-        <button onClick={()=>{navigate("/StudentDashboard/profile")}} className='hover:bg-gray-200 p-2 md:w-[250px] rounded-md flex flex-row justify-center items-center gap-2'>
+        <button onClick={()=>{navigate("/studentDashboard/profile")}} className='hover:bg-gray-200 p-2 md:w-[250px] rounded-md flex flex-row justify-center items-center gap-2'>
             <div className='border-2 rounded-full border-[#0096C1] '>
-            <img src={person} className='w-10 rounded-full ' alt="person" />
+            <img src={auth.personalImage} className='w-10 rounded-full ' alt="person" />
             </div>
 
 {/* TODO: switch user with API data  */}
             <div className='sub-text flex flex-row items-center  '>
-                <p>Hi, <span className='font-bold'>User</span> </p>
+                <p>Hi, <span className='font-bold'>{trimText(name,10)}</span> </p>
                 <MdKeyboardArrowDown className='w-5 h-5'/>
 
             </div>

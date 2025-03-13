@@ -7,7 +7,7 @@ import { LuBookText } from "react-icons/lu";
 import { trimText } from "../utils/trim";
 
 const Profile = () => {
-  const { user, setUser } = useStateContext();
+  const { user, setUser ,auth } = useStateContext();
   const [isChanged, setIsChanged] = useState(false);
 
   const handleChange = (e) => {

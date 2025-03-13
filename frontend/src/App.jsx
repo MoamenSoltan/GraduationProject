@@ -14,6 +14,7 @@ import AdminDashboard from "../pages/AdminDashboard"
 import { useStateContext } from "../contexts/ContextProvider"
 import { useEffect } from "react"
 import ProtectedRoutes from "../components/ProtectedRoutes"
+import { Toaster } from "react-hot-toast"
 /**
  * e-commerce app for better understanding of filtering and query parameters
  * 
@@ -110,6 +111,7 @@ function App() {
         </Routes>
       
       </BrowserRouter>
+      <Toaster/>
     </div>
   )
 }

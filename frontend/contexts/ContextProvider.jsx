@@ -46,7 +46,10 @@ export const ContextProvider = ({children})=>{
    return (
     <stateContext.Provider value={{
         Placeholder,user,setUser,
-        meter,incrementMeter,setMeter,decrementMeter,activeMenu,setActiveMenu,profile,setProfile,auth ,setAuth
+        meter,incrementMeter,setMeter,decrementMeter,
+        activeMenu,setActiveMenu,
+        profile,setProfile,
+        auth ,setAuth
     }}>
         {children}
     </stateContext.Provider>
