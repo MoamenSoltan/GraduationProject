@@ -84,7 +84,7 @@ const ProtectedRoutes = ({ allowedRoles }) => {
 
         if (!auth?.accessToken) {
             console.warn("User is not authenticated, redirecting to /registration...");
-            toast.error("User logged out")
+            toast.error("Session expired")
             navigate("/registration", { replace: true });
             return;
         }
