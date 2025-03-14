@@ -22,7 +22,7 @@ public class Role {
     @Column(name = "role_name")
     private RoleType roleName;
 
-    @ManyToMany(mappedBy = "roleList")
+    @ManyToMany(mappedBy = "roleList", cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JsonBackReference
     private List<User> users;
 
