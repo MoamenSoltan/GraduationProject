@@ -8,18 +8,25 @@ import org.example.backend.dto.instructorDto.InstructorRequestDTO;
 import org.example.backend.dto.instructorDto.InstructorResponseDTO;
 import org.example.backend.dto.semesterDto.SemesterRequestDTO;
 import org.example.backend.dto.semesterDto.SemesterResponseDTO;
+import org.example.backend.entity.Course;
+import org.example.backend.entity.Instructor;
+import org.example.backend.entity.User;
 import org.example.backend.enums.AdmissionStatus;
 import org.example.backend.enums.SemesterName;
+import org.example.backend.exception.ResourceNotFound;
+import org.example.backend.repository.CourseRepository;
+import org.example.backend.repository.DepartmentRepository;
+import org.example.backend.repository.InstructorRepository;
+import org.example.backend.repository.UserRepository;
 import org.example.backend.service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @RequestMapping("/admin")
@@ -32,8 +39,12 @@ public class AdminController {
     private static final Logger logger = LoggerFactory.getLogger(AdminController.class);
     private final AdminService adminService;
     private final SubmissionRequestService submissionRequestService;
+    private final InstructorRepository instructorRepository;
+    private final CourseRepository courseRepository;
+    private final DepartmentRepository departmentRepository;
+    private final UserRepository userRepository;
 
-    public AdminController(StudentService studentService, InstructorService instructorService, PasswordEncoder passwordEncoder, SemesterService service, CourseService courseService, AdminService adminService, SubmissionRequestService submissionRequestService) {
+    public AdminController(StudentService studentService, InstructorService instructorService, PasswordEncoder passwordEncoder, SemesterService service, CourseService courseService, AdminService adminService, SubmissionRequestService submissionRequestService, InstructorRepository instructorRepository, CourseRepository courseRepository, DepartmentRepository departmentRepository, UserRepository userRepository) {
         this.studentService = studentService;
         this.instructorService = instructorService;
         this.passwordEncoder = passwordEncoder;
@@ -42,6 +53,10 @@ public class AdminController {
         this.courseService = courseService;
         this.adminService = adminService;
         this.submissionRequestService = submissionRequestService;
+        this.instructorRepository = instructorRepository;
+        this.courseRepository = courseRepository;
+        this.departmentRepository = departmentRepository;
+        this.userRepository = userRepository;
     }
 
     @PostMapping("/approve/{id}")
@@ -82,6 +97,27 @@ public class AdminController {
     {
         List<InstructorResponseDTO> instructors = instructorService.getAllInstructors();
         return ResponseEntity.ok(instructors);
+    }
+
+    @DeleteMapping("/instructor/{id}")
+    @Transactional
+    public ResponseEntity<?> deleteInstructor(@PathVariable int id) {
+        Instructor instructor = instructorRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFound("Instructor", "id", id));
+
+        User user = instructor.getUser();
+        if (user != null) {
+            //  Remove user from user_roles
+            instructorRepository.deleteByUserId(user.getId());
+
+
+            userRepository.delete(user);
+        }
+
+
+        instructorRepository.delete(instructor);
+
+        return ResponseEntity.ok("Instructor deleted successfully");
     }
 
 

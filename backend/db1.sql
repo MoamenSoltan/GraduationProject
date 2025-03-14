@@ -158,3 +158,9 @@ CREATE TABLE refresh_tokens (
 
 CREATE INDEX idx_refresh_token_user_id ON refresh_tokens(user_id);
 CREATE INDEX idx_refresh_token_expiry ON refresh_tokens(expiry_date);
+
+ALTER TABLE `courses` DROP FOREIGN KEY `courses_ibfk_3`;
+
+ALTER TABLE `courses`
+    ADD CONSTRAINT `courses_ibfk_3` FOREIGN KEY (`instructor_id`)
+        REFERENCES `instructors` (`instructor_id`) ON DELETE SET NULL;

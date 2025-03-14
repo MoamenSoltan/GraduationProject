@@ -8,6 +8,9 @@ import lombok.Getter;
 import lombok.Setter;
 import org.example.backend.entity.Department;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Table(name = "instructors")
 @Setter
@@ -17,7 +20,7 @@ public class Instructor {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int instructorId;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn(name = "user_id")
     private User user;
 
@@ -30,5 +33,7 @@ public class Instructor {
     @JsonBackReference
     private Department managedDepartment;
 
+    @OneToMany(mappedBy = "instructor", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Course> courses = new ArrayList<>();
 
 }
