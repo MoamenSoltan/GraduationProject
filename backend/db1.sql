@@ -148,7 +148,7 @@ insert into graduation_project.department values (1,'general',null,now()),
 CREATE TABLE refresh_tokens (
                                 id BIGINT PRIMARY KEY AUTO_INCREMENT,
                                 token VARCHAR(512) NOT NULL,
-                                user_id BIGINT NOT NULL,
+                                user_id int NOT NULL,
                                 expiry_date TIMESTAMP NOT NULL,
                                 revoked BOOLEAN NOT NULL DEFAULT FALSE,
                                 CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
@@ -164,3 +164,35 @@ ALTER TABLE `courses` DROP FOREIGN KEY `courses_ibfk_3`;
 ALTER TABLE `courses`
     ADD CONSTRAINT `courses_ibfk_3` FOREIGN KEY (`instructor_id`)
         REFERENCES `instructors` (`instructor_id`) ON DELETE SET NULL;
+
+CREATE TRIGGER increase_enrollment_count
+    AFTER INSERT ON graduation_project.student_course
+    FOR EACH ROW
+BEGIN
+    UPDATE graduation_project.courses
+    SET student_enrolled = courses.student_enrolled + 1
+    WHERE course_id = NEW.course_id;
+END;
+
+
+CREATE TRIGGER decrease_enrollment_count
+    AFTER delete ON graduation_project.student_course
+    FOR EACH ROW
+BEGIN
+    UPDATE graduation_project.courses
+    SET student_enrolled = courses.student_enrolled - 1
+    WHERE course_id = OLD.course_id;
+END;
+
+CREATE TRIGGER decrease_enrollment_count
+    AFTER DELETE ON graduation_project.student_course
+    FOR EACH ROW
+BEGIN
+    -- Ensure student_enrolled never goes below 0
+    UPDATE graduation_project.courses
+    SET student_enrolled = CASE
+                               WHEN student_enrolled > 0 THEN student_enrolled - 1
+                               ELSE 0
+        END
+    WHERE course_id = OLD.course_id;
+    END
