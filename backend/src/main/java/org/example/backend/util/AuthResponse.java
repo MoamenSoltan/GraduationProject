@@ -23,6 +23,7 @@ public class AuthResponse {
     private String email;
     private List<String> roles;
     private String personalImage;
+    @JsonIgnore
     private String refreshToken;
 
 

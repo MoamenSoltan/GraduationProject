@@ -8,16 +8,11 @@ import org.example.backend.dto.instructorDto.InstructorRequestDTO;
 import org.example.backend.dto.instructorDto.InstructorResponseDTO;
 import org.example.backend.dto.semesterDto.SemesterRequestDTO;
 import org.example.backend.dto.semesterDto.SemesterResponseDTO;
-import org.example.backend.entity.Course;
-import org.example.backend.entity.Instructor;
-import org.example.backend.entity.User;
+import org.example.backend.entity.*;
 import org.example.backend.enums.AdmissionStatus;
 import org.example.backend.enums.SemesterName;
 import org.example.backend.exception.ResourceNotFound;
-import org.example.backend.repository.CourseRepository;
-import org.example.backend.repository.DepartmentRepository;
-import org.example.backend.repository.InstructorRepository;
-import org.example.backend.repository.UserRepository;
+import org.example.backend.repository.*;
 import org.example.backend.service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,8 +38,9 @@ public class AdminController {
     private final CourseRepository courseRepository;
     private final DepartmentRepository departmentRepository;
     private final UserRepository userRepository;
+    private final StudentRepository studentRepository;
 
-    public AdminController(StudentService studentService, InstructorService instructorService, PasswordEncoder passwordEncoder, SemesterService service, CourseService courseService, AdminService adminService, SubmissionRequestService submissionRequestService, InstructorRepository instructorRepository, CourseRepository courseRepository, DepartmentRepository departmentRepository, UserRepository userRepository) {
+    public AdminController(StudentService studentService, InstructorService instructorService, PasswordEncoder passwordEncoder, SemesterService service, CourseService courseService, AdminService adminService, SubmissionRequestService submissionRequestService, InstructorRepository instructorRepository, CourseRepository courseRepository, DepartmentRepository departmentRepository, UserRepository userRepository, StudentRepository studentRepository) {
         this.studentService = studentService;
         this.instructorService = instructorService;
         this.passwordEncoder = passwordEncoder;
@@ -57,6 +53,7 @@ public class AdminController {
         this.courseRepository = courseRepository;
         this.departmentRepository = departmentRepository;
         this.userRepository = userRepository;
+        this.studentRepository = studentRepository;
     }
 
     @PostMapping("/approve/{id}")
@@ -120,6 +117,28 @@ public class AdminController {
         return ResponseEntity.ok("Instructor deleted successfully");
     }
 
+    @DeleteMapping("/student/{id}")
+    @Transactional
+    public ResponseEntity<?> deleteStudent(@PathVariable int id) {
+        Student student = studentRepository.findById((long) id)
+                .orElseThrow(() -> new ResourceNotFound("Instructor", "id", id));
+
+        User user = student.getUser();
+        if (user != null) {
+            //  Remove user from user_roles
+            instructorRepository.deleteByUserId(user.getId());
+
+
+            userRepository.delete(user);
+        }
+
+//        List<StudentCourse> course=student.getStudentCourse();
+
+
+        studentRepository.delete(student);
+
+        return ResponseEntity.ok("Student deleted successfully");
+    }
 
 
     @PostMapping("/semester")

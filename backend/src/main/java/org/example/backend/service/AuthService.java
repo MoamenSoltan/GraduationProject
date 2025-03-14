@@ -1,5 +1,6 @@
 package org.example.backend.service;
 
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.example.backend.config.CustomUserDetails;
@@ -17,7 +18,9 @@ import org.example.backend.repository.StudentRepository;
 import org.example.backend.repository.UserRepository;
 import org.example.backend.util.AuthResponse;
 import org.example.backend.util.JwtResponse;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -27,13 +30,13 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class AuthService {
+    @Value("${application.security.jwt.refresh-token-expiration}")
+    private  long REFRESH_VALIDITY ;
     private final AuthenticationManager manager;
     private final JwtService jwtService;
     private final UserRepository userRepository;
@@ -77,66 +80,46 @@ public class AuthService {
         }
     }
 
-    public AuthResponse login(String email, String password)
+    public AuthResponse login(String email, String password,HttpServletResponse servletResponse)
     {
         User user = userRepository.getUserByEmail(email)
-                .orElse(null);
-
-        if (user == null) {
-            throw new BadCredentialsException("Invalid email or password.");
-        }
+                .orElseThrow(() -> new BadCredentialsException("Invalid email or password."));
 
         var auth = isAuthenticated(email, password);
-
         if (auth == null || !auth.isAuthenticated()) {
             throw new BadCredentialsException("Invalid email or password.");
         }
 
         SecurityContextHolder.getContext().setAuthentication(auth);
         UserDetails userDetails = (UserDetails) auth.getPrincipal();
-        String accessToken = jwtService.generateAccessToken(userDetails);
-        RefreshToken tokenEntity = refreshTokenService.createRefreshToken(userDetails.getUsername());
-//        String refreshToken = jwtService.generateRefreshToken(userDetails);
-        String refreshToken = tokenEntity.getToken();
-        Object userData;
-        String message = "User login successful";
-        AuthResponse response =new AuthResponse();
 
+        // Generate Tokens
+        String accessToken = jwtService.generateAccessToken(userDetails);
+//        RefreshToken tokenEntity = refreshTokenService.createRefreshToken(userDetails.getUsername());
+//        String refreshToken = tokenEntity.getToken();
+
+        String refreshToken = jwtService.generateRefreshToken(userDetails);
+        setRefreshTokenCookie(servletResponse,refreshToken);
+
+        AuthResponse response = new AuthResponse();
+        response.setAccessToken(accessToken);
+        response.setRefreshToken(refreshToken);
+        response.setEmail(user.getEmail());
+        response.setFirstName(user.getFirstName());
+        response.setLastName(user.getLastName());
+        response.setMessage("User login successful");
+
+        // Process User Role: Admin, Student, or Instructor
         if (isAdmin(userDetails)) {
-            userData = StudentMapper.toUserDTO(user);
+            response.setRoles(getUserRoles(userDetails));
         } else {
             Student student = studentRepository.findByUser(user).orElse(null);
             Instructor instructor = instructorRepository.findByUser(user).orElse(null);
 
             if (student != null) {
-                response.setAccessToken(accessToken);
-                response.setMessage(message);
-                response.setPersonalImage(fileService.getFileName(student.getSubmissionRequest().getPersonalPhoto()));
-                response.setFirstName(student.getUser().getFirstName());
-                response.setLastName(student.getUser().getLastName());
-                List<String> roles = new ArrayList<>();
-                for(var role: student.getUser().getRoleList()){
-                    roles.add(String.valueOf(role.getRoleName()));
-                }
-                response.setRoles(roles);
-                response.setEmail(student.getUser().getEmail());
-                response.setRefreshToken(refreshToken);
-
-//                userData = StudentMapper.toStudentResponseDTO(student);
-
+                populateStudentResponse(response, student);
             } else if (instructor != null) {
-                response.setAccessToken(accessToken);
-                response.setMessage(message);
-                response.setFirstName(instructor.getUser().getFirstName());
-                response.setLastName(instructor.getUser().getLastName());
-                List<String> roles = new ArrayList<>();
-                for(var role: instructor.getUser().getRoleList()){
-                    roles.add(String.valueOf(role.getRoleName()));
-                }
-                response.setRoles(roles);
-                response.setEmail(instructor.getUser().getEmail());
-                response.setRefreshToken(refreshToken);
-//                userData = InstructorMapper.entityToResponseDTO(instructor);
+                populateInstructorResponse(response, instructor);
             } else {
                 throw new RuntimeException("User type not recognized");
             }
@@ -147,38 +130,25 @@ public class AuthService {
 
 
     public ResponseEntity<?> refreshToken(HttpServletRequest request, HttpServletResponse response) {
-        // extract the token from the request
-        String authHeader = request.getHeader("authorization");
-
-        if(authHeader ==null || !authHeader.startsWith("Bearer "))
+        String refreshToken = extractRefreshTokenFromCookie(request);
+        if(refreshToken==null)
         {
-            return null;
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Missing refresh token.");
         }
 
-        String token = authHeader.substring(7);
-        String email = jwtService.extractUsername(token);
-
+        String email = jwtService.validateRefreshToken(refreshToken);
         User user = userRepository.getUserByEmail(email)
-                .orElseThrow(()->new ResourceNotFound("user","email",email));
+                .orElseThrow(() -> new ResourceNotFound("User", "email", email));
 
-//        jwtService.isValidateRefreshToken(token, user);
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        UserDetails userDetails = null;
-        System.out.println("userDetails : " + userDetails);
-        if(jwtService.isRefreshTokenValid(token,user))
-        {
-            userDetails = new CustomUserDetails(user);
-            String newAccessToken = jwtService.generateAccessToken(userDetails);
-            String newRefreshToken = jwtService.generateRefreshToken(userDetails);
-            Map<String,String> tokens = new HashMap<>();
-            tokens.put("accessToken", newAccessToken);
-            tokens.put("refreshToken", newRefreshToken);
+        UserDetails userDetails =new CustomUserDetails(user);
+        String accessToken = jwtService.generateAccessToken(userDetails);
+        String newRefreshToken = jwtService.generateRefreshToken(userDetails);
+        setRefreshTokenCookie(response,newRefreshToken);
 
-            return new ResponseEntity<>(tokens,HttpStatus.OK);
-        }
+        Map<String, String> tokens = new HashMap<>();
+        tokens.put("accessToken", accessToken);
 
-
-        return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        return ResponseEntity.ok(tokens);
     }
 
     public JwtResponse getNewAccessToken(String refreshToken) {
@@ -199,5 +169,46 @@ public class AuthService {
         response.setRefreshToken(refreshToken);
 
         return response;
+    }
+
+    private List<String> getUserRoles(UserDetails userDetails) {
+        return userDetails.getAuthorities().stream()
+                .map(role -> role.getAuthority().replace("ROLE_", "")) // Remove "ROLE_" prefix
+                .collect(Collectors.toList());
+    }
+
+    private void populateStudentResponse(AuthResponse response, Student student) {
+        response.setPersonalImage(fileService.getFileName(student.getSubmissionRequest().getPersonalPhoto()));
+        response.setRoles(student.getUser().getRoleList().stream()
+                .map(role -> role.getRoleName().toString())
+                .collect(Collectors.toList()));
+    }
+    private void populateInstructorResponse(AuthResponse response, Instructor instructor) {
+        response.setRoles(instructor.getUser().getRoleList().stream()
+                .map(role -> role.getRoleName().toString())
+                .collect(Collectors.toList()));
+    }
+
+    private String extractRefreshTokenFromCookie(HttpServletRequest request) {
+        if (request.getCookies() != null) {
+            for (Cookie cookie : request.getCookies()) {
+                if (cookie.getName().equals("refreshToken")) {
+                    return cookie.getValue();
+                }
+            }
+        }
+        return null;
+    }
+
+    private  void setRefreshTokenCookie(HttpServletResponse response, String refreshToken) {
+        ResponseCookie refreshCookie = ResponseCookie.from("refreshToken", refreshToken)
+                .httpOnly(true) // Secure against XSS
+                .secure(true) // Use HTTPS in production
+                .sameSite("Strict") // Prevent CSRF attacks
+                .path("/auth/refreshToken") // Only used for refresh endpoint
+                .maxAge(REFRESH_VALIDITY) // 7 days
+                .build();
+
+        response.addHeader("Set-Cookie", refreshCookie.toString());
     }
 }

@@ -28,7 +28,7 @@ import java.util.Collections;
 @Configuration
 public class SecurityConfig {
     private static final String[] PUBLIC_URLS = {
-            "/auth/login", "/auth/register","auth/refreshToken",
+            "/auth/login", "/auth/register","auth/refreshToken","auth/refresh_token",
             "/test/**", "/api/**",
             "/v2/api-docs", "/v3/api-docs",
             "/v3/api-docs/**", "/swagger-resources",
@@ -67,6 +67,7 @@ public class SecurityConfig {
                         .anyRequest().authenticated()
                 )
 //                .httpBasic(Customizer.withDefaults())
+//                .formLogin(f->f.permitAll())
                 .addFilterBefore(getJwtFilter(jwtService), UsernamePasswordAuthenticationFilter.class)
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()));
 //                .exceptionHandling(e -> e
