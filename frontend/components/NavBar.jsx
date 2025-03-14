@@ -13,7 +13,7 @@ import { trimText } from '../utils/trim'
 
 const NavBar = () => {
     const {activeMenu,setActiveMenu,auth}=useStateContext()
-    const name=auth.firstName.concat(" ",auth.lastName)
+    const name=auth?.firstName?.concat(" ",auth.lastName) || "Guest"
     const navigate = useNavigate()
     useEffect(()=>{
         //TODO: API call here to fetch profile info , or fetch required data upon login
