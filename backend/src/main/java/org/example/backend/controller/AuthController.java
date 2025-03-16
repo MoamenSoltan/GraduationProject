@@ -38,10 +38,10 @@ public class AuthController {
             description = "Authenticates a user with their email and password and returns a JWT token."
     )
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginRequest request) {
+    public ResponseEntity<?> login(@RequestBody LoginRequest request,HttpServletResponse servletResponse) {
         String email = request.getEmail();
         String password = request.getPassword();
-        AuthResponse response=  authService.login(email,password);
+        AuthResponse response=  authService.login(email,password,servletResponse);
 
         return ResponseEntity.ok(response);
     }
@@ -68,13 +68,13 @@ public class AuthController {
     }
 
 
-    @PostMapping("/refresh_token")
+    @PostMapping("/refreshToken")
     public ResponseEntity<?> refreshToken(HttpServletRequest request, HttpServletResponse response)
     {
         return ResponseEntity.ok(authService.refreshToken(request,response));
     }
 
-    @PostMapping("/refreshToken")
+   // @PostMapping("/refreshToken")
     public ResponseEntity<?> refreshToken(@RequestBody RefreshTokenRequest refreshToken) {
 
         return ResponseEntity.ok(authService.getNewAccessToken(refreshToken.getRefreshToken()));

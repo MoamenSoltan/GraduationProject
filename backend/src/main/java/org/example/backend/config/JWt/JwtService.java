@@ -95,7 +95,25 @@ public class JwtService {
                 "REFRESH".equals(tokenType));
     }
 
-    public void saveRefreshToken(String token ,User user)
+    public String validateRefreshToken(String refreshToken) {
+        try {
+            Claims claims = getClaims(refreshToken);
+            if (!"REFRESH".equals(claims.get("token_type", String.class))) {
+                return null;
+            }
+
+            Optional<RefreshToken> storedToken = refreshTokenRepository.getRefreshToken(refreshToken);
+            if (storedToken.isEmpty() || storedToken.get().isRevoked()) {
+                return null;
+            }
+
+            return claims.getSubject(); // Extract Email
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    private void saveRefreshToken(String token ,User user)
     {
         RefreshToken refreshToken = new RefreshToken();
         refreshToken.setToken(token);

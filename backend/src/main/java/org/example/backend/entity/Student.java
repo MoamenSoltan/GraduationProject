@@ -30,9 +30,9 @@ public class Student  {
 
     private LocalDateTime createdAt;
 
-    @OneToMany(mappedBy ="student")
+    @OneToMany(mappedBy ="student",cascade = CascadeType.ALL)
     private List<StudentCourse> studentCourse;
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "submission_request_id")
     private SubmissionRequest submissionRequest;
 }

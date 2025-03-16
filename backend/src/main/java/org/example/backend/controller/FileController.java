@@ -29,10 +29,10 @@ public class FileController {
                 return ResponseEntity.notFound().build();
             }
 
-            // Dynamically detect file type
+
             String contentType = Files.probeContentType(file);
             if (contentType == null) {
-                contentType = "application/octet-stream"; // Default to binary if unknown
+                contentType = "application/octet-stream";
             }
 
             return ResponseEntity.ok()
