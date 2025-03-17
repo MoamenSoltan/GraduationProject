@@ -19,7 +19,10 @@ public class Instructor {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int instructorId;
-
+    @Column(name = "bio")
+    private String bio =null;
+    @Column(name = "personal_image")
+    private String personalImage =null;
     @OneToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn(name = "user_id")
     private User user;

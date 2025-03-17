@@ -7,7 +7,7 @@ import lombok.Setter;
 @Getter
 public class SemesterDTO {
 
-        private Integer yearLevel;
+    private Integer yearLevel;
     private String semesterName;
     private int year;
 }

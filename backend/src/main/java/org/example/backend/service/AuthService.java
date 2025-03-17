@@ -77,6 +77,7 @@ public class AuthService {
             return null; // Return null if credentials are invalid
         } catch (Exception e) {
             throw new RuntimeException("Authentication failed: " + e.getMessage());
+//            return null;
         }
     }
 
@@ -120,6 +121,7 @@ public class AuthService {
                 populateStudentResponse(response, student);
             } else if (instructor != null) {
                 populateInstructorResponse(response, instructor);
+//                response.setPersonalImage(instructor.);
             } else {
                 throw new RuntimeException("User type not recognized");
             }
@@ -184,6 +186,7 @@ public class AuthService {
                 .collect(Collectors.toList()));
     }
     private void populateInstructorResponse(AuthResponse response, Instructor instructor) {
+        response.setPersonalImage(fileService.getFileName(instructor.getPersonalImage()));
         response.setRoles(instructor.getUser().getRoleList().stream()
                 .map(role -> role.getRoleName().toString())
                 .collect(Collectors.toList()));

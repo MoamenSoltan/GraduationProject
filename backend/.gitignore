@@ -1,33 +1,69 @@
-HELP.md
+# General Java
+*.class
+*.log
+*.swp
+*.swo
+*.bak
+
+# Build Directories
 target/
-!.mvn/wrapper/maven-wrapper.jar
-!**/src/main/**/target/
-!**/src/test/**/target/
+build/
+.mvn/
+.gradle/
 
-### STS ###
-.apt_generated
-.classpath
-.factorypath
-.project
-.settings
-.springBeans
-.sts4-cache
-
-### IntelliJ IDEA ###
-.idea
+# IDE Configs
+.idea/
 *.iws
 *.iml
 *.ipr
-
-### NetBeans ###
-/nbproject/private/
-/nbbuild/
-/dist/
-/nbdist/
-/.nb-gradle/
-build/
-!**/src/main/**/build/
-!**/src/test/**/build/
-
-### VS Code ###
 .vscode/
+.settings/
+.springBeans/
+.apt_generated/
+.sts4-cache/
+
+# NetBeans
+nbproject/private/
+nbbuild/
+dist/
+nbdist/
+.nb-gradle/
+
+# OS-Specific
+.DS_Store
+Thumbs.db
+ehthumbs.db
+$RECYCLE.BIN/
+desktop.ini
+~$
+
+# Application Configuration
+.env
+.env.local
+.env.development
+.env.test
+.env.production
+src/main/resources/application*.yml
+src/main/resources/application*.yaml
+src/main/resources/application*.properties
+
+# User Uploads
+# Ignore all uploads folder and its subdirectories
+uploads/
+uploads/*
+uploads/**
+
+# Ignore specific paths
+src/main/resources/images/
+uploads/images/
+
+
+# Docker
+docker-compose.override.yml
+docker-compose.override.yaml
+.dockerignore
+
+# Database
+*.h2.db
+*.mv.db
+*.db

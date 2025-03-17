@@ -19,5 +19,15 @@ public interface InstructorRepository extends JpaRepository<Instructor,Integer> 
     @Query(value = "DELETE FROM user_roles ur WHERE ur.user_id = :userId" ,nativeQuery = true)
     void deleteByUserId(@Param("userId") int userId);
 
+    @Query("select i from Instructor i " +
+            "join Course c on i.instructorId=c.instructor.instructorId " +
+            "join StudentCourse sc on sc.course.courseId =c.courseId " +
+            "join Student s on s.studentId = sc.student.studentId " +
+            "join User u_st on s.user.id = u_st.id " +
+            "join User u_in on s.user.id = u_in.id " +
+            "where u_st.email=:studentEmail"
+    )
+    Optional<Instructor> getCoursesInstructorForStudent(@Param("studentEmail") String studentEmail);
+
 
 }

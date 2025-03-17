@@ -11,6 +11,7 @@ import org.example.backend.mapper.StudentMapper;
 import org.example.backend.repository.StudentRepository;
 import org.example.backend.repository.UserRepository;
 import org.example.backend.service.AnnouncementService;
+import org.example.backend.service.InstructorService;
 import org.example.backend.service.StudentCoursesService;
 import org.example.backend.service.StudentService;
 import org.springframework.http.ResponseEntity;
@@ -29,13 +30,15 @@ public class StudentController {
     private final StudentRepository studentRepository;
     private final AnnouncementService announcementService;
     private final StudentService studentService;
+    private final InstructorService instructorService;
 
-    public StudentController(StudentCoursesService studentCoursesService, UserRepository userRepository, StudentRepository studentRepository, AnnouncementService announcementService, StudentService studentService) {
+    public StudentController(StudentCoursesService studentCoursesService, UserRepository userRepository, StudentRepository studentRepository, AnnouncementService announcementService, StudentService studentService, InstructorService instructorService) {
         this.studentCoursesService = studentCoursesService;
         this.userRepository = userRepository;
         this.studentRepository = studentRepository;
         this.announcementService = announcementService;
         this.studentService = studentService;
+        this.instructorService = instructorService;
     }
 
     @PostMapping("/course")
@@ -79,5 +82,12 @@ public class StudentController {
     {
         List<AnnouncementResponseDTO> announcements = announcementService.getAnnouncementsByType(type);
         return ResponseEntity.ok(announcements);
+    }
+    @GetMapping("/instructors")
+    public ResponseEntity<?> getInstructorOfCoursesRegistered()
+    {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email =authentication.getName();
+        return ResponseEntity.ok(instructorService.getCoursesInstructorsForStudent(email));
     }
 }
