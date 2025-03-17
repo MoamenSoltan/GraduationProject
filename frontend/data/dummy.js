@@ -155,26 +155,52 @@ export const announcementsData = [
 
   export const instructorsData = [
     {
-      id: 1,
-      image: "https://randomuser.me/api/portraits/men/32.jpg",
+      "id": 1,
+      "firstName": "John",
+      "lastName": "Doe",
+      "description": "Dr. John Doe is a passionate educator and researcher in the field of Artificial Intelligence and Machine Learning. With over 15 years of experience, he has mentored numerous students and published groundbreaking research in deep learning and data science.",
+      "department": "Computer Science",
+      "managedDepartment": "AI",
+      "image": "https://randomuser.me/api/portraits/women/12.jpg"
     },
     {
-      id: 2,
-      image: "https://randomuser.me/api/portraits/women/45.jpg",
+      "id": 2,
+      "firstName": "Jane",
+      "lastName": "Smith",
+      "description": "Prof. Jane Smith is a dedicated mathematician with a keen interest in statistical analysis and data science. She has spent the last decade helping students develop strong analytical skills and has contributed to several international research projects.",
+      "department": "Mathematics",
+      "managedDepartment": null,
+      "image": "https://randomuser.me/api/portraits/men/1.jpg"
     },
     {
-      id: 3,
-      image: "https://randomuser.me/api/portraits/men/54.jpg",
+      "id": 3,
+      "firstName": "Michael",
+      "lastName": "Brown",
+      "description": "Dr. Michael Brown is an award-winning physicist specializing in Quantum Mechanics and Astrophysics. His research on black holes and quantum computing has been widely recognized, and he enjoys making complex concepts accessible to students.",
+      "department": "Physics",
+      "managedDepartment": "CS",
+      "image": "https://randomuser.me/api/portraits/men/2.jpg"
     },
     {
-      id: 4,
-      image: "https://randomuser.me/api/portraits/women/60.jpg",
+      "id": 4,
+      "firstName": "Emily",
+      "lastName": "Davis",
+      "description": "Prof. Emily Davis is an expert in Electrical Engineering with a strong focus on Embedded Systems and IoT. She has collaborated with leading tech companies to develop innovative solutions and enjoys mentoring aspiring engineers.",
+      "department": "Electrical Engineering",
+      "managedDepartment": "IS",
+      "image": "https://randomuser.me/api/portraits/women/3.jpg"
     },
     {
-      id: 5,
-      image: "https://randomuser.me/api/portraits/men/12.jpg",
-    },
-  ];
+      "id": 5,
+      "firstName": "Robert",
+      "lastName": "Wilson",
+      "description": "Dr. Robert Wilson is a business strategist and finance expert with over 20 years of experience in entrepreneurship and corporate management. He has helped shape the next generation of business leaders through his engaging lectures and practical insights.",
+      "department": "Business Administration",
+      "managedDepartment": "IT",
+      "image": "https://randomuser.me/api/portraits/men/15.jpg"
+    }
+  ]
+  
   
   
   

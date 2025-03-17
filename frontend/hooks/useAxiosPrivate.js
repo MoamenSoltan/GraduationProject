@@ -105,27 +105,35 @@ const useAxiosPrivate = ()=>{
 
         const requestIntercept = axiosPrivate.interceptors.request.use(
             config => {
+                console.log("Request Interceptor - Config:", config);
                 if (!config.headers['Authorization']) {
                     config.headers['Authorization'] = `Bearer ${auth.accessToken}`;
                 }
                 return config;
-            }, (error) =>Promise.reject(error)
-        )
-
+            }, (error) => {
+                console.error("Request Interceptor Error:", error);
+                return Promise.reject(error);
+            }
+        );
+        
         const responseIntercept = axiosPrivate.interceptors.response.use(
-            response=>response,
+            response => {
+                console.log("Response Interceptor - Success:", response);
+                return response;
+            },
             async (error) => {
-            const prevRequest = error?.config
-            if ((error?.response?.status === 401 || error?.response?.status === 403)&& !prevRequest.sent)
-            {
-                prevRequest.sent = true
-                const newAccessToken = await refresh()
-                prevRequest.headers["Authorization"] = `Bearer ${newAccessToken}`
-                return axiosPrivate(prevRequest)
-
-            } return Promise.reject(error)
-           }
-        )
+                console.error("Response Interceptor Error:", error);
+                const prevRequest = error?.config;
+                if ((error?.response?.status === 401 || error?.response?.status === 403) && !prevRequest.sent) {
+                    prevRequest.sent = true;
+                    const newAccessToken = await refresh();
+                    prevRequest.headers["Authorization"] = `Bearer ${newAccessToken}`;
+                    return axiosPrivate(prevRequest);
+                }
+                return Promise.reject(error);
+            }
+        );
+        
 
 
         return ()=> {

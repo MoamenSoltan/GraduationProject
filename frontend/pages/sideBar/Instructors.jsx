@@ -1,8 +1,10 @@
 import React from 'react'
-
+import InstructorsComponent from '../../components/InstructorsComponent'
 const Instructors = () => {
   return (
-    <div>Instructors</div>
+    <div>
+      <InstructorsComponent preview={false}/>
+    </div>
   )
 }
 

@@ -82,8 +82,11 @@ function App() {
           <Route path="/registration/done" element={<Done />} />
           <Route path="/status" element={<Status />} />
 
+          <Route path="/studentDashboard/*" element={<StudentDashboard />} />
+          <Route path="/instructorDashboard/*" element={<InstructorDashboard />} />
+          <Route path="/adminDashboard/*" element={<AdminDashboard />} />
           
-          {/* protected routes  */}
+          {/* protected routes 
           <Route element={<ProtectedRoutes allowedRoles={['student']}/>}>
             <Route path="/studentDashboard/*" element={<StudentDashboard />} />
           </Route>
@@ -95,7 +98,7 @@ function App() {
 
          <Route element={<ProtectedRoutes allowedRoles={['admin']}/>}>
             <Route path="/adminDashboard/*" element={<AdminDashboard />} />
-         </Route>
+         </Route> */}
           
           
           

@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import Hero from "../../components/Hero";
 import Announcements from "../../components/Announcements";
 import Courses from "../../components/CoursesComponent";
-import Instructors from "../../components/Instructors";
+import InstructorsComponent from "../../components/InstructorsComponent";
 import Payment from "../../components/Payment";
 import { useStateContext } from "../../contexts/ContextProvider";
 
@@ -41,7 +41,7 @@ const Analytics = () => {
          <div className="flex flex-col gap-10 ml-10">
           {/* instructors */}
           <div className="">
-            <Instructors/>
+            <InstructorsComponent preview={true}/>
           </div>
 
           {/* Payment */}
