@@ -6,6 +6,7 @@ import org.example.backend.dto.instructorDto.InstructorResponseDTO;
 import org.example.backend.dto.instructorDto.UpdateInstructor;
 import org.example.backend.entity.Department;
 import org.example.backend.entity.Instructor;
+import org.example.backend.entity.Role;
 import org.example.backend.exception.ResourceNotFound;
 import org.example.backend.mapper.InstructorMapper;
 import org.example.backend.repository.DepartmentRepository;
@@ -74,6 +75,9 @@ public class InstructorService {
     public InstructorResponseDTO createInstructor(InstructorRequestDTO requestDTO)
     {
         Instructor instructor = InstructorMapper.requestToEntity(requestDTO);
+        Role role = roleRepository.getInstructorRole()
+                .get();
+        instructor.getUser().addRole(role);
 
         Department department = departmentRepository.findById(requestDTO.getDepartmentId())
                 .orElseThrow(() -> new ResourceNotFound("Department", "id", requestDTO.getDepartmentId()));
@@ -118,6 +122,7 @@ public class InstructorService {
     public InstructorProfile getInstructorProfile(String email) {
         Instructor instructor=instructorRepository.getByEmail(email)
                 .orElseThrow(()->new ResourceNotFound("instructor", "email", email));
+
         return InstructorMapper.toInstructorProfile(instructor);
     }
 

@@ -268,3 +268,4 @@ alter table instructors
 
 alter table instructors
     add column personal_image varchar(255);
+

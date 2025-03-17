@@ -8,6 +8,7 @@ import org.example.backend.dto.instructorDto.InstructorResponseDTO;
 import org.example.backend.dto.semesterDto.SemesterDTO;
 import org.example.backend.entity.Course;
 import org.example.backend.entity.Instructor;
+import org.example.backend.entity.Role;
 import org.example.backend.entity.User;
 import org.example.backend.util.FileResponse;
 
@@ -27,7 +28,6 @@ public class InstructorMapper {
         user.setFirstName(requestDTO.getFirstName());
         user.setLastName(requestDTO.getLastName());
         user.setGender(requestDTO.getGender());
-
         instructor.setPersonalImage("D:\\GraduationProject\\backend\\uploads\\profile-default-iconpng.png");
         instructor.setBio(null);
         instructor.setUser(user);
@@ -38,6 +38,8 @@ public class InstructorMapper {
     public static InstructorResponseDTO  entityToResponseDTO(Instructor entity)
     {
         InstructorResponseDTO responseDTO = new InstructorResponseDTO();
+        responseDTO.setPersonalImage(new FileResponse().getFileName(entity.getPersonalImage()));
+
         responseDTO.setInstructorId(entity.getInstructorId());
         if (entity.getUser() != null) {
             responseDTO.setFirstName(entity.getUser().getFirstName());

@@ -50,6 +50,7 @@ public class InstructorController {
     {
         Authentication auth= SecurityContextHolder.getContext().getAuthentication();
         String email = auth.getName();
+        System.out.println(email);
 
         return ResponseEntity.ok(instructorService.getInstructorProfile(email));
     }
