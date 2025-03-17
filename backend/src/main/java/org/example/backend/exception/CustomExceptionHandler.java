@@ -6,6 +6,7 @@ import io.jsonwebtoken.security.SignatureException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
+import org.springframework.orm.jpa.JpaSystemException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -43,11 +44,6 @@ public class CustomExceptionHandler {
         return createProblemDetail(HttpStatus.FORBIDDEN, "JWT token expired", "Your session has expired. Please log in again.");
     }
 
-    @ExceptionHandler(DataIntegrityViolationException.class)
-    public ProblemDetail handleDataIntegrityViolationException(DataIntegrityViolationException ex) {
-        return createProblemDetail(HttpStatus.CONFLICT, "Duplicate entry", "Email already exists.");
-    }
-
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ProblemDetail handleValidationException(MethodArgumentNotValidException ex) {
         ProblemDetail problemDetail = createProblemDetail(HttpStatus.BAD_REQUEST, "Validation error", "Validation failed for request.");
@@ -57,6 +53,41 @@ public class CustomExceptionHandler {
 
         problemDetail.setProperty("validation_errors", errors);
         return problemDetail;
+    }
+
+    @ExceptionHandler(JpaSystemException.class)
+    public ProblemDetail handleJpaException(JpaSystemException ex) {
+        return handleEnrollmentException(ex.getMostSpecificCause().getMessage());
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ProblemDetail handleDataIntegrityViolation(DataIntegrityViolationException ex) {
+        return handleEnrollmentException(ex.getMostSpecificCause().getMessage());
+    }
+
+    /**
+     * Handles enrollment-related errors (e.g., prerequisites, course limits).
+     */
+    private ProblemDetail handleEnrollmentException(String errorMessage) {
+        if (errorMessage.contains("Student has not passed the prerequisite course")) {
+            return createProblemDetail(
+                    HttpStatus.BAD_REQUEST,
+                    "Enrollment Error",
+                    "You must pass the prerequisite course before enrolling."
+            );
+        }
+        if (errorMessage.contains("Student cannot enroll in more than the allowed courses for this semester")) {
+            return createProblemDetail(
+                    HttpStatus.BAD_REQUEST,
+                    "Enrollment Limit Exceeded",
+                    "Student cannot enroll in more than the allowed courses for this semester."
+            );
+        }
+        return createProblemDetail(
+                HttpStatus.INTERNAL_SERVER_ERROR,
+                "Database Error",
+                "An error occurred while processing your request."
+        );
     }
 
     @ExceptionHandler(Exception.class)

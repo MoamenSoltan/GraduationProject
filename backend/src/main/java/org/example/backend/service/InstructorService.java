@@ -1,7 +1,9 @@
 package org.example.backend.service;
 
+import org.example.backend.dto.instructorDto.InstructorProfile;
 import org.example.backend.dto.instructorDto.InstructorRequestDTO;
 import org.example.backend.dto.instructorDto.InstructorResponseDTO;
+import org.example.backend.dto.instructorDto.UpdateInstructor;
 import org.example.backend.entity.Department;
 import org.example.backend.entity.Instructor;
 import org.example.backend.exception.ResourceNotFound;
@@ -13,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,14 +25,16 @@ public class InstructorService {
     private final InstructorRepository instructorRepository;
     private final DepartmentRepository departmentRepository;
     private final RoleRepository roleRepository;
+    private final FileService fileService;
 
     public InstructorService(InstructorRepository instructorRepository,
                              DepartmentRepository departmentRepository,
-                             RoleRepository roleRepository) {
+                             RoleRepository roleRepository, FileService fileService) {
         this.instructorRepository = instructorRepository;
 
         this.departmentRepository = departmentRepository;
         this.roleRepository = roleRepository;
+        this.fileService = fileService;
     }
 
 //    @Transactional
@@ -98,5 +103,42 @@ public class InstructorService {
         }
 
         return responseDTOList;
+    }
+
+    public InstructorResponseDTO getCoursesInstructorsForStudent(String studentEmail)
+    {
+        Instructor instructor = instructorRepository.getCoursesInstructorForStudent(studentEmail)
+                .orElseThrow(()->new ResourceNotFound("Instructors","instructors","not found"));
+
+        System.out.println(instructor.getCourses().get(0).getCourseCode());
+        instructor.getCourses().forEach(c-> System.out.println(c.getCourseCode()));
+        return InstructorMapper.entityToResponseDTO(instructor);
+    }
+
+    public InstructorProfile getInstructorProfile(String email) {
+        Instructor instructor=instructorRepository.getByEmail(email)
+                .orElseThrow(()->new ResourceNotFound("instructor", "email", email));
+        return InstructorMapper.toInstructorProfile(instructor);
+    }
+
+    public String UpdateInstructor(UpdateInstructor updateInstructor, Instructor instructor) throws IOException {
+        if (updateInstructor.getFirstName() != null) {
+            instructor.getUser().setFirstName(updateInstructor.getFirstName());
+        }
+        if (updateInstructor.getLastName() != null) {
+            instructor.getUser().setLastName(updateInstructor.getLastName());
+        }
+        if (updateInstructor.getBio() != null) {
+            instructor.setBio(updateInstructor.getBio());
+        }
+        if(updateInstructor.getEmail() != null) {
+            instructor.getUser().setEmail(updateInstructor.getEmail());
+        }
+        if (updateInstructor.getPersonalImage() != null) {
+            instructor.setPersonalImage(fileService.uploadFile(updateInstructor.getPersonalImage()));
+        }
+
+        instructorRepository.save(instructor);
+        return "Instructor updated successfully";
     }
 }

@@ -175,14 +175,6 @@ BEGIN
 END;
 
 
-CREATE TRIGGER decrease_enrollment_count
-    AFTER delete ON graduation_project.student_course
-    FOR EACH ROW
-BEGIN
-    UPDATE graduation_project.courses
-    SET student_enrolled = courses.student_enrolled - 1
-    WHERE course_id = OLD.course_id;
-END;
 
 CREATE TRIGGER decrease_enrollment_count
     AFTER DELETE ON graduation_project.student_course
@@ -195,4 +187,84 @@ BEGIN
                                ELSE 0
         END
     WHERE course_id = OLD.course_id;
-    END
+    END;
+
+
+
+# trigger to check if student passed the prerequisite course before registering the course
+
+CREATE TRIGGER check_if_student_pass_prerequisite_course
+    BEFORE INSERT ON graduation_project.student_course
+    FOR EACH ROW
+BEGIN
+    DECLARE has_prerequisite_course BOOLEAN;
+    DECLARE prerequisite_passed INT;
+
+    -- Check if the course has any prerequisites
+    SET has_prerequisite_course = EXISTS (
+        SELECT 1
+        FROM courses c
+                 JOIN courses c1 ON c.course_id = c1.prerequisites_course_id
+        WHERE c1.course_id = NEW.course_id
+    );
+
+    -- If there are prerequisites, verify if student passed them
+    IF has_prerequisite_course THEN
+        SET prerequisite_passed = (
+            SELECT COUNT(*)
+            FROM student_course sc
+                     JOIN courses c ON sc.course_id = c.prerequisites_course_id
+            WHERE sc.student_id = NEW.student_id
+              AND sc.course_id IN (
+                SELECT prerequisites_course_id
+                FROM courses
+                WHERE course_id = NEW.course_id
+            )
+              AND sc.degree >= 60  -- Assuming 60 is the passing grade
+        );
+
+        -- If no prerequisites passed, raise an error
+        IF prerequisite_passed = 0 THEN
+            SIGNAL SQLSTATE '45000'
+                SET MESSAGE_TEXT = 'Student has not passed the prerequisite course';
+        END IF;
+    END IF;
+END;
+
+####################
+
+CREATE TRIGGER check_student_course_limit
+    BEFORE INSERT ON student_course
+    FOR EACH ROW
+BEGIN
+    DECLARE course_count INT;
+    DECLARE max_courses INT;
+
+    -- Determine the maximum allowed courses based on semester type
+    IF NEW.semester_name = 'Summer' THEN
+        SET max_courses = 2;  -- Summer semester allows only 2 courses
+    ELSE
+        SET max_courses = 6;  -- Fall and Spring allow up to 6 courses
+    END IF;
+
+    -- Count the number of courses the student is already enrolled in for the same semester and year
+    SELECT COUNT(*)
+    INTO course_count
+    FROM student_course
+    WHERE student_id = NEW.student_id
+      AND semester_year_level = NEW.semester_year_level
+      AND semester_name = NEW.semester_name;
+
+    -- If the student has reached the limit, block the enrollment
+    IF course_count >= max_courses THEN
+        SIGNAL SQLSTATE '45000'
+            SET MESSAGE_TEXT = 'Student cannot enroll in more than the allowed courses for this semester.';
+    END IF;
+END;
+
+################################################################
+alter table instructors
+    add column bio text;
+
+alter table instructors
+    add column personal_image varchar(255);
