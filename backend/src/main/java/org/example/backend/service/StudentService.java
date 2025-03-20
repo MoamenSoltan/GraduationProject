@@ -1,11 +1,13 @@
 package org.example.backend.service;
 
+import org.example.backend.dto.studentDto.StudentProfile;
 import org.example.backend.dto.studentDto.UpdateStudent;
 import org.example.backend.entity.Role;
 import org.example.backend.entity.Student;
 import org.example.backend.entity.SubmissionRequest;
 import org.example.backend.enums.AdmissionStatus;
 import org.example.backend.enums.DepartmentName;
+import org.example.backend.mapper.StudentMapper;
 import org.example.backend.mapper.SubmissionRequestMapper;
 import org.example.backend.repository.DepartmentRepository;
 import org.example.backend.repository.RoleRepository;
@@ -44,7 +46,7 @@ public class StudentService {
        return studentRepository.save(student);
     }
 
-    public void updateStudent(UpdateStudent updateStudent, Student student) throws IOException {
+    public StudentProfile updateStudent(UpdateStudent updateStudent, Student student) throws IOException {
         if (updateStudent.getFirstName() != null) {
             student.getUser().setFirstName(updateStudent.getFirstName());
         }
@@ -71,7 +73,7 @@ public class StudentService {
             student.getSubmissionRequest().setPersonalPhoto(fullPath);
         }
 
-        studentRepository.save(student);
+        return StudentMapper.toStudentProfile(studentRepository.save(student));
     }
 
 
