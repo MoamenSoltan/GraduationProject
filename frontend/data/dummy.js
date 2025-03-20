@@ -8,53 +8,77 @@ import { FaHandsHelping } from "react-icons/fa";
 import { IoLogOutOutline } from "react-icons/io5";
 import { BsMegaphone } from "react-icons/bs";
 import { useStateContext } from "../contexts/ContextProvider";
+import { IoCreateOutline } from "react-icons/io5";
+import { IoPerson } from "react-icons/io5";
+
 
 
 // icons as just the name , when using them in map , wrap with </> to make it a component
 
 
 
-export const links = [
+export const sideBarLinks = {
+  student : [
     {
-        name : "Analytics",
-        icon : TbReportAnalytics 
- 
+      name : "Analytics",
+      icon : TbReportAnalytics 
+
+  },
+  {
+      name : "Announcements",
+      icon : BsMegaphone
+  }
+  ,
+  {
+      name : "Registration",
+      icon : FaPen 
+
+  },
+  {
+      name : "Courses",
+      icon : AiOutlineFileDone 
+
+  },
+  {
+      name : "Payment",
+      icon : FaMoneyCheckDollar 
+  },
+  {
+      name : "Events",
+      icon : IoIosCalendar 
+  },
+  {
+      name : "Instructors",
+      icon : IoIosPerson 
+
+  },
+  {
+      name : "Help",
+      icon : FaHandsHelping 
+
+  },
+  ],
+  admin : [
+    {
+      name : "submission Requests",
+      icon : AiOutlineFileDone 
     },
     {
-        name : "Announcements",
-        icon : BsMegaphone
+      name : "create Instructor",
+      icon : IoPerson
+    },
+    {
+      name : "create Course",
+      icon : IoCreateOutline
     }
-    ,
+    
+  ],
+  instructor : [
     {
-        name : "Registration",
-        icon : FaPen 
 
-    },
-    {
-        name : "Courses",
-        icon : AiOutlineFileDone 
-
-    },
-    {
-        name : "Payment",
-        icon : FaMoneyCheckDollar 
-    },
-    {
-        name : "Events",
-        icon : IoIosCalendar 
-    },
-    {
-        name : "Instructors",
-        icon : IoIosPerson 
-
-    },
-    {
-        name : "Help",
-        icon : FaHandsHelping 
-
-    },
-   
-]
+    }
+  ]
+}
 
 export const announcementsData = [
     {

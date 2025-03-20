@@ -1,11 +1,21 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useStateContext } from "../contexts/ContextProvider";
 import { Link, NavLink } from "react-router-dom";
-import { links } from "../data/dummy";
+import { sideBarLinks } from "../data/dummy";
 import { IoLogOutOutline } from "react-icons/io5";
 
 const SideBar = () => {
-  const { activeMenu, setActiveMenu ,setAuth } = useStateContext();
+  const { activeMenu, setActiveMenu ,setAuth,auth } = useStateContext();
+
+  const role = auth?.roles[0].toLowerCase()
+  useEffect(()=>{
+    console.log("current role :",role);
+    
+  },[])
+
+  const links = sideBarLinks[role] || ""
+  // TODO: sidebarlinks is an object , each pair can be accessed with []
+  // TODO: below , replace spaces with - 
 
   const activeLink =
     "flex items-center gap-5 pl-4 pt-3 pb-2.5 rounded-lg text-white text-md m-2 ";
@@ -19,7 +29,7 @@ const SideBar = () => {
           <div className="mt-[100px] flex flex-col gap-3 pr-2">
             {links.map((link) => (
               <NavLink
-                to={`/studentDashboard/${link.name}`}
+                to={`/${role}Dashboard/${link.name.replace(/\s+/g, "-")}`}
                 key={link.name}
                 style={({ isActive }) => ({
                   backgroundColor: isActive ? "#0096C1" : "",

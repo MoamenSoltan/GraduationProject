@@ -29,6 +29,16 @@ export const ContextProvider = ({children})=>{
    
 
   })
+
+  const [updatedProfileData, setupdatedProfileData] = useState({
+    firstName:"",
+    lastName:"",
+    city:"",
+    country:"",
+    address:"",
+    personalImage:null
+    //no personal image here , added manually below
+  });
   const [activeMenu, setActiveMenu] = useState(false)
   const [profile, setProfile] = useState(false)
 
@@ -46,6 +56,7 @@ export const ContextProvider = ({children})=>{
    return (
     <stateContext.Provider value={{
         Placeholder,user,setUser,
+        updatedProfileData,setupdatedProfileData,
         meter,incrementMeter,setMeter,decrementMeter,
         activeMenu,setActiveMenu,
         profile,setProfile,
