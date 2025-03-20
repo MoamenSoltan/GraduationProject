@@ -2,6 +2,7 @@ package org.example.backend.controller;
 
 import org.example.backend.dto.AnnouncementDto.AnnouncementResponseDTO;
 import org.example.backend.dto.StudentCourseRequestDTO;
+import org.example.backend.dto.studentDto.StudentProfile;
 import org.example.backend.dto.studentDto.UpdateStudent;
 import org.example.backend.entity.Student;
 import org.example.backend.entity.User;
@@ -72,8 +73,8 @@ public class StudentController {
 
         Student student = studentRepository.findByUser(user)
                 .orElseThrow(() -> new RuntimeException("Student not found"));
-        studentService.updateStudent(updateStudent,student);
-        return ResponseEntity.ok("updated");
+        StudentProfile profile = studentService.updateStudent(updateStudent,student);
+        return ResponseEntity.ok(profile);
     }
 
     @GetMapping("/announcements")
