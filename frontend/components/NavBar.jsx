@@ -13,9 +13,7 @@ import { trimText } from "../utils/trim";
 const NavBar = () => {
   const { activeMenu, setActiveMenu, auth, updatedProfileData } =
     useStateContext();
-  const name = updatedProfileData?.firstName
-    ? updatedProfileData.firstName
-    : auth?.firstName || "Guest";
+  const name =  auth?.firstName || "Guest";
   const navigate = useNavigate();
   useEffect(() => {
     //TODO: API call here to fetch profile info , or fetch required data upon login
@@ -43,8 +41,8 @@ const NavBar = () => {
         <div className="border-2 rounded-full border-[#0096C1] ">
           <img
             src={
-              updatedProfileData?.imagePreview
-                ? updatedProfileData.imagePreview
+              auth?.imagePreview
+                ? auth.imagePreview
                 : auth.personalImage
             }
             className="w-10 min-h-10 rounded-full "

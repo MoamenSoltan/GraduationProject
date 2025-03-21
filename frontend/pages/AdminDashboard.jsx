@@ -6,6 +6,7 @@ import { Route, Routes } from 'react-router'
 import SubmissionRequests from './AdminPages/SubmissionRequests'
 import CreateInstructor from './AdminPages/CreateInstructor'
 import CreateCourse from './AdminPages/CreateCourse'
+import DetailedSubmissionRequests from '../components/DetailedSubmissionRequests'
 const AdminDashboard = () => {
   const {activeMenu}=useStateContext()
 
@@ -30,7 +31,9 @@ const AdminDashboard = () => {
       <Routes>
 
         <Route path='/' element={<SubmissionRequests/>} />
-        <Route path='/submission-Requests' element={<SubmissionRequests/>} />
+        <Route path='/submission-Requests/' element={<SubmissionRequests/>} />
+        <Route path='/submission-Requests/:id' element={<DetailedSubmissionRequests/>} />
+
         <Route path='/create-Instructor' element={<CreateInstructor/>}/>
         <Route path='/create-Course' element={<CreateCourse/>}/>
 

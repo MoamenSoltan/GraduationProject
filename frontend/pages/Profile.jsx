@@ -7,6 +7,7 @@ import { LuBookText } from "react-icons/lu";
 import { trimText } from "../utils/trim";
 import toast from "react-hot-toast";
 import useAxiosPrivate from "../hooks/useAxiosPrivate";
+import { useLocation } from "react-router";
 
 const Profile = () => {
   const axiosPrivate = useAxiosPrivate();
@@ -73,7 +74,7 @@ const Profile = () => {
         console.log("patch request data : ",response.data);
         // dont forget to set profiledata , to get last information
         setprofileData(response.data)
-        setAuth((prev)=>({...prev,updatedProfileData}))
+        setAuth((prev)=>({...prev,...updatedProfileData}))
         // to trigger navbar profile to re render , with latest data
       } catch (error) {
         toast.error("Failed to update profile")
@@ -85,6 +86,8 @@ const Profile = () => {
     setIsChanged(false); // Reset state after saving
   };
 
+  
+
   useEffect(() => {
     if (loading) return;
     setloading(true);
@@ -93,7 +96,7 @@ const Profile = () => {
         const response = await axiosPrivate.get("/student/profile");
         setprofileData(response.data);
         // // TODO: very important to initialize the updated data
-        setupdatedProfileData(response.data)
+        setupdatedProfileData((prev)=>({...prev,...response.data}))
 
         console.log("Profile info : ", response.data);
       } catch (error) {
