@@ -4,7 +4,7 @@ import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.example.backend.enums.CourseType;
-import org.example.backend.enums.CourseYear;
+import org.example.backend.enums.LevelYear;
 import org.example.backend.enums.SemesterName;
 
 @Setter
@@ -30,7 +30,7 @@ public class CourseRequestDTO {
     private int maxStudents = 200;
 
     @NotNull(message = "Year is required")
-    private CourseYear year;
+    private LevelYear year;
 
     @NotNull(message = "Course type is required")
     private CourseType type;

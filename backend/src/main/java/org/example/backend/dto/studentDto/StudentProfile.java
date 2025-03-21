@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.example.backend.dto.courseDto.CourseDTO;
 import org.example.backend.enums.DepartmentName;
+import org.example.backend.enums.LevelYear;
 
 import java.util.List;
 
@@ -18,7 +19,7 @@ public class StudentProfile {
     private Integer totalCredit;
     private DepartmentName department;
     private Double gpa;
-    private int grade;
+    private LevelYear grade;
     private String address;
     private String city;
     private String country;

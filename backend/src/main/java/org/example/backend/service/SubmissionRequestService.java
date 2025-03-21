@@ -6,6 +6,7 @@ import org.example.backend.dto.submissionDto.SubmissionRequestDto;
 import org.example.backend.dto.submissionDto.SubmissionResponseDTO;
 import org.example.backend.entity.SubmissionRequest;
 import org.example.backend.enums.AdmissionStatus;
+import org.example.backend.exception.ResourceNotFound;
 import org.example.backend.mapper.SubmissionRequestMapper;
 import org.example.backend.repository.SubmissionReqRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -96,5 +97,8 @@ public class SubmissionRequestService {
     }
 
 
-
+    public SubmissionResponseDTO getSubmissionById(int id) {
+        SubmissionRequest request = submissionReqRepository.findById(id).orElseThrow(() -> new ResourceNotFound("Submission","submission ID",id));
+        return submissionRequestMapper.toResponseDTO(request);
+    }
 }

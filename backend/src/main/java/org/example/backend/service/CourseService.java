@@ -1,19 +1,19 @@
 package org.example.backend.service;
 
 import jakarta.validation.Valid;
+import org.example.backend.dto.courseDto.CourseDTO;
 import org.example.backend.dto.courseDto.CourseRequestDTO;
 import org.example.backend.dto.courseDto.CourseResponseDTO;
 import org.example.backend.entity.*;
+import org.example.backend.enums.LevelYear;
 import org.example.backend.enums.SemesterName;
 import org.example.backend.exception.ResourceNotFound;
 import org.example.backend.mapper.CourseMapper;
-import org.example.backend.repository.CourseRepository;
-import org.example.backend.repository.DepartmentRepository;
-import org.example.backend.repository.InstructorRepository;
-import org.example.backend.repository.SemesterRepository;
+import org.example.backend.repository.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,14 +23,14 @@ public class CourseService {
     private final DepartmentRepository departmentRepository;
     private final InstructorRepository instructorRepository;
     private final SemesterRepository semesterRepository;
-    private final CourseRepository courseRepository;
+    private final StudentRepository studentRepository;
 
-    public CourseService(CourseRepository courseRepo, DepartmentRepository departmentRepository, InstructorRepository instructorRepository, SemesterRepository semesterRepository, CourseRepository courseRepository) {
+    public CourseService(CourseRepository courseRepo, DepartmentRepository departmentRepository, InstructorRepository instructorRepository, SemesterRepository semesterRepository, StudentRepository studentRepository) {
         this.courseRepo = courseRepo;
         this.departmentRepository = departmentRepository;
         this.instructorRepository = instructorRepository;
         this.semesterRepository = semesterRepository;
-        this.courseRepository = courseRepository;
+        this.studentRepository = studentRepository;
     }
 
     public CourseResponseDTO createCourse(CourseRequestDTO dto)
@@ -207,15 +207,39 @@ public class CourseService {
                 .orElseThrow(() -> new ResourceNotFound("Semester", "yearLevel and semesterName",
                         yearLevel + " and " + semesterName));
 
-        Course course = courseRepository.findById(courseId)
+        Course course = courseRepo.findById(courseId)
                 .orElseThrow(() -> new ResourceNotFound("Course", "id", courseId));
 
         course.setSemester(semester);
 
 
-        Course updatedCourse=courseRepository.save(course);
+        Course updatedCourse=courseRepo.save(course);
 
         return CourseMapper.toResponseDTO(updatedCourse);
 
+    }
+
+    public List<CourseResponseDTO> getCoursesForRegistration(String email) {
+        Student student=studentRepository.findStudentByEmail(email).get();
+        List<Course> courses =courseRepo.getCourseByYear(student.getAcademicYear()).get();
+        List<CourseResponseDTO> courseDTO = new ArrayList<>();
+
+        for (var i:courses)
+        {
+           courseDTO.add( CourseMapper.toResponseDTO(i));
+        }
+        return courseDTO;
+
+    }
+
+    public List<CourseResponseDTO> getCoursesCompletedByStudent(String studentEmail, LevelYear year) {
+        List<Course> completedCourses = courseRepo.getCoursesByStudentAndYear(studentEmail, year);
+        List<CourseResponseDTO> dtos=new ArrayList<>();
+        for (var i:completedCourses)
+        {
+            dtos.add(CourseMapper.toResponseDTO(i));
+        }
+
+        return dtos;
     }
 }

@@ -78,6 +78,11 @@ public class AdminController {
     {
         return ResponseEntity.ok(submissionRequestService.getAllSubmissions(status));
     }
+    @GetMapping("/submissions/{id}")
+    public ResponseEntity<?> getSubmissionByID(@PathVariable int id)
+    {
+        return ResponseEntity.ok(submissionRequestService.getSubmissionById(id));
+    }
 
     @PostMapping("/instructor")
     public ResponseEntity<InstructorResponseDTO> addInstructor(@RequestBody InstructorRequestDTO instructorDto)

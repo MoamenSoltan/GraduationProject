@@ -199,6 +199,8 @@ CREATE TRIGGER check_if_student_pass_prerequisite_course
 BEGIN
     DECLARE has_prerequisite_course BOOLEAN;
     DECLARE prerequisite_passed INT;
+    DECLARE prerequisite_course_name VARCHAR(255);  -- Variable to hold the prerequisite course name
+    DECLARE error_message VARCHAR(255);  -- Variable to hold the dynamic error message
 
     -- Check if the course has any prerequisites
     SET has_prerequisite_course = EXISTS (
@@ -210,6 +212,13 @@ BEGIN
 
     -- If there are prerequisites, verify if student passed them
     IF has_prerequisite_course THEN
+        -- Get the name of the prerequisite course
+        SET prerequisite_course_name = (
+            SELECT c.course_name
+            FROM courses c
+            WHERE c.course_id = (SELECT prerequisites_course_id FROM courses WHERE course_id = NEW.course_id LIMIT 1)
+        );
+
         SET prerequisite_passed = (
             SELECT COUNT(*)
             FROM student_course sc
@@ -223,13 +232,15 @@ BEGIN
               AND sc.degree >= 60  -- Assuming 60 is the passing grade
         );
 
-        -- If no prerequisites passed, raise an error
+        -- If no prerequisites passed, create error message and raise an error
         IF prerequisite_passed = 0 THEN
-            SIGNAL SQLSTATE '45000'
-                SET MESSAGE_TEXT = 'Student has not passed the prerequisite course';
+            SET error_message = CONCAT('Student has not passed the prerequisite course: ', prerequisite_course_name);
+            SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = error_message;
         END IF;
     END IF;
 END;
+
+
 
 ####################
 

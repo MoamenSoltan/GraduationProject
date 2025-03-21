@@ -6,6 +6,8 @@ import lombok.Setter;
 @Setter
 @Getter
 public class SubmissionResponseDTO {
+    private String firstname;
+    private String lastname;
     private Integer id;
     private String highSchoolName;
     private String graduationYear;

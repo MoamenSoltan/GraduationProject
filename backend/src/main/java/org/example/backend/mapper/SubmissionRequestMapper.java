@@ -8,6 +8,7 @@ import org.example.backend.entity.SubmissionRequest;
 import org.example.backend.entity.User;
 import org.example.backend.enums.AdmissionStatus;
 import org.example.backend.enums.FeesStatus;
+import org.example.backend.enums.LevelYear;
 import org.example.backend.enums.RoleType;
 import org.example.backend.service.FileService;
 import org.example.backend.util.FileResponse;
@@ -31,7 +32,7 @@ public class SubmissionRequestMapper {
         request.setLastName(dto.getLastName());
         request.setEmail(dto.getEmail());
         request.setPassword(dto.getPassword());
-        request.setAcademicYear(1);
+        request.setAcademicYear(LevelYear.FIRST_YEAR);
         request.setHighSchoolName(dto.getHighSchoolName());
         request.setGraduationYear(dto.getGraduationYear());
         request.setCity(dto.getCity());
@@ -61,7 +62,7 @@ public class SubmissionRequestMapper {
         student.setSubmissionRequest(request);
         student.setUser(user);
 //        student.setSubmissionRequest();
-        student.setAcademicYear(1);
+        student.setAcademicYear(LevelYear.FIRST_YEAR);
         student.setFeesStatus(FeesStatus.pending);
         student.setGpa(0.0);
 
@@ -88,7 +89,7 @@ public class SubmissionRequestMapper {
         request.setLastName(dto.getLastName());
         request.setEmail(dto.getEmail());
         request.setPassword(dto.getPassword());
-        request.setAcademicYear(1);
+        request.setAcademicYear(LevelYear.FIRST_YEAR);
         request.setHighSchoolName(dto.getHighSchoolName());
         request.setGraduationYear(dto.getGraduationYear());
         request.setCity(dto.getCity());
@@ -111,6 +112,8 @@ public class SubmissionRequestMapper {
         dto.setHighSchoolName(submission.getHighSchoolName());
         dto.setGraduationYear(submission.getGraduationYear());
         dto.setHighSchoolGpa(submission.getHighSchoolGpa());
+        dto.setFirstname(submission.getFirstName());
+        dto.setLastname(submission.getLastName());
 
         dto.setHighSchoolCertificate(fileResponse. getFileName(submission.getHighSchoolCertificate()));
         dto.setIdPhoto(fileResponse. getFileName(submission.getIdPhoto()));

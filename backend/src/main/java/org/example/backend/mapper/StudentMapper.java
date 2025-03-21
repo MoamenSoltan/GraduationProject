@@ -8,7 +8,6 @@ import org.example.backend.dto.submissionDto.SubmissionResponseDTO;
 import org.example.backend.entity.Student;
 import org.example.backend.entity.StudentCourse;
 import org.example.backend.entity.User;
-import org.example.backend.util.AuthResponse;
 import org.example.backend.util.FileResponse;
 
 import java.util.ArrayList;
