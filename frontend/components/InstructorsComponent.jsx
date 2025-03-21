@@ -4,12 +4,15 @@ import { instructorsData } from "../data/dummy";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { trimText } from "../utils/trim";
-import axios from "../api/axios";
 import toast from "react-hot-toast";
+import useAxiosPrivate from "../hooks/useAxiosPrivate";
+
 
 const InstructorsComponent = ({ preview }) => {
   const [loading, setLoading] = useState(false);
   const [instructors, setInstructors] = useState([]);
+
+  const axiosPrivate = useAxiosPrivate()
 
   const sliderSettings = {
     dots: true,
@@ -25,22 +28,24 @@ const InstructorsComponent = ({ preview }) => {
     ],
   };
 
-  // useEffect(() => {
-  //   const getInstructors = async () => {
-  //     try {
-  //       if (loading) return;
-  //       setLoading(true);
-  //       const response = await axios.get("/student/instructor");
-  //       setInstructors(response.data);
-  //     } catch (error) {
-  //       console.error("Error fetching instructors:", error);
-  //       toast.error("error")
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   };
-  //   getInstructors();
-  // }, []);
+  useEffect(() => {
+    const getInstructors = async () => {
+      try {
+        if (loading) return;
+        setLoading(true);
+        const response = await axiosPrivate.get("/student/instructors");
+        setInstructors(response.data);
+        console.log("Instructors data :",response.data);
+        
+      } catch (error) {
+        console.error("Error fetching instructors:", error.response.data.detail);
+        toast.error(`Error fetching instructors: ${error.response.data.detail}`);
+      } finally {
+        setLoading(false);
+      }
+    };
+    getInstructors();
+  }, []);
 
   return preview ? (
     <div className="flex flex-col w-full bg-white shadow-lg rounded-xl p-6 mt-5 relative overflow-hidden">
