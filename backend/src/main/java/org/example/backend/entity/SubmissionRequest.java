@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.example.backend.enums.AdmissionStatus;
 import org.example.backend.enums.GenderType;
+import org.example.backend.enums.LevelYear;
 import org.example.backend.enums.RoleType;
 
 import java.time.LocalDateTime;
@@ -36,7 +37,8 @@ public class SubmissionRequest {
     @Enumerated(EnumType.STRING)
     private GenderType gender;
 
-    private Integer academicYear;
+    @Enumerated(EnumType.STRING)
+    private LevelYear academicYear ;
     private String highSchoolName;
     private String graduationYear;
     private Double highSchoolGpa;

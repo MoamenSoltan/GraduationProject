@@ -12,6 +12,7 @@ import org.example.backend.mapper.InstructorMapper;
 import org.example.backend.repository.DepartmentRepository;
 import org.example.backend.repository.InstructorRepository;
 import org.example.backend.repository.RoleRepository;
+import org.example.backend.repository.StudentRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,7 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class InstructorService {
@@ -27,15 +29,17 @@ public class InstructorService {
     private final DepartmentRepository departmentRepository;
     private final RoleRepository roleRepository;
     private final FileService fileService;
+    private final StudentRepository studentRepository;
 
     public InstructorService(InstructorRepository instructorRepository,
                              DepartmentRepository departmentRepository,
-                             RoleRepository roleRepository, FileService fileService) {
+                             RoleRepository roleRepository, FileService fileService, StudentRepository studentRepository) {
         this.instructorRepository = instructorRepository;
 
         this.departmentRepository = departmentRepository;
         this.roleRepository = roleRepository;
         this.fileService = fileService;
+        this.studentRepository = studentRepository;
     }
 
 //    @Transactional
@@ -111,11 +115,16 @@ public class InstructorService {
 
     public InstructorResponseDTO getCoursesInstructorsForStudent(String studentEmail)
     {
-        Instructor instructor = instructorRepository.getCoursesInstructorForStudent(studentEmail)
-                .orElseThrow(()->new ResourceNotFound("Instructors","instructors","not found"));
+        Optional<Instructor> opt = instructorRepository.getCoursesInstructorForStudent(studentEmail);
+        if(!opt.isPresent())
+        {
+            throw new RuntimeException("you don't signed any courses");
+        }
 
-        System.out.println(instructor.getCourses().get(0).getCourseCode());
-        instructor.getCourses().forEach(c-> System.out.println(c.getCourseCode()));
+        Instructor instructor = opt.get();
+//        System.out.println(instructor.getCourses().get(0).getCourseCode());
+//        instructor.getCourses().forEach(c-> System.out.println(c.getCourseCode()));
+        //return InstructorMapper.entityToResponseDTO(instructor,studentRepository.findStudentByEmail(studentEmail).get());
         return InstructorMapper.entityToResponseDTO(instructor);
     }
 

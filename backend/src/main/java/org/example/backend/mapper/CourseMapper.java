@@ -8,7 +8,7 @@ import org.example.backend.dto.instructorDto.InstructorDTO;
 import org.example.backend.dto.semesterDto.SemesterDTO;
 import org.example.backend.entity.Course;
 import org.example.backend.enums.CourseType;
-import org.example.backend.enums.CourseYear;
+import org.example.backend.enums.LevelYear;
 
 public class CourseMapper {
     public static Course toEntity(CourseRequestDTO dto)
@@ -23,7 +23,7 @@ public class CourseMapper {
 
 
         if (dto.getYear() != null) {
-            course.setYear(CourseYear.valueOf(dto.getYear().name()));
+            course.setYear(LevelYear.valueOf(dto.getYear().name()));
         }
         if (dto.getType() != null) {
             course.setType(CourseType.valueOf(dto.getType().name()));

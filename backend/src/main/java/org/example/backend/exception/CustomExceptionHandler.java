@@ -70,10 +70,13 @@ public class CustomExceptionHandler {
      */
     private ProblemDetail handleEnrollmentException(String errorMessage) {
         if (errorMessage.contains("Student has not passed the prerequisite course")) {
+            // Extract course name from the error message (assuming it's part of the message)
+            String prerequisiteCourseName = extractPrerequisiteCourseName(errorMessage);
+
             return createProblemDetail(
                     HttpStatus.BAD_REQUEST,
                     "Enrollment Error",
-                    "You must pass the prerequisite course before enrolling."
+                    "You must pass the prerequisite course before enrolling. Prerequisite: " + prerequisiteCourseName
             );
         }
         if (errorMessage.contains("Student cannot enroll in more than the allowed courses for this semester")) {
@@ -89,6 +92,15 @@ public class CustomExceptionHandler {
                 "An error occurred while processing your request."
         );
     }
+
+    // Helper method to extract the prerequisite course name from the error message
+    private String extractPrerequisiteCourseName(String errorMessage) {
+        // Assuming the error message contains the course name, extract it from the message
+        // Example: "Student has not passed the prerequisite course: Introduction to Programming"
+        int startIndex = errorMessage.indexOf(":") + 2; // Skip ": "
+        return errorMessage.substring(startIndex);
+    }
+
 
     @ExceptionHandler(Exception.class)
     public ProblemDetail handleGenericException(Exception ex) {

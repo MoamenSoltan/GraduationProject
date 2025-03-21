@@ -6,7 +6,7 @@ import org.example.backend.dto.DepartmentDTO;
 import org.example.backend.dto.instructorDto.InstructorDTO;
 import org.example.backend.dto.semesterDto.SemesterDTO;
 import org.example.backend.enums.CourseType;
-import org.example.backend.enums.CourseYear;
+import org.example.backend.enums.LevelYear;
 
 import java.time.LocalDateTime;
 @Setter
@@ -19,7 +19,7 @@ public class CourseResponseDTO {
     private int credit;
     private String description;
     private int maxStudents;
-    private CourseYear year;
+    private LevelYear year;
     private CourseType type;
     private String schedule;
     private int studentEnrolled;

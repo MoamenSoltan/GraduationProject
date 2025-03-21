@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.example.backend.enums.CourseType;
-import org.example.backend.enums.CourseYear;
+import org.example.backend.enums.LevelYear;
 
 import java.time.LocalDateTime;
 
@@ -31,7 +31,7 @@ public class Course {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "year")
-    private CourseYear year;
+    private LevelYear year;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "type")

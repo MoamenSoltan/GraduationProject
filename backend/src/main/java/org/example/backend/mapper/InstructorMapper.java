@@ -6,10 +6,7 @@ import org.example.backend.dto.instructorDto.InstructorProfile;
 import org.example.backend.dto.instructorDto.InstructorRequestDTO;
 import org.example.backend.dto.instructorDto.InstructorResponseDTO;
 import org.example.backend.dto.semesterDto.SemesterDTO;
-import org.example.backend.entity.Course;
-import org.example.backend.entity.Instructor;
-import org.example.backend.entity.Role;
-import org.example.backend.entity.User;
+import org.example.backend.entity.*;
 import org.example.backend.util.FileResponse;
 
 import java.util.ArrayList;
@@ -136,4 +133,74 @@ public class InstructorMapper {
 
         return responseDTO;
     }
+
+    public static InstructorResponseDTO entityToResponseDTO(Instructor entity, Student student) {
+        InstructorResponseDTO responseDTO = new InstructorResponseDTO();
+
+        // Set the personal image URL
+        responseDTO.setPersonalImage(new FileResponse().getFileName(entity.getPersonalImage()));
+
+        // Set basic instructor details
+        responseDTO.setInstructorId(entity.getInstructorId());
+        if (entity.getUser() != null) {
+            responseDTO.setFirstName(entity.getUser().getFirstName());
+            responseDTO.setLastName(entity.getUser().getLastName());
+            responseDTO.setEmail(entity.getUser().getEmail());
+            responseDTO.setGender(entity.getUser().getGender());
+        }
+
+        // Set department information
+        if (entity.getDepartment() != null) {
+            DepartmentDTO departmentDTO = new DepartmentDTO();
+            departmentDTO.setDepartmentId(entity.getDepartment().getDepartmentId());
+            departmentDTO.setDepartmentName(entity.getDepartment().getDepartmentName());
+            responseDTO.setDepartment(departmentDTO);
+        }
+
+        // Set managed department information
+        if (entity.getManagedDepartment() != null) {
+            DepartmentDTO managedDepartmentDTO = new DepartmentDTO();
+            managedDepartmentDTO.setDepartmentId(entity.getManagedDepartment().getDepartmentId());
+            managedDepartmentDTO.setDepartmentName(entity.getManagedDepartment().getDepartmentName());
+            responseDTO.setManagedDepartment(managedDepartmentDTO);
+        }
+
+        // Filter and include only the courses that this student is enrolled in
+        if (entity.getCourses() != null && !entity.getCourses().isEmpty()) {
+            List<CourseDTO> courses = new ArrayList<>();
+
+            for (Course course : entity.getCourses()) {
+                // Check if the student is enrolled in this course with the current instructor
+                boolean studentEnrolled = false;
+                for (StudentCourse studentCourse : student.getStudentCourse()) {
+                    if (studentCourse.getCourse().getCourseId().equals(course.getCourseId())) {
+                        studentEnrolled = true;
+                        break;
+                    }
+                }
+
+                // If the student is enrolled in this course, add it to the response
+                if (studentEnrolled) {
+                    CourseDTO dto = new CourseDTO();
+                    dto.setGrade(course.getYear()); // Assuming `course.getYear()` represents the grade
+                    dto.setCourseId(course.getCourseId());
+                    dto.setCourseName(course.getCourseName());
+                    dto.setCourseCode(course.getCourseCode());
+
+                    // Set semester details
+                    SemesterDTO semesterDTO = new SemesterDTO();
+                    semesterDTO.setSemesterName(course.getSemester().getSemesterId().getSemesterName().toString());
+                    semesterDTO.setYear(course.getSemester().getSemesterId().getYearLevel());
+                    semesterDTO.setYearLevel(course.getSemester().getSemesterId().getYearLevel());
+                    dto.setSemester(semesterDTO);
+
+                    courses.add(dto);
+                }
+            }
+            responseDTO.setCourses(courses);
+        }
+
+        return responseDTO;
+    }
+
 }
