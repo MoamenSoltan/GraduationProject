@@ -79,8 +79,14 @@ const DetailedSubmissionRequests = () => {
                         View High School Certificate
                     </a>
 
-                    <button onClick={handleAccept}>Accept</button>
-                    <button onClick={handleReject}>Reject</button>
+                    {
+                        request.status ==="PENDING"
+                        &&  <div>
+                                <button onClick={handleAccept}>Accept</button>
+                                <button onClick={handleReject}>Reject</button>
+                            </div>
+                    
+                    }
                 </div>
             </div>
         </div>

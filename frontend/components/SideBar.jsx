@@ -26,7 +26,7 @@ const SideBar = () => {
     <div className="  overflow-auto md:overflow-hidden  h-screen md:hover:overflow-auto pb-10 shadow-md ">
       {activeMenu && (
         <>
-          <div className="mt-[100px] flex flex-col gap-3 pr-2">
+          <div className="mt-[100px] flex flex-col  gap-3 pr-2">
             {links.map((link) => (
               <NavLink
                 to={`/${role}Dashboard/${link.name.replace(/\s+/g, "-")}`}
