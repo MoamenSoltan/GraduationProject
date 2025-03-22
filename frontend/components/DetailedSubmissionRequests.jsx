@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 import useAxiosPrivate from '../hooks/useAxiosPrivate';
 import toast from 'react-hot-toast';
 
@@ -8,6 +8,8 @@ const DetailedSubmissionRequests = () => {
     const axiosPrivate = useAxiosPrivate();
     const [request, setRequest] = useState(null);
     const [loading, setLoading] = useState(true);
+
+    const navigate = useNavigate()
 
     useEffect(() => {
         const fetchRequestDetails = async () => {
@@ -23,6 +25,28 @@ const DetailedSubmissionRequests = () => {
 
         fetchRequestDetails();
     }, [id]);
+
+    const handleAccept = async ()=>{
+        try {
+
+            const response = await axiosPrivate.post(`/admin/approve/${id}`)
+            toast.success("Submmision accepted successfully")
+            navigate("/adminDashboard/submission-Requests")
+        } catch (error) {
+            toast.error("couldn't accept submission")
+        }
+    }
+
+    const handleReject = async ()=>{
+        try {
+
+            const response = await axiosPrivate.post(`/admin/reject/${id}`)
+            toast.success("Submmision rejected successfully")
+            navigate("/adminDashboard/submission-Requests")
+        } catch (error) {
+            toast.error("couldn't reject submission")
+        }
+    }
 
     if (loading) return <div className="text-center text-lg">Loading...</div>;
     if (!request) return <div className="text-center text-lg text-red-500">No data found for this request</div>;
@@ -54,6 +78,15 @@ const DetailedSubmissionRequests = () => {
                     >
                         View High School Certificate
                     </a>
+
+                    {
+                        request.status ==="PENDING"
+                        &&  <div>
+                                <button onClick={handleAccept}>Accept</button>
+                                <button onClick={handleReject}>Reject</button>
+                            </div>
+                    
+                    }
                 </div>
             </div>
         </div>
