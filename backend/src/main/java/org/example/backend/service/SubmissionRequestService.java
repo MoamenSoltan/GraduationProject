@@ -9,6 +9,10 @@ import org.example.backend.enums.AdmissionStatus;
 import org.example.backend.exception.ResourceNotFound;
 import org.example.backend.mapper.SubmissionRequestMapper;
 import org.example.backend.repository.SubmissionReqRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -101,4 +105,36 @@ public class SubmissionRequestService {
         SubmissionRequest request = submissionReqRepository.findById(id).orElseThrow(() -> new ResourceNotFound("Submission","submission ID",id));
         return submissionRequestMapper.toResponseDTO(request);
     }
+
+    public List<SubmissionResponseDTO> getSubmissionsWithSorting(String field)
+    {
+        List<SubmissionRequest> submissionRequests = submissionReqRepository.findAll(Sort.by(Sort.Direction.ASC,field));
+        List<SubmissionResponseDTO> responseDTOList = new ArrayList<>();
+
+        for (SubmissionRequest request : submissionRequests) {
+            responseDTOList.add(submissionRequestMapper.toResponseDTO(request));
+        }
+
+        return responseDTOList;
+    }
+
+    public List<SubmissionRequest> getSubmissionWithPagination(int offset, int pageSize)
+    {
+        Page<SubmissionRequest> submissionRequests=
+                submissionReqRepository.findAll(PageRequest.of(offset,pageSize));
+        return submissionRequests.getContent();
+    }
+
+    public List<SubmissionResponseDTO> getAllSubmissions(int pageNumber, int pageSize, String sortBy, String sortDir) {
+        Sort sort = sortDir.equalsIgnoreCase("desc") ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending();
+
+        Pageable pageable = PageRequest.of(pageNumber, pageSize, sort);
+        Page<SubmissionRequest> submissionRequests = submissionReqRepository.findAll(pageable);
+
+        return submissionRequests.getContent()
+                .stream()
+                .map(submissionRequestMapper::toResponseDTO)
+                .collect(Collectors.toList());
+    }
+
 }

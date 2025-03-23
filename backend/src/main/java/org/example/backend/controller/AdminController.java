@@ -8,6 +8,7 @@ import org.example.backend.dto.instructorDto.InstructorRequestDTO;
 import org.example.backend.dto.instructorDto.InstructorResponseDTO;
 import org.example.backend.dto.semesterDto.SemesterRequestDTO;
 import org.example.backend.dto.semesterDto.SemesterResponseDTO;
+import org.example.backend.dto.submissionDto.SubmissionResponseDTO;
 import org.example.backend.entity.*;
 import org.example.backend.enums.AdmissionStatus;
 import org.example.backend.enums.SemesterName;
@@ -16,6 +17,7 @@ import org.example.backend.repository.*;
 import org.example.backend.service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
@@ -78,12 +80,35 @@ public class AdminController {
     {
         return ResponseEntity.ok(submissionRequestService.getAllSubmissions(status));
     }
+
+    @GetMapping("/pagination/submissions")
+    public ResponseEntity<List<SubmissionResponseDTO>> getAllSubmissions(
+            @RequestParam(value = "pageNumber", defaultValue = "0") int pageNumber,
+            @RequestParam(value = "pageSize", defaultValue = "10") int pageSize,
+            @RequestParam(value = "sortBy", defaultValue = "id") String sortBy,
+            @RequestParam(value = "sortDir", defaultValue = "asc") String sortDir // Added sort direction
+    ) {
+        return ResponseEntity.ok(submissionRequestService.getAllSubmissions(pageNumber, pageSize, sortBy, sortDir));
+    }
+
+
+    @GetMapping("/submissions/sort/{field}")
+    ResponseEntity<List<SubmissionResponseDTO>> getSubmissionsSortedByField(@PathVariable String field)
+    {
+        return ResponseEntity.ok(submissionRequestService.getSubmissionsWithSorting(field));
+    }
     @GetMapping("/submissions/{id}")
-    public ResponseEntity<?> getSubmissionByID(@PathVariable int id)
+    public ResponseEntity<SubmissionResponseDTO> getSubmissionByID(@PathVariable int id)
     {
         return ResponseEntity.ok(submissionRequestService.getSubmissionById(id));
     }
 
+    @GetMapping("/submissions/page")
+    public ResponseEntity<List<SubmissionRequest>> getAllSubmissionsWithPagination(@RequestParam(defaultValue = "0") int offset,
+                                                                                       @RequestParam(defaultValue = "10") int size)
+    {
+        return ResponseEntity.ok(submissionRequestService.getSubmissionWithPagination(offset, size));
+    }
     @PostMapping("/instructor")
     public ResponseEntity<InstructorResponseDTO> addInstructor(@RequestBody InstructorRequestDTO instructorDto)
     {
@@ -99,6 +124,20 @@ public class AdminController {
     {
         List<InstructorResponseDTO> instructors = instructorService.getAllInstructors();
         return ResponseEntity.ok(instructors);
+    }
+
+    @GetMapping("/instructor/managed")
+    public ResponseEntity<List<InstructorResponseDTO>> getInstructorMangesDp()
+    {
+        List<InstructorResponseDTO> instructorManges = instructorService.getInstructManagesDp();
+        return ResponseEntity.ok(instructorManges);
+    }
+
+    @GetMapping("/instructor/{id}")
+    public ResponseEntity<InstructorResponseDTO> getInstructorById(@PathVariable int id)
+    {
+        InstructorResponseDTO instructor = instructorService.getInstructorById(id);
+        return ResponseEntity.ok(instructor);
     }
 
     @DeleteMapping("/instructor/{id}")
@@ -173,6 +212,11 @@ public class AdminController {
     public ResponseEntity<?> deleteCourse(@PathVariable Long id) {
         String message = courseService.deleteCourse(id);
         return ResponseEntity.ok(message);
+    }
+    @GetMapping("/course/{id}")
+    public ResponseEntity<CourseResponseDTO> getCourseById(@PathVariable Long id) {
+        CourseResponseDTO course = courseService.getCourseById(id);
+        return ResponseEntity.ok(course);
     }
     @PutMapping("/course/{id}")
     public ResponseEntity<CourseResponseDTO> updateCourse(@PathVariable Long id,

@@ -35,8 +35,8 @@ public class InstructorMapper {
     public static InstructorResponseDTO  entityToResponseDTO(Instructor entity)
     {
         InstructorResponseDTO responseDTO = new InstructorResponseDTO();
-        responseDTO.setPersonalImage(new FileResponse().getFileName(entity.getPersonalImage()));
 
+            responseDTO.setPersonalImage(new FileResponse().getFileName(entity.getPersonalImage()));
         responseDTO.setInstructorId(entity.getInstructorId());
         if (entity.getUser() != null) {
             responseDTO.setFirstName(entity.getUser().getFirstName());

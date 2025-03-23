@@ -158,4 +158,22 @@ public class InstructorService {
         instructorRepository.save(instructor);
         return "Instructor updated successfully";
     }
+
+    public InstructorResponseDTO getInstructorById(int id) {
+        Optional<Instructor> opt = instructorRepository.findById(id);
+        if (!opt.isPresent()) {
+            throw new ResourceNotFound("Instructor", "id", id);
+        }
+        Instructor instructor = opt.get();
+        return InstructorMapper.entityToResponseDTO(instructor);
+    }
+
+    public List<InstructorResponseDTO> getInstructManagesDp() {
+        List<Instructor> instructors = instructorRepository.getInstructorThatMangedDepartments().get();
+        List<InstructorResponseDTO> responseDTOList = new ArrayList<>();
+        for (Instructor instructor : instructors) {
+            responseDTOList.add(InstructorMapper.entityToResponseDTO(instructor));
+        }
+        return responseDTOList;
+    }
 }
