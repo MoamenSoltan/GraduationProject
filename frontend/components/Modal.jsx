@@ -44,10 +44,10 @@ const Modal = ({open,onClose,children}) => {
     if (!open) return null; // Prevent rendering when modal is closed
 
   return ReactDom.createPortal(
-    <div onClick={onClose} className={`inset-0 fixed cursor-default  flex justify-center items-center  transition-colors ${open ? "visible bg-black/20":"invisible"}`}>
+    <div onClick={onClose} className={`inset-0  fixed cursor-default  flex justify-center items-center  transition-colors ${open ? "visible bg-black/20":"invisible"}`}>
         {/* since parent of this is body , and we have inset-0 , bg-black will be applied to body */}
 
-        <div onClick={(e)=>{e.stopPropagation()}} className={`bg-white max-w-[90%] overflow-hidden rounded-xl  shadow p-6 transition-all ${open ?"scale-100 opacity-100" :"scale-125 opacity-0"}`}>
+        <div onClick={(e)=>{e.stopPropagation()}} className={`bg-white max-h-[65vh] overflow-y-auto md:min-w-[40%] md:max-w-[40%] overflow-hidden rounded-xl  shadow p-6 transition-all ${open ?"scale-100 opacity-100" :"scale-125 opacity-0"}`}>
             {children} {/* children prop contains the content of modal */}
             <button onClick={onClose} className="absolute top-4 right-4 text-gray-600 hover:text-gray-800">X</button> {/* close button */}
         </div>
