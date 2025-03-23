@@ -85,12 +85,14 @@ const CreateInstructor = () => {
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-   // if (!validate()) return; // Prevent submission if validation fails
+    if (!validate()) return; // Prevent submission if validation fails
   
     try {
       const response = await axiosPrivate.post("/admin/instructor", instructor);
       const newInstructor = response.data; // Use API response (including ID and any other data)
       setreFetch(prev=>!prev)
+      console.log("instructor data sent :",instructor);
+      
       toast.success("Instructor added successfully!");
       setModal(false);
       
