@@ -1,5 +1,7 @@
 package org.example.backend.enums;
 
 public enum CourseType {
-    REQUIRED, OPTIONAL
+    REQUIRED,
+    OPTIONAL,
+    RECOMMENDED
 }

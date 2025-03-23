@@ -1,5 +1,8 @@
 package org.example.backend.repository;
 
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import org.example.backend.entity.Instructor;
 import org.example.backend.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -30,4 +33,5 @@ public interface InstructorRepository extends JpaRepository<Instructor,Integer> 
     Optional<Instructor> getCoursesInstructorForStudent(@Param("studentEmail") String studentEmail);
 
 
+    boolean existsByUserEmail(@NotBlank(message = "Email is required") @Email(message = "Email must be valid") @Size(max = 100, message = "Email must not exceed 100 characters") String email);
 }

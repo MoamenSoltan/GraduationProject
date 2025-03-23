@@ -19,6 +19,7 @@ import java.util.Map;
 @RestControllerAdvice
 public class CustomExceptionHandler {
 
+    // Handle authentication errors
     @ExceptionHandler(BadCredentialsException.class)
     public ProblemDetail handleBadCredentialsException(BadCredentialsException ex) {
         return createProblemDetail(HttpStatus.UNAUTHORIZED, "Authentication failed", "Invalid email or password.");
@@ -44,6 +45,7 @@ public class CustomExceptionHandler {
         return createProblemDetail(HttpStatus.FORBIDDEN, "JWT token expired", "Your session has expired. Please log in again.");
     }
 
+    // Handle validation errors
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ProblemDetail handleValidationException(MethodArgumentNotValidException ex) {
         ProblemDetail problemDetail = createProblemDetail(HttpStatus.BAD_REQUEST, "Validation error", "Validation failed for request.");
@@ -55,11 +57,13 @@ public class CustomExceptionHandler {
         return problemDetail;
     }
 
+    // Handle JPA system errors
     @ExceptionHandler(JpaSystemException.class)
     public ProblemDetail handleJpaException(JpaSystemException ex) {
         return handleEnrollmentException(ex.getMostSpecificCause().getMessage());
     }
 
+    // Handle Data Integrity Violation (e.g., duplicate entries)
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ProblemDetail handleDataIntegrityViolation(DataIntegrityViolationException ex) {
         return handleEnrollmentException(ex.getMostSpecificCause().getMessage());
@@ -101,7 +105,7 @@ public class CustomExceptionHandler {
         return errorMessage.substring(startIndex);
     }
 
-
+    // Handle generic exceptions
     @ExceptionHandler(Exception.class)
     public ProblemDetail handleGenericException(Exception ex) {
         return createProblemDetail(HttpStatus.INTERNAL_SERVER_ERROR, "An unexpected error occurred", ex.getMessage());
@@ -111,5 +115,19 @@ public class CustomExceptionHandler {
         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(status, detail);
         problemDetail.setProperty("error", title);
         return problemDetail;
+    }
+
+    // Handle duplicate entry errors (e.g., email already exists)
+    private ProblemDetail handleDuplicateEntry(String message) {
+        String duplicateValue = extractDuplicateValue(message);
+        return createProblemDetail(HttpStatus.BAD_REQUEST, "Duplicate Entry", "The value '" + duplicateValue + "' already exists. Please use a unique value.");
+    }
+
+    // Method to extract the duplicate value from the exception message
+    private String extractDuplicateValue(String message) {
+        // Extract the duplicated value from the error message
+        // For example: "Duplicate entry 'joeFliooxxx@example.com' for key 'users.email'"
+        String[] parts = message.split("'");
+        return parts.length > 1 ? parts[1] : "Unknown value";
     }
 }

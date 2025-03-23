@@ -39,6 +39,9 @@ public class User {
     @JsonManagedReference
     private List<Role> roleList;
 
+    @OneToMany(mappedBy = "user")
+    private List<ForgotPassword> forgotPassword;
+
 
     public void addRole(Role role) {
         if (roleList == null) {
