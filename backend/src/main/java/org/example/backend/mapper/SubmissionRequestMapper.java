@@ -114,6 +114,7 @@ public class SubmissionRequestMapper {
         dto.setHighSchoolGpa(submission.getHighSchoolGpa());
         dto.setFirstname(submission.getFirstName());
         dto.setLastname(submission.getLastName());
+        dto.setStatus(submission.getAdmissionStatus());
 
         dto.setHighSchoolCertificate(fileResponse. getFileName(submission.getHighSchoolCertificate()));
         dto.setIdPhoto(fileResponse. getFileName(submission.getIdPhoto()));

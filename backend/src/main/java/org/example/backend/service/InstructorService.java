@@ -78,6 +78,9 @@ public class InstructorService {
 //    }
     public InstructorResponseDTO createInstructor(InstructorRequestDTO requestDTO)
     {
+        if (instructorRepository.existsByUserEmail(requestDTO.getEmail())) {
+            throw new RuntimeException("Email already exists: " + requestDTO.getEmail());
+        }
         Instructor instructor = InstructorMapper.requestToEntity(requestDTO);
         Role role = roleRepository.getInstructorRole()
                 .get();

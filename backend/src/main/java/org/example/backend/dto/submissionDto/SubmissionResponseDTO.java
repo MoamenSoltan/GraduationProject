@@ -2,6 +2,8 @@ package org.example.backend.dto.submissionDto;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.example.backend.enums.AdmissionStatus;
+
 
 @Setter
 @Getter
@@ -12,6 +14,7 @@ public class SubmissionResponseDTO {
     private String highSchoolName;
     private String graduationYear;
     private Double highSchoolGpa;
+    private AdmissionStatus status;
     private String highSchoolCertificate;
     private String phoneNumber;
     private String idPhoto;

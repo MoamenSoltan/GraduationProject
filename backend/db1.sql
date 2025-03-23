@@ -280,3 +280,21 @@ alter table instructors
 alter table instructors
     add column personal_image varchar(255);
 
+
+alter table graduation_project.submission_request
+    modify column academic_year enum('FIRST_YEAR','SECOND_YEAR','THIRD_YEAR','FOURTH_YEAR') DEFAULT 'FIRST_YEAR';
+
+alter table graduation_project.students
+    modify column academic_year enum('FIRST_YEAR','SECOND_YEAR','THIRD_YEAR','FOURTH_YEAR') DEFAULT 'FIRST_YEAR';
+
+
+create table forgot_password
+(
+    fp_Id  int primary key auto_increment not null,
+    otp int not null ,
+    expiration_time DATETIME NOT NULL,
+    user_id int,
+    foreign key (user_id) REFERENCES users(id)
+
+)
+

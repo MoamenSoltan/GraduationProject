@@ -67,3 +67,6 @@ docker-compose.override.yaml
 *.h2.db
 *.mv.db
 *.db
+
+draft
+tasks_todo.txt
