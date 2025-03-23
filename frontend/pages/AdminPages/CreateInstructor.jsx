@@ -14,6 +14,7 @@ const CreateInstructor = () => {
     managedDepartmentId: null,
   });
 
+  const [reFetch, setreFetch] = useState(false)
   const [errors, setErrors] = useState({});
   const [allInstructors, setAllInstructors] = useState([]);
   const [modal, setModal] = useState(false);
@@ -30,7 +31,7 @@ const CreateInstructor = () => {
       }
     };
     fetchInstructors();
-  }, []);
+  }, [reFetch]);
 
   // Handle input change for text fields
   const handleChange = (e) => {
@@ -84,17 +85,18 @@ const CreateInstructor = () => {
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!validate()) return; // Prevent submission if validation fails
+   // if (!validate()) return; // Prevent submission if validation fails
   
     try {
       const response = await axiosPrivate.post("/admin/instructor", instructor);
       const newInstructor = response.data; // Use API response (including ID and any other data)
-  
+      setreFetch(prev=>!prev)
       toast.success("Instructor added successfully!");
       setModal(false);
       
       // Update the state with the new instructor from API
-      setAllInstructors((prev) => [...prev, newInstructor]); 
+    //  setAllInstructors((prev) => [...prev, newInstructor]); 
+    //not needed because of reFetch state .
       
       // Reset the form
       setInstructor({
@@ -109,7 +111,9 @@ const CreateInstructor = () => {
   
       setErrors({});
     } catch (error) {
-      toast.error("Error adding instructor");
+      toast.error(`Error adding instructor : ${error.response.data.detail}`);
+      console.error("Error adding instructor",error.response.data.detail);
+
     }
   };
   
