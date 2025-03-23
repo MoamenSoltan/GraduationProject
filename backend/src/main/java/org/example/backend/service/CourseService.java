@@ -242,4 +242,11 @@ public class CourseService {
 
         return dtos;
     }
+
+    public CourseResponseDTO getCourseById(Long id) {
+        Course course = courseRepo.findById(id)
+                .orElseThrow(() -> new ResourceNotFound("Course", "id", id));
+
+        return CourseMapper.toResponseDTO(course);
+    }
 }

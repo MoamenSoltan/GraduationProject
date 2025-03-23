@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface InstructorRepository extends JpaRepository<Instructor,Integer> {
@@ -34,4 +35,9 @@ public interface InstructorRepository extends JpaRepository<Instructor,Integer> 
 
 
     boolean existsByUserEmail(@NotBlank(message = "Email is required") @Email(message = "Email must be valid") @Size(max = 100, message = "Email must not exceed 100 characters") String email);
+    @Query("select ins\n" +
+            "from Instructor ins\n" +
+            "join Department dp on dp.headOfDepartment.instructorId=ins.instructorId")
+    Optional<List<Instructor>> getInstructorThatMangedDepartments();
+
 }
