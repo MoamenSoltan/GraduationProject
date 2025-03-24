@@ -84,7 +84,7 @@ const DetailedInstructor = () => {
         )}
       </h2>
 
-      {/* Personal Image */}
+      
       {instructor?.personalImage ? (
         <img
           src={instructor.personalImage}
