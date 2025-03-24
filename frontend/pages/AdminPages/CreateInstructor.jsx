@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import toast from "react-hot-toast";
 import Modal from "../../components/Modal";
+import { useNavigate } from "react-router";
 
 const CreateInstructor = () => {
   const [instructor, setInstructor] = useState({
@@ -119,6 +120,7 @@ const CreateInstructor = () => {
     }
   };
   
+  const navigate = useNavigate()
 
   return (
     <div className="md:w-[80%] w-full m-auto mt-10">
@@ -126,7 +128,7 @@ const CreateInstructor = () => {
 
       <div className="flex w-full flex-row flex-wrap gap-2">
         {allInstructors.map((instructor) => (
-          <div
+          <div onClick={()=>navigate(`/adminDashboard/create-Instructor/${instructor.instructorId}`)}
             key={instructor.instructorId}
             className="rounded-sm shadow-xl p-4 hover:scale-105 transition-all cursor-pointer"
           >

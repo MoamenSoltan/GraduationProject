@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import toast from "react-hot-toast";
 import Modal from "../../components/Modal";
+import { useNavigate } from "react-router";
 
 const CreateCourse = () => {
   const [course, setCourse] = useState({
@@ -117,13 +118,15 @@ const CreateCourse = () => {
     }
   };
 
+  const navigate = useNavigate()
+
   return (
     <div className="md:w-[80%] w-full m-auto mt-10">
       <h2 className="sub-text-2">Courses</h2>
       <div className="flex w-full flex-row flex-wrap gap-2">
         {allCourses.map((course) => (
-          <div
-            key={course.id}
+          <div onClick={()=>navigate(`/adminDashboard/create-Course/${course.courseId}`)}
+            key={course.courseId}
             className="rounded-sm shadow-xl p-4 hover:scale-105 transition-all cursor-pointer"
           >
             <h3 className="text-lg">{course.courseName}</h3>
@@ -167,7 +170,7 @@ const CreateCourse = () => {
             type="number"
             name="credit"
             placeholder="Credit Hours"
-            value={course.credit}
+            value={course?.credit||""}
             onChange={handleChange}
             className="w-full p-2 border rounded mb-2"
           />
@@ -186,7 +189,7 @@ const CreateCourse = () => {
             type="number"
             name="maxStudents"
             placeholder="Max Students"
-            value={course.maxStudents}
+            value={course?.maxStudents||""}
             onChange={handleChange}
             className="w-full p-2 border rounded mb-2"
           />
@@ -299,12 +302,12 @@ const CreateCourse = () => {
 
           <select
             name="prerequisiteCourseId"
-            value={course.prerequisiteCourseId}
+            value={course?.prerequisiteCourseId ||""}
             onChange={handleChange}
             className="w-full p-2 border rounded mb-2"
           >
             
-            <option value="">none</option>
+            <option value="">Select Prerequisite Course </option>
 
             {allCourses.map((course) => (
               <option key={course.courseId} value={course.courseId}>

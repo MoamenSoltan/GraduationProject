@@ -7,6 +7,8 @@ import SubmissionRequests from './AdminPages/SubmissionRequests'
 import CreateInstructor from './AdminPages/CreateInstructor'
 import CreateCourse from './AdminPages/CreateCourse'
 import DetailedSubmissionRequests from '../components/DetailedSubmissionRequests'
+import DetailedInstructor from '../components/DetailedInstructor'
+import DetailedCourses from '../components/DetailedCourses'
 const AdminDashboard = () => {
   const {activeMenu}=useStateContext()
 
@@ -35,7 +37,11 @@ const AdminDashboard = () => {
         <Route path='/submission-Requests/:id' element={<DetailedSubmissionRequests/>} />
 
         <Route path='/create-Instructor' element={<CreateInstructor/>}/>
+        <Route path='/create-Instructor/:id' element={<DetailedInstructor/>}/>
+
         <Route path='/create-Course' element={<CreateCourse/>}/>
+        <Route path='/create-Course/:id' element={<DetailedCourses/>}/>
+
 
       </Routes>
     </div>
