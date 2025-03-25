@@ -22,7 +22,11 @@ const DetailedCourses = () => {
             try {
                 const response = await axiosPrivate.get(`/admin/course/${id}`);
                 setCourse(response.data);
-                setEditedCourse(response.data); // Initialize editable fields
+                // setCourse(response.data) //this is the correct approach , we did the other one for backend preference
+                setEditedCourse({...response.data
+                    ,departmentId:response?.data?.department?.departmentId,
+                    semesterName:response?.data?.semester?.semesterName,
+                    yearLevel:response?.data?.semester?.yearLevel}); // Initialize editable fields
             } catch (err) {
                 setError(err.message);
             } finally {
@@ -44,8 +48,9 @@ const DetailedCourses = () => {
             setCourse(editedCourse);
             setIsEditing(false);
             toast.success("Course updated successfully!");
+            navigate("/adminDashboard/create-Course")
         } catch (error) {
-            toast.error("Failed to update course.");
+            toast.error(`Failed to update course : ${error?.response?.data?.detail}`);
             console.error("Update error:", error);
             console.log("Updated course : ",editedCourse);
             console.log(" course : ",course);
