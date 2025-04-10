@@ -9,7 +9,7 @@ const DetailedSubmissionRequests = () => {
     const [request, setRequest] = useState(null);
     const [loading, setLoading] = useState(true);
 
-    const navigate = useNavigate()
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchRequestDetails = async () => {
@@ -26,37 +26,35 @@ const DetailedSubmissionRequests = () => {
         fetchRequestDetails();
     }, [id]);
 
-    const handleAccept = async ()=>{
+    const handleAccept = async () => {
         try {
-
-            const response = await axiosPrivate.post(`/admin/approve/${id}`)
-            toast.success("Submmision accepted successfully")
-            navigate("/adminDashboard/submission-Requests")
+            await axiosPrivate.post(`/admin/approve/${id}`);
+            toast.success('Submission accepted successfully');
+            navigate('/adminDashboard/submission-Requests');
         } catch (error) {
-            toast.error("couldn't accept submission")
+            toast.error("Couldn't accept submission");
         }
-    }
+    };
 
-    const handleReject = async ()=>{
+    const handleReject = async () => {
         try {
-
-            const response = await axiosPrivate.post(`/admin/reject/${id}`)
-            toast.success("Submmision rejected successfully")
-            navigate("/adminDashboard/submission-Requests")
+            await axiosPrivate.post(`/admin/reject/${id}`);
+            toast.success('Submission rejected successfully');
+            navigate('/adminDashboard/submission-Requests');
         } catch (error) {
-            toast.error("couldn't reject submission")
+            toast.error("Couldn't reject submission");
         }
-    }
+    };
 
     if (loading) return <div className="text-center text-lg">Loading...</div>;
     if (!request) return <div className="text-center text-lg text-red-500">No data found for this request</div>;
 
     return (
-        <div className="max-w-3xl mx-auto p-6 bg-white shadow-md rounded-lg">
-            <h2 className="text-2xl font-bold mb-4">Submission Details</h2>
+        <div className="max-w-3xl mx-auto p-6 bg-white shadow-lg rounded-lg border border-gray-200">
+            <h2 className="text-3xl font-semibold mb-6 text-center">Submission Details</h2>
 
-            <div className="grid grid-cols-2 gap-4">
-                <div>
+            <div className="grid md:grid-cols-2 gap-8">
+                <div className="space-y-4">
                     <p><strong>ID:</strong> {request.id}</p>
                     <p><strong>City:</strong> {request.city}</p>
                     <p><strong>Address:</strong> {request.address}</p>
@@ -67,26 +65,34 @@ const DetailedSubmissionRequests = () => {
                     <p><strong>Phone Number:</strong> {request.phoneNumber}</p>
                 </div>
 
-                <div className="flex flex-col space-y-4">
-                    <img className="w-40 h-40 rounded-lg" src={request.personalPhoto} alt="Personal" />
-                    <img className="w-40 h-40 rounded-lg" src={request.idPhoto} alt="ID" />
+                <div className="space-y-4 flex flex-col items-center justify-center">
+                    <img className="w-40 h-40 rounded-full border-4 border-gray-200 shadow-md" src={request.personalPhoto} alt="Personal" />
+                  
                     <a 
                         href={request.highSchoolCertificate} 
                         target="_blank" 
                         rel="noopener noreferrer" 
-                        className="text-blue-500 underline"
+                        className="text-blue-500 underline hover:text-blue-600"
                     >
                         View High School Certificate
                     </a>
 
-                    {
-                        request.status ==="PENDING"
-                        &&  <div>
-                                <button onClick={handleAccept}>Accept</button>
-                                <button onClick={handleReject}>Reject</button>
-                            </div>
-                    
-                    }
+                    {request.status === "PENDING" && (
+                        <div className="flex gap-4 mt-6">
+                            <button 
+                                onClick={handleAccept} 
+                                className="px-6 py-2 bg-green-500 text-white rounded-full hover:bg-green-600 transition-all"
+                            >
+                                Accept
+                            </button>
+                            <button 
+                                onClick={handleReject} 
+                                className="px-6 py-2 bg-red-500 text-white rounded-full hover:bg-red-600 transition-all"
+                            >
+                                Reject
+                            </button>
+                        </div>
+                    )}
                 </div>
             </div>
         </div>

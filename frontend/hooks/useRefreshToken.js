@@ -4,19 +4,21 @@ import axios from '../api/axios'
 
 const useRefreshToken = () => {
 
-    const {setAuth} = useStateContext()
+    const {setAuth,auth} = useStateContext()
+    
 
     // refresh token API 
 
     const refresh = async ()=>{
-        const response = await axios.get('/refresh', {
+        const response = await axios.get('/refreshToken', {
+        
            withCredentials:true
         //    withcredentials , means were using cookies , refresh tokens are stored in http only cookies (server side) while access tokens are stored in memory aka context of react app
         })
         setAuth((prev)=>{
             console.log(JSON.stringify(prev));
             console.log(response.data.accessToken);
-            return {...prev , accessToken:response.data.accessToken}
+            return {...prev , accessToken:response.data.body.accessToken}
         })
         return response.data.accessToken
     }

@@ -34,7 +34,11 @@ const NavBar = () => {
 
       <button
         onClick={() => {
+          if(auth.roles[0]==="STUDENT")
           navigate("/studentDashboard/profile");
+          console.log("auth :",auth);
+          
+          
         }}
         className="hover:bg-gray-200 p-2 md:w-[250px] rounded-md flex flex-row justify-center items-center gap-2"
       >
