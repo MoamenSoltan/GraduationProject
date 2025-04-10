@@ -7,13 +7,13 @@ import { IoLogOutOutline } from "react-icons/io5";
 const SideBar = () => {
   const { activeMenu, setActiveMenu ,setAuth,auth } = useStateContext();
 
-  const role = auth?.roles[0].toLowerCase()
+  const role = auth?.roles?.[0]?.toLowerCase() || "";
   useEffect(()=>{
     console.log("current role :",role);
     
   },[])
 
-  const links = sideBarLinks[role] || ""
+  const links = sideBarLinks[role] || []
   // TODO: sidebarlinks is an object , each pair can be accessed with []
   // TODO: below , replace spaces with - 
 
@@ -29,7 +29,7 @@ const SideBar = () => {
           <div className="mt-[100px] flex flex-col  gap-3 pr-2">
             {links.map((link) => (
               <NavLink
-                to={`/${role}Dashboard/${link.name.replace(/\s+/g, "-")}`}
+                to={`/${role}Dashboard/${link?.name?.replace(/\s+/g, "-")}`}
                 key={link.name}
                 style={({ isActive }) => ({
                   backgroundColor: isActive ? "#0096C1" : "",

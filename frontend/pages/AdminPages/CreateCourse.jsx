@@ -122,22 +122,32 @@ const CreateCourse = () => {
 
   return (
     <div className="md:w-[80%] w-full m-auto mt-10">
-      <h2 className="sub-text-2">Courses</h2>
-      <div className="flex w-full flex-row flex-wrap gap-2">
-        {allCourses.map((course) => (
-          <div onClick={()=>navigate(`/adminDashboard/create-Course/${course.courseId}`)}
-            key={course.courseId}
-            className="rounded-sm shadow-xl p-4 hover:scale-105 transition-all cursor-pointer"
-          >
-            <h3 className="text-lg">{course.courseName}</h3>
-            <p className="text-sm">Code: {course.courseCode}</p>
-            <p className="text-sm">Credit Hours: {course.credit}</p>
-          </div>
-        ))}
+      <h2 className="text-2xl font-semibold mb-4 text-gray-800">Courses</h2>
+      <div className="flex w-full flex-row flex-wrap gap-4">
+  {allCourses.map((course) => (
+    <div 
+      onClick={() => navigate(`/adminDashboard/create-Course/${course.courseId}`)} 
+      key={course.courseId} 
+      className="w-72 bg-white rounded-lg shadow-lg hover:scale-105 hover:shadow-2xl transition-all duration-300 transform cursor-pointer"
+    >
+      <div className="relative overflow-hidden rounded-t-lg">
+        
       </div>
+      <div className="p-4 space-y-2">
+        <h3 className="text-xl font-semibold text-gray-800">{course.courseName}</h3>
+        <p className="text-sm text-gray-600">Code: {course.courseCode}</p>
+        <p className="text-sm text-gray-600">Credit Hours: {course.credit}</p>
+        <div className="flex justify-between items-center mt-2">
+          <button className="text-blue-500 hover:underline">View Details</button>
+        </div>
+      </div>
+    </div>
+  ))}
+</div>
+
       <button
         onClick={() => setModal(true)}
-        className="fixed bottom-5 right-5 p-4 w-28 h-28 rounded-full bg-slate-200 hover:scale-105 transition-all text-2xl"
+        className="fixed bottom-5 right-5 p-4 w-28 h-28 rounded-full bg-blue-600 text-white hover:scale-105 transition-all text-2xl"
       >
         +
       </button>

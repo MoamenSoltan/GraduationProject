@@ -15,6 +15,7 @@ import { useStateContext } from "../contexts/ContextProvider"
 import { useEffect } from "react"
 import ProtectedRoutes from "../components/ProtectedRoutes"
 import { Toaster } from "react-hot-toast"
+import axios from "../api/axios"
 /**
  * e-commerce app for better understanding of filtering and query parameters
  * 
@@ -57,7 +58,7 @@ note on search params
  */
 
 function App() {
-
+  
 
   
   return (
@@ -82,11 +83,12 @@ function App() {
           <Route path="/registration/done" element={<Done />} />
           <Route path="/status" element={<Status />} />
 
-          <Route path="/studentDashboard/*" element={<StudentDashboard />} />
+          {/* <Route path="/studentDashboard/*" element={<StudentDashboard />} />
           <Route path="/instructorDashboard/*" element={<InstructorDashboard />} />
-          <Route path="/adminDashboard/*" element={<AdminDashboard />} />
+          <Route path="/adminDashboard/*" element={<AdminDashboard />} /> */}
           
-          {/* protected routes 
+           {/* protected routes */}
+
           <Route element={<ProtectedRoutes allowedRoles={['student']}/>}>
             <Route path="/studentDashboard/*" element={<StudentDashboard />} />
           </Route>
@@ -98,8 +100,8 @@ function App() {
 
          <Route element={<ProtectedRoutes allowedRoles={['admin']}/>}>
             <Route path="/adminDashboard/*" element={<AdminDashboard />} />
-         </Route> */}
-          
+         </Route> 
+           
           
           
           

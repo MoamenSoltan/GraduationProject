@@ -63,52 +63,51 @@ const DetailedInstructor = () => {
     }
   };
 
-  if (loading) return <p>Loading instructor details...</p>;
-  if (error) return <p className="text-red-500">{error}</p>;
-  if (!instructor) return <p>No instructor found.</p>;
+  if (loading) return <div className="text-center py-4">Loading instructor details...</div>;
+  if (error) return <div className="text-red-500 text-center py-4">{error}</div>;
+  if (!instructor) return <div className="text-center py-4">No instructor found.</div>;
 
   return (
-    <div className="max-w-3xl mx-auto p-6 bg-white shadow-md rounded-lg">
+    <div className="max-w-3xl mx-auto mt-10 p-6 bg-white shadow-lg rounded-lg border border-gray-200">
       {/* Instructor Name */}
-      <h2 className="text-2xl font-bold text-gray-800 mb-4">
+      <h2 className="text-3xl font-semibold text-gray-800 mb-6 flex items-center justify-between">
         {isEditing ? (
           <input
             type="text"
             name="firstName"
             value={editedInstructor?.firstName || ""}
             onChange={handleChange}
-            className="border border-blue-500 p-2 rounded w-full"
+            className="border-2 border-blue-500 p-3 rounded-md w-full"
           />
         ) : (
-          `${instructor?.firstName || "N/A"} ${instructor?.lastName || "N/A"}`
+          <span>{`${instructor?.firstName || "N/A"} ${instructor?.lastName || "N/A"}`}</span>
         )}
       </h2>
 
-      
-      {instructor?.personalImage ? (
-        <img
-          src={instructor.personalImage}
-          alt="Instructor"
-          className="w-32 h-32 rounded-full mb-4"
-        />
-      ) : (
-        <p className="text-gray-500">No profile image available</p>
-      )}
-      <strong className="text-gray-600">Instructor ID:</strong>
-      <p className="text-gray-600">{instructor.instructorId}</p>
+      <div className="flex justify-center mb-6">
+        {instructor?.personalImage ? (
+          <img
+            src={instructor.personalImage}
+            alt="Instructor"
+            className="w-40 h-40 rounded-full border-4 border-gray-200 shadow-md"
+          />
+        ) : (
+          <div className="text-gray-500">No profile image available</div>
+        )}
+      </div>
 
       {/* Instructor Details */}
-      <div className="space-y-2">
+      <div className="space-y-4">
         {["email", "gender"].map((field) => (
-          <div key={field}>
-            <strong className="text-gray-600 capitalize">{field}:</strong>
+          <div key={field} className="flex items-center">
+            <strong className="text-gray-700 w-[15%]">{field.charAt(0).toUpperCase() + field.slice(1)}:</strong>
             {isEditing ? (
               <input
                 type="text"
                 name={field}
                 value={editedInstructor?.[field] || ""}
                 onChange={handleChange}
-                className="border border-blue-500 p-2 rounded w-full"
+                className="border-2 border-blue-500 p-2 rounded-md w-2/3"
               />
             ) : (
               <p className="text-gray-600">{instructor?.[field] || "N/A"}</p>
@@ -117,8 +116,8 @@ const DetailedInstructor = () => {
         ))}
 
         {/* Department */}
-        <div>
-          <strong className="text-gray-600">Department:</strong>
+        <div className="flex  items-center">
+          <strong className="text-gray-700 w-[15%]">Department:</strong>
           {isEditing ? (
             <input
               type="text"
@@ -133,19 +132,17 @@ const DetailedInstructor = () => {
                   },
                 }))
               }
-              className="border border-blue-500 p-2 rounded w-full"
+              className="border-2 border-blue-500 p-2 rounded-md w-2/3"
             />
           ) : (
-            <p className="text-gray-600">
-              {instructor?.department?.departmentName || "N/A"}
-            </p>
+            <p className="text-gray-600 ">{instructor?.department?.departmentName || "N/A"}</p>
           )}
         </div>
 
         {/* Managed Department */}
         {instructor?.managedDepartment && (
-          <div>
-            <strong className="text-gray-600">Managed Department:</strong>
+          <div className="flex  items-center">
+            <strong className="text-gray-700 mr-5">Managed Department:</strong>
             <p className="text-gray-600">
               {instructor.managedDepartment?.departmentName || "N/A"}
             </p>
@@ -154,14 +151,12 @@ const DetailedInstructor = () => {
 
         {/* Courses */}
         <div>
-          <strong className="text-gray-600">Courses:</strong>
-          {Array.isArray(instructor?.courses) &&
-          instructor.courses.length > 0 ? (
-            <ul className="list-disc pl-4">
+          <strong className="text-gray-700">Courses:</strong>
+          {Array.isArray(instructor?.courses) && instructor.courses.length > 0 ? (
+            <ul className="list-disc pl-4 text-gray-600">
               {instructor.courses.map((course) => (
                 <li key={course.courseId}>
-                  {course.courseName} ({course.courseCode}) -{" "}
-                  {course.semester.semesterName}
+                  {course.courseName} ({course.courseCode}) - {course.semester.semesterName}
                 </li>
               ))}
             </ul>
@@ -172,12 +167,12 @@ const DetailedInstructor = () => {
       </div>
 
       {/* Action Buttons */}
-      <div className="mt-6 flex gap-4">
+      <div className="mt-6 flex gap-6 justify-center">
         {isEditing ? (
           <>
             <button
               onClick={handleUpdate}
-              className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
+              className="bg-green-600 text-white px-6 py-3 rounded-md hover:bg-green-700 transition"
             >
               Confirm Changes
             </button>
@@ -186,7 +181,7 @@ const DetailedInstructor = () => {
                 setIsEditing(false);
                 setEditedInstructor(instructor);
               }}
-              className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600"
+              className="bg-gray-500 text-white px-6 py-3 rounded-md hover:bg-gray-600 transition"
             >
               Discard
             </button>
@@ -195,13 +190,13 @@ const DetailedInstructor = () => {
           <>
             <button
               onClick={() => setIsEditing(true)}
-              className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+              className="bg-yellow-500 text-white px-6 py-3 rounded-md hover:bg-blue-700 transition"
             >
-              Update
+              Edit 
             </button>
             <button
               onClick={() => setDeleteModal(true)}
-              className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
+              className="bg-red-600 text-white px-6 py-3 rounded-md hover:bg-red-700 transition"
             >
               Delete
             </button>
@@ -211,16 +206,16 @@ const DetailedInstructor = () => {
 
       {/* Delete Modal */}
       <Modal open={deleteModal} onClose={() => setDeleteModal(false)}>
-        <h3 className="text-lg font-bold mb-4">Delete Instructor</h3>
-        <p className="text-gray-600">
-          Are you sure you want to delete this instructor?
-        </p>
-        <button
-          onClick={deleteInstructor}
-          className="bg-red-600 text-white px-4 py-2 mt-2 rounded hover:bg-red-700"
-        >
-          Delete Instructor
-        </button>
+        <div className="text-center p-6">
+          <h3 className="text-lg font-semibold text-gray-800 mb-4">Delete Instructor</h3>
+          <p className="text-gray-600 mb-6">Are you sure you want to delete this instructor?</p>
+          <button
+            onClick={deleteInstructor}
+            className="bg-red-600 text-white px-6 py-3 rounded-md hover:bg-red-700 transition"
+          >
+            Delete Instructor
+          </button>
+        </div>
       </Modal>
     </div>
   );
