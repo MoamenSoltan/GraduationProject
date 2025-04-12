@@ -1,9 +1,11 @@
 package org.example.backend.service;
 
+import org.example.backend.dto.courseDto.CourseDTO;
 import org.example.backend.dto.instructorDto.InstructorProfile;
 import org.example.backend.dto.instructorDto.InstructorRequestDTO;
 import org.example.backend.dto.instructorDto.InstructorResponseDTO;
 import org.example.backend.dto.instructorDto.UpdateInstructor;
+import org.example.backend.dto.semesterDto.SemesterDTO;
 import org.example.backend.entity.Department;
 import org.example.backend.entity.Instructor;
 import org.example.backend.entity.Role;
@@ -175,5 +177,27 @@ public class InstructorService {
             responseDTOList.add(InstructorMapper.entityToResponseDTO(instructor));
         }
         return responseDTOList;
+    }
+
+    public List<CourseDTO> getInstructorCourses(String email) {
+       Optional <Instructor> instructor = instructorRepository.getByEmail(email);
+        if (!instructor.isPresent()) {
+            throw new ResourceNotFound("Instructor", "email", email);
+        }
+        List<CourseDTO> courseDTOList = new ArrayList<>();
+        for (var course : instructor.get().getCourses()) {
+            CourseDTO courseDTO = new CourseDTO();
+            courseDTO.setCourseCode(course.getCourseCode());
+            courseDTO.setCourseName(course.getCourseName());
+            courseDTO.setCourseId(course.getCourseId());
+            courseDTO.setGrade(course.getYear());
+
+            SemesterDTO semesterDTO =new SemesterDTO();
+            semesterDTO.setYearLevel(course.getSemester().getSemesterId().getYearLevel());
+            semesterDTO.setSemesterName(course.getSemester().getSemesterId().getSemesterName().toString());
+            semesterDTO.setYear(course.getSemester().getStartDate().getYear());            courseDTO.setSemester(semesterDTO);
+            courseDTOList.add(courseDTO);
+        }
+        return courseDTOList;
     }
 }

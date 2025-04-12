@@ -1,5 +1,6 @@
 package org.example.backend.service;
 
+import org.example.backend.dto.MailBody;
 import org.example.backend.entity.Role;
 import org.example.backend.entity.Student;
 import org.example.backend.entity.SubmissionRequest;
@@ -22,12 +23,14 @@ public class AdminService {
     private final DepartmentRepository departmentRepository;
     private final RoleRepository roleRepository;
     private final StudentRepository studentRepository;
+    private final MailService mailService;
 
-    public AdminService(SubmissionReqRepository submissionReqRepository, DepartmentRepository departmentRepository, RoleRepository roleRepository, StudentRepository studentRepository) {
+    public AdminService(SubmissionReqRepository submissionReqRepository, DepartmentRepository departmentRepository, RoleRepository roleRepository, StudentRepository studentRepository, MailService mailService) {
         this.submissionReqRepository = submissionReqRepository;
         this.departmentRepository = departmentRepository;
         this.roleRepository = roleRepository;
         this.studentRepository = studentRepository;
+        this.mailService = mailService;
     }
 
     public String approveSubmissionRequest(int id)
@@ -44,7 +47,20 @@ public class AdminService {
         Role role = roleRepository.getStudentRole();
         student.getUser().addRole(role);
         studentRepository.save(student);
+
+
+        mailService.sendEmail(createMail(request.getEmail(), "Accepted"));
         return "Submission request approved successfully!";
+    }
+    private MailBody createMail(String email,String status)
+    {
+        MailBody mailBody =new MailBody();
+        mailBody.setTo(email);
+        mailBody.setSubject("your submission is "+status);
+        mailBody.setText("got to collage website \n" +
+                "localhost:8080");
+
+        return mailBody;
     }
 
     public String rejectSubmissionRequest(int id)
@@ -55,6 +71,8 @@ public class AdminService {
             return "This request is already approved or rejected!";
         request.setAdmissionStatus(AdmissionStatus.REJECTED);
         submissionReqRepository.save(request);
+
+        mailService.sendEmail(createMail(request.getEmail(), "Accepted"));
         return "Submission request rejected successfully!";
     }
 }

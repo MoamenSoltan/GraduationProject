@@ -2,6 +2,7 @@ package org.example.backend.controller;
 
 import org.example.backend.dto.AnnouncementDto.AnnouncementRequestDTO;
 import org.example.backend.dto.AnnouncementDto.AnnouncementResponseDTO;
+import org.example.backend.dto.courseDto.CourseDTO;
 import org.example.backend.dto.instructorDto.UpdateInstructor;
 import org.example.backend.entity.Instructor;
 import org.example.backend.exception.ResourceNotFound;
@@ -15,6 +16,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.List;
 
 @RestController
 @RequestMapping("/instructor")
@@ -65,5 +67,14 @@ public class InstructorController {
         String message = instructorService.UpdateInstructor(updateInstructor,instructor);
         return ResponseEntity.ok(message);
 
+    }
+
+    @GetMapping("/course")
+    public  ResponseEntity<List<CourseDTO>> getInstructorCourses() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+
+
+        return ResponseEntity.ok(instructorService.getInstructorCourses(email));
     }
 }

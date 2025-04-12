@@ -1,5 +1,6 @@
 package org.example.backend.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -7,6 +8,7 @@ import org.example.backend.enums.CourseType;
 import org.example.backend.enums.LevelYear;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 
 @Entity
@@ -61,6 +63,10 @@ public class Course {
             @JoinColumn(name = "semester_name", referencedColumnName = "semester_name")
     })
     private Semester semester;
+
+    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<Task> tasks;
 
 
 
