@@ -143,14 +143,15 @@ CREATE TABLE announcements (
 create table tasks(
     task_id int primary key auto_increment,
     course_id int ,
-    instructor_id int,
+    max_grade double default 100,
+    attachment text,
+    is_active boolean default true,
     task_name varchar(255) not null,
     task_description text,
     deadline date,
     created_at timestamp DEFAULT CURRENT_TIMESTAMP,
 
-    foreign key (course_id) references courses(course_id),
-    foreign key (instructor_id) references instructors(instructor_id)
+    foreign key (course_id) references courses(course_id)
 );
 
 create table task_submissions (

@@ -58,7 +58,7 @@ public class FileService {
         String sanitizedFilename = originalFilename.replaceAll("\\s+", "_");
         sanitizedFilename.replaceAll("[^a-zA-Z0-9._-]", "");
         String uniqueFileName = UUID.randomUUID() + "_" + sanitizedFilename;
-        String fullPath = UPLOAD_DIRECTORY + File.separator + uniqueFileName;
+        String fullPath = UPLOAD_DIRECTORY + "/" + uniqueFileName;
 
         try (InputStream inputStream = file.getInputStream();
              FileOutputStream outputStream = new FileOutputStream(fullPath)) {

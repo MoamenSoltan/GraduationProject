@@ -298,3 +298,30 @@ create table forgot_password
 
 )
 
+CREATE TABLE `tasks` (
+    `task_id` INT PRIMARY KEY AUTO_INCREMENT,
+    `course_id` INT NOT NULL,
+    `instructor_id` INT NOT NULL,
+    `title` VARCHAR(255) NOT NULL,
+    `description` TEXT,
+    `due_date` DATETIME NOT NULL,
+    `max_grade` INT NOT NULL,
+    `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (`course_id`) REFERENCES `courses`(`course_id`) ON DELETE CASCADE,
+    FOREIGN KEY (`instructor_id`) REFERENCES `instructors`(`instructor_id`) ON DELETE CASCADE
+);
+
+CREATE TABLE `task_submissions` (
+    `submission_id` INT PRIMARY KEY AUTO_INCREMENT,
+    `task_id` INT NOT NULL,
+    `student_id` INT NOT NULL,
+    `file_path` VARCHAR(255) NOT NULL,
+    `submission_date` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    `grade` INT,
+    `feedback` TEXT,
+    `status` ENUM('SUBMITTED', 'GRADED') DEFAULT 'SUBMITTED',
+    FOREIGN KEY (`task_id`) REFERENCES `tasks`(`task_id`) ON DELETE CASCADE,
+    FOREIGN KEY (`student_id`) REFERENCES `students`(`student_id`) ON DELETE CASCADE
+);
+

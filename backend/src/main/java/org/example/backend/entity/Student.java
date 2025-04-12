@@ -1,5 +1,6 @@
 package org.example.backend.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -37,5 +38,9 @@ public class Student  {
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "submission_request_id")
     private SubmissionRequest submissionRequest;
+
+    @OneToMany(mappedBy = "student")
+    @JsonIgnore
+    private List<TaskSubmission> taskSubmissions;
 }
 
