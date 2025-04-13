@@ -1,6 +1,7 @@
 package org.example.backend.service;
 
 import org.example.backend.dto.studentDto.StudentProfile;
+import org.example.backend.dto.studentDto.StudentResponseDTO;
 import org.example.backend.dto.studentDto.UpdateStudent;
 import org.example.backend.entity.Role;
 import org.example.backend.entity.Student;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -74,6 +76,17 @@ public class StudentService {
         }
 
         return StudentMapper.toStudentProfile(studentRepository.save(student));
+    }
+
+    public List<StudentResponseDTO> getAllStudents() {
+        List<Student> students = studentRepository.findAll();
+        List<StudentResponseDTO> responseDTOS=new ArrayList<>();
+        for (Student student : students) {
+            StudentResponseDTO responseDTO = StudentMapper.toStudentResponseDTO(student);
+            responseDTOS.add(responseDTO);
+        }
+
+        return responseDTOS;
     }
 
 

@@ -68,6 +68,10 @@ public class Course {
     @JsonIgnore
     private List<Task> tasks;
 
+    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<StudentCourse> studentCourses;
+
 
 
 }

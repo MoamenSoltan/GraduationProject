@@ -13,11 +13,9 @@ public class RequestTaskDTO {
     private double maxGrade;
     private String description;
     private MultipartFile attachment;
-    private boolean isActive = true;
+    private String isActive ;
     private LocalDate deadline;
     private Long courseId;
 
-    public boolean getIsActive() {
-        return isActive;
-    }
+
 }

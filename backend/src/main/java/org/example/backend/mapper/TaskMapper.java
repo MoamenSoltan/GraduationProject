@@ -17,6 +17,7 @@ public class TaskMapper {
         task.setDescription(requestTaskDTO.getDescription());
 //        task.setActive(requestTaskDTO.getIsActive());
         task.setDeadline(requestTaskDTO.getDeadline());
+
         return task;
     }
 
@@ -31,6 +32,8 @@ public class TaskMapper {
         responseTaskDTO.setAttachment(fileResponse.getFileName(task.getAttachment()));
         responseTaskDTO.setActive(task.isActive());
         responseTaskDTO.setDeadline(task.getDeadline());
+        responseTaskDTO.setCourseId(task.getCourse().getCourseId());
+        responseTaskDTO.setCreatedAt(task.getCreatedAt());
         return responseTaskDTO;
     }
 }

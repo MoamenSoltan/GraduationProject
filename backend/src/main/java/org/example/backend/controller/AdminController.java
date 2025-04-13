@@ -8,6 +8,7 @@ import org.example.backend.dto.instructorDto.InstructorRequestDTO;
 import org.example.backend.dto.instructorDto.InstructorResponseDTO;
 import org.example.backend.dto.semesterDto.SemesterRequestDTO;
 import org.example.backend.dto.semesterDto.SemesterResponseDTO;
+import org.example.backend.dto.studentDto.StudentResponseDTO;
 import org.example.backend.dto.submissionDto.SubmissionResponseDTO;
 import org.example.backend.entity.*;
 import org.example.backend.enums.AdmissionStatus;
@@ -182,6 +183,13 @@ public class AdminController {
         studentRepository.delete(student);
 
         return ResponseEntity.ok("Student deleted successfully");
+    }
+
+    @GetMapping("/student")
+    public ResponseEntity<List<StudentResponseDTO>> getAllStudents()
+    {
+
+        return ResponseEntity.ok(studentService.getAllStudents());
     }
 
 
