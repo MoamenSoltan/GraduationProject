@@ -11,6 +11,7 @@ import { useStateContext } from "../contexts/ContextProvider";
 import { IoCreateOutline } from "react-icons/io5";
 import { IoPerson } from "react-icons/io5";
 
+import { MdQuiz } from "react-icons/md";
 
 
 // icons as just the name , when using them in map , wrap with </> to make it a component
@@ -75,7 +76,16 @@ export const sideBarLinks = {
   ],
   instructor : [
     {
-
+      name : "Assigned Courses",
+      icon : AiOutlineFileDone 
+    },
+    {
+      name : "Announcements",
+      icon : BsMegaphone
+    },
+    {
+      name : "Quizzes",
+      icon : MdQuiz
     }
   ]
 }
