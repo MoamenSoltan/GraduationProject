@@ -1,11 +1,17 @@
 package org.example.backend.service;
 
+import com.opencsv.CSVReader;
+import com.opencsv.CSVWriter;
+import com.opencsv.exceptions.CsvValidationException;
+import org.example.backend.dto.studentDto.StudentCourseDTO;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -74,5 +80,56 @@ public class FileService {
 
     public  String getFileName(String filePath) {
         return filePath != null ?BASE_URL+Paths.get(filePath).getFileName().toString() : null;
+    }
+
+    public ByteArrayInputStream load(List<StudentCourseDTO> dtoList)  {
+
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        try(CSVWriter writer = new CSVWriter(new OutputStreamWriter(outputStream))){
+
+            writer.writeNext(new String[]{"Student ID", "Username", "Email", "Degree"});
+
+            for (StudentCourseDTO dto : dtoList) {
+                String[] row = new String[]{
+                        dto.getStudentId().toString(),
+                        dto.getUsername(),
+                        dto.getEmail(),
+                        dto.getDegree().toString()
+                };
+                writer.writeNext(row);
+            }
+            writer.flush();
+        }catch (IOException e)
+        {
+            throw new RuntimeException("Failed to generate CSV file", e);
+        }
+
+
+
+        return new ByteArrayInputStream(outputStream.toByteArray());
+    }
+
+    public List<StudentCourseDTO> parseCSV(MultipartFile file)
+    {
+        List<StudentCourseDTO> dtos=new ArrayList<>();
+        try(CSVReader reader = new CSVReader(new InputStreamReader(file.getInputStream())))
+        {
+            String[] nextLine;
+            // Skip the header line
+            reader.readNext();
+            while ((nextLine = reader.readNext()) != null) {
+                Long studentId = Long.parseLong(nextLine[0]);
+                String username = nextLine[1];
+                String email = nextLine[2];
+                Double degree = Double.parseDouble(nextLine[3]);
+
+                StudentCourseDTO dto = new StudentCourseDTO(studentId, username, email, degree);
+                dtos.add(dto);
+            }
+        } catch (CsvValidationException | IOException e) {
+            throw new RuntimeException("Failed to parse CSV file", e);
+        }
+
+        return dtos;
     }
 }
