@@ -6,6 +6,7 @@ import org.example.backend.dto.instructorDto.InstructorRequestDTO;
 import org.example.backend.dto.instructorDto.InstructorResponseDTO;
 import org.example.backend.dto.instructorDto.UpdateInstructor;
 import org.example.backend.dto.semesterDto.SemesterDTO;
+import org.example.backend.dto.studentDto.StudentCourseDTO;
 import org.example.backend.entity.Department;
 import org.example.backend.entity.Instructor;
 import org.example.backend.entity.Role;
@@ -18,6 +19,7 @@ import org.example.backend.repository.StudentRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -199,5 +201,47 @@ public class InstructorService {
             courseDTOList.add(courseDTO);
         }
         return courseDTOList;
+    }
+
+    public List<StudentCourseDTO> getStudentsInCourse(int courseId, String email) {
+        Instructor instructor = instructorRepository.getByEmail(email)
+                .orElseThrow(() -> new ResourceNotFound("Instructor", "email", email));
+
+        int instructorId = instructor.getInstructorId();
+
+        Optional<List<StudentCourseDTO>> students = studentRepository.getStudentInCourse(courseId, instructorId);
+
+        return students.get();
+    }
+
+    public StudentCourseDTO getStudentInCourse(int courseId, String email, Long studentId) {
+        Instructor instructor = instructorRepository.getByEmail(email)
+                .orElseThrow(() -> new ResourceNotFound("Instructor", "email", email));
+
+        int instructorId = instructor.getInstructorId();
+
+        Optional<StudentCourseDTO> students = studentRepository.getStudentInCourse(courseId, instructorId, studentId);
+
+        return students.get();
+    }
+
+    public String updateStudentDegree(int courseId, MultipartFile file,String email) {
+
+        List<StudentCourseDTO> dtos = fileService.parseCSV(file);
+        Instructor instructor = instructorRepository.getByEmail(email)
+                .orElseThrow(() -> new ResourceNotFound("Instructor", "email", email));
+
+        int instructorId = instructor.getInstructorId();
+
+        for (StudentCourseDTO dto : dtos) {
+            if(dto.getStudentId() != null && dto.getDegree()!=null )
+            {
+            Long studentId = dto.getStudentId();
+            double degree = dto.getDegree();
+            studentRepository.updateStudentDegree(studentId,degree,courseId);
+            }
+        }
+
+        return "degree update ";
     }
 }

@@ -60,7 +60,7 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(PUBLIC_URLS).permitAll()
-                        .requestMatchers("/admin/**","/api/**").permitAll()
+                        .requestMatchers("/admin/**","/api/**","/instructor/course/**").permitAll()
                         .requestMatchers("/auth/data").hasAuthority("ROLE_INSTRUCTOR")
                         .requestMatchers("/instructor/**","/task/create").hasAuthority("ROLE_INSTRUCTOR")
                         .requestMatchers("/student/**").hasAuthority("ROLE_STUDENT")
