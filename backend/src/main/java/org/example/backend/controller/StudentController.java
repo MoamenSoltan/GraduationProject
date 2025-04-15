@@ -3,12 +3,15 @@ package org.example.backend.controller;
 import org.example.backend.dto.AnnouncementDto.AnnouncementResponseDTO;
 import org.example.backend.dto.StudentCourseRequestDTO;
 import org.example.backend.dto.courseDto.CourseResponseDTO;
+import org.example.backend.dto.courseDto.DegreeCourseDTO;
 import org.example.backend.dto.studentDto.StudentProfile;
 import org.example.backend.dto.studentDto.UpdateStudent;
 import org.example.backend.entity.Student;
+import org.example.backend.entity.StudentCourse;
 import org.example.backend.entity.User;
 import org.example.backend.enums.AnnouncementType;
 import org.example.backend.enums.LevelYear;
+import org.example.backend.enums.SemesterName;
 import org.example.backend.exception.ResourceNotFound;
 import org.example.backend.mapper.StudentMapper;
 import org.example.backend.repository.StudentRepository;
@@ -113,4 +116,18 @@ public class StudentController {
        List<CourseResponseDTO> responseDTOS= courseService.getCoursesCompletedByStudent(studentEmail, year);
         return ResponseEntity.ok(responseDTOS);
     }
+
+
+
+
+    @GetMapping("/semesters/degree")
+    public ResponseEntity<List<DegreeCourseDTO>> getAllSemestersForStudent(
+            @RequestParam(name = "semesterName", required = false) SemesterName semesterName,
+            @RequestParam(name = "semesterYear", required = false) Integer semesterYear) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String studentEmail = authentication.getName();
+        List<DegreeCourseDTO> obj = studentCoursesService.getCoursesWithDegreeByStudentAndSemester(studentEmail, semesterName, semesterYear);
+        return ResponseEntity.ok(obj);
+    }
+
 }
