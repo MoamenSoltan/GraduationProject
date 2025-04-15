@@ -16,6 +16,11 @@ import NavBar from "../components/NavBar";
 
 import { useLocation } from "react-router";
 import Profile from "./Profile";
+import StudentQuizzes from "../components/StudentQuizzes";
+import StudentDetailedQuizzes from "../components/StudentDetailedQuizzes";
+import QuizStart from "../components/QuizStart";
+import QuizSummary from "../components/QuizSummary";
+import QuizResults from "../components/QuizResults";
 
 // conditional rendering based on route 
 
@@ -61,7 +66,15 @@ const StudentDashboard = () => {
         <Route path="/Registration"  element={<Registration/>}/>
         <Route path="/Courses/:year?"  element={<Courses/>}/>
         <Route path="/Payment"  element={<Payment/>}/>
-        <Route path="/Events"  element={<Events/>}/>
+        <Route path="/Quizzes"  element={<StudentQuizzes/>}/>
+        <Route path="/Quizzes/:id"  element={<StudentDetailedQuizzes/>}/>
+        <Route path="/Quizzes/:id/start"  element={<QuizStart/>}/>
+        <Route path="/Quizzes/summary"  element={<QuizSummary/>}/>
+        <Route path="/Quizzes/result/:id"  element={<QuizResults/>}/>
+
+
+
+
         <Route path="/Instructors"  element={<Instructors/>}/>
         <Route path="/Help"  element={<Help/>}/>
 

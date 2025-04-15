@@ -45,8 +45,8 @@ export const sideBarLinks = {
       icon : FaMoneyCheckDollar 
   },
   {
-      name : "Events",
-      icon : IoIosCalendar 
+      name : "Quizzes",
+      icon :  MdQuiz
   },
   {
       name : "Instructors",

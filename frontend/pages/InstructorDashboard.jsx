@@ -6,6 +6,8 @@ import { Route, Routes } from 'react-router'
 import AssignedCourses from './InstructorPages/AssignedCourses'
 import InstructorAnnouncements from './InstructorPages/InstructorAnnouncements'
 import Quizzes from './InstructorPages/Quizzes'
+import DetailedQuizzes from '../components/DetailedQuizzes'
+import InstructorQuizSubmissionDetails from '../components/InstructorQuizSubmissionDetails'
 
 const InstructorDashboard = () => {
     const {activeMenu}=useStateContext()
@@ -38,7 +40,11 @@ const InstructorDashboard = () => {
 {/* <Route path='/create-Instructor/:id' element={<DetailedInstructor/>}/> */}
 
 <Route path='/quizzes' element={<Quizzes/>}/>
-{/* <Route path='/create-Course/:id' element={<DetailedCourses/>}/> */}
+<Route path='/quizzes/:id' element={<DetailedQuizzes/>}/>
+
+{/* TODO: might need refinements */}
+<Route path='/quizzes/:id/submissions' element={<InstructorQuizSubmissionDetails/>}/>
+
 
 
 </Routes>
