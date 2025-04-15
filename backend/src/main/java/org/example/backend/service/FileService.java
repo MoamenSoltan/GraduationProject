@@ -90,6 +90,10 @@ public class FileService {
             writer.writeNext(new String[]{"Student ID", "Username", "Email", "Degree"});
 
             for (StudentCourseDTO dto : dtoList) {
+                if(dto.getDegree()==null)
+                {
+                    dto.setDegree(0.0);
+                }
                 String[] row = new String[]{
                         dto.getStudentId().toString(),
                         dto.getUsername(),

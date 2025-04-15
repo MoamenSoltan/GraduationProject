@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import org.example.backend.dto.courseDto.CourseDTO;
 import org.example.backend.dto.courseDto.CourseRequestDTO;
 import org.example.backend.dto.courseDto.CourseResponseDTO;
+import org.example.backend.dto.courseDto.DegreeCourseDTO;
 import org.example.backend.entity.*;
 import org.example.backend.enums.LevelYear;
 import org.example.backend.enums.SemesterName;
@@ -14,7 +15,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -249,4 +252,7 @@ public class CourseService {
 
         return CourseMapper.toResponseDTO(course);
     }
+
+
+
 }
