@@ -8,7 +8,12 @@ import InstructorAnnouncements from './InstructorPages/InstructorAnnouncements'
 import Quizzes from './InstructorPages/Quizzes'
 import DetailedQuizzes from '../components/DetailedQuizzes'
 import InstructorQuizSubmissionDetails from '../components/InstructorQuizSubmissionDetails'
-
+import InstructorTasks from "../pages/InstructorPages/InstructorTasks"
+import DetailedInstructorCourses from './InstructorPages/DetailedInstructorCourses'
+import StudentInCourse from './InstructorPages/StudentInCourse'
+import DetailedTasks from './InstructorPages/DetailedTasks'
+import TaskSubmissions from './InstructorPages/TaskSubmissions'
+import ReviewTasks from './InstructorPages/ReviewTasks'
 const InstructorDashboard = () => {
     const {activeMenu}=useStateContext()
   
@@ -34,6 +39,10 @@ const InstructorDashboard = () => {
 
 <Route path='/' element={<AssignedCourses/>} />
 <Route path='/assigned-Courses/' element={<AssignedCourses/>} />
+<Route path='/assigned-Courses/:id' element={<DetailedInstructorCourses/>} />
+<Route path='/assigned-Courses/:id/students/:stdId' element={<StudentInCourse/>} />
+
+
 {/* <Route path='/submission-Requests/:id' element={<DetailedSubmissionRequests/>} /> */}
 
 <Route path='/announcements' element={<InstructorAnnouncements/>}/>
@@ -44,6 +53,15 @@ const InstructorDashboard = () => {
 
 {/* TODO: might need refinements */}
 <Route path='/quizzes/:id/submissions' element={<InstructorQuizSubmissionDetails/>}/>
+
+<Route path='/tasks' element={<InstructorTasks/>}/>
+<Route path='/tasks/:id' element={<DetailedTasks/>}/>
+<Route path='/tasks/:taskId/submissions' element={<TaskSubmissions/>}/>
+<Route path='/tasks/:taskId/submissions/:submissionId/:courseId' element={<ReviewTasks/>}/>
+
+
+
+
 
 
 

@@ -10,6 +10,12 @@ import { BsMegaphone } from "react-icons/bs";
 import { useStateContext } from "../contexts/ContextProvider";
 import { IoCreateOutline } from "react-icons/io5";
 import { IoPerson } from "react-icons/io5";
+import { MdDataUsage } from "react-icons/md";
+import { RiUserCommunityLine } from "react-icons/ri";
+import { RiBookShelfLine } from "react-icons/ri";
+import { IoBarChart } from "react-icons/io5";
+
+
 
 import { MdQuiz } from "react-icons/md";
 
@@ -49,9 +55,22 @@ export const sideBarLinks = {
       icon :  MdQuiz
   },
   {
+    name : "Tasks",
+    icon : AiOutlineFileDone
+  },
+  {
+    name : "Results",
+    icon : MdDataUsage
+  },
+ 
+  {
       name : "Instructors",
       icon : IoIosPerson 
 
+  },
+  {
+    name : "About us",
+    icon : RiUserCommunityLine
   },
   {
       name : "Help",
@@ -71,7 +90,14 @@ export const sideBarLinks = {
     {
       name : "create Course",
       icon : IoCreateOutline
-    }
+    },
+    {
+      name : "Semesters",
+      icon : RiBookShelfLine
+    },{
+      name : "Year levels",
+      icon : IoBarChart
+    },
     
   ],
   instructor : [
@@ -86,6 +112,10 @@ export const sideBarLinks = {
     {
       name : "Quizzes",
       icon : MdQuiz
+    },
+    {
+      name : "Tasks",
+      icon : AiOutlineFileDone
     }
   ]
 }
