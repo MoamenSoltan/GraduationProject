@@ -7,7 +7,6 @@ import org.example.backend.dto.courseDto.DegreeCourseDTO;
 import org.example.backend.dto.studentDto.StudentProfile;
 import org.example.backend.dto.studentDto.UpdateStudent;
 import org.example.backend.entity.Student;
-import org.example.backend.entity.StudentCourse;
 import org.example.backend.entity.User;
 import org.example.backend.enums.AnnouncementType;
 import org.example.backend.enums.LevelYear;

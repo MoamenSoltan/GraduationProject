@@ -1,5 +1,6 @@
 package org.example.backend.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
 import org.example.backend.dto.taskDTO.RequestTaskDTO;
 import org.example.backend.dto.taskDTO.ResponseTaskDTO;
 import org.example.backend.dto.taskDTO.ResponseTaskSubmissionDTO;
@@ -66,17 +67,27 @@ public class TaskInstructorController {
     }
 
     @GetMapping("/course/{courseId}")
-    public ResponseEntity<List<ResponseTaskDTO>> getCourseTask(@PathVariable int courseId) {
+    public ResponseEntity<List<ResponseTaskDTO>> getCourseTask(
+            @PathVariable int courseId
+    ) {
 
 
         return ResponseEntity.ok(taskService.getAllTasksByCourseId(courseId));
     }
 
+
+    @Operation(
+            summary = "Get all tasks for instructor and adding filter to course id and sort by created at "
+
+    )
     @GetMapping
-    public ResponseEntity<List<ResponseTaskDTO>> getAllTasksForInstructor() {
+    public ResponseEntity<List<ResponseTaskDTO>> getAllTasksForInstructor(
+            @RequestParam(name = "courseId", required = false) Long courseId,
+            @RequestParam(value = "sortDir", defaultValue = "asc" ,required = false) String sortDir
+    ) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
-        List<ResponseTaskDTO> tasks = taskService.getInstructorTasks(email);
+        List<ResponseTaskDTO> tasks = taskService.getInstructorTasks(email, courseId,  sortDir);
         return ResponseEntity.ok(tasks);
     }
 

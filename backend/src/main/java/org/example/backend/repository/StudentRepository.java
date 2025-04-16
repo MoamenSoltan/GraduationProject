@@ -33,7 +33,8 @@ public interface StudentRepository extends JpaRepository<Student,Long> {
             "where sc.course.courseId = :courseId and c.instructor.instructorId = :instructorId and s.studentId = :studentId")
     Optional<StudentCourseDTO> getStudentInCourse(@Param("courseId") int courseId, @Param("instructorId") int instructorId, @Param("studentId") Long studentId);
 
-    @Query("update StudentCourse sc set " +
+    @Query("update StudentCourse sc  " +
+            " set " +
             "sc.degree = :degree  where " +
             "sc.student.studentId =:studentId and sc.course.courseId=:courseId " )
     @Modifying

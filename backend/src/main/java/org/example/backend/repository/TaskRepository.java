@@ -2,6 +2,7 @@ package org.example.backend.repository;
 
 import org.example.backend.entity.Instructor;
 import org.example.backend.entity.Task;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -13,8 +14,18 @@ public interface TaskRepository extends JpaRepository<Task,Integer> {
     @Query("select t from Task t where t.course.courseId =:courseId")
     List<Task> findTaskByCourseId(@Param("courseId") int courseId);
 
-    @Query("select t from Task t where t.course.instructor =:instructor order by t.id")
-    List<Task> findTaskByInstructor(@Param("instructor") Instructor instructor);
+    @Query("SELECT t FROM Task t WHERE t.course.instructor = :instructor AND (:courseId IS NULL OR t.course.courseId = :courseId) ORDER BY t.id desc "
+            )
+    List<Task> findTaskByInstructorDesc(@Param("instructor") Instructor instructor,
+                                    @Param("courseId") Long courseId);
+
+    @Query("SELECT t FROM Task t WHERE t.course.instructor = :instructor AND (:courseId IS NULL OR t.course.courseId = :courseId) ORDER BY t.id asc "
+    )
+    List<Task> findTaskByInstructorAsc(@Param("instructor") Instructor instructor,
+                                    @Param("courseId") Long courseId);
+
+    List<Task> findByCourseInstructorAndCourseCourseId(Instructor instructor, Long courseId, Sort sort);
+
 
     @Query(value = "SELECT t.* " +
             "FROM tasks t " +

@@ -11,13 +11,11 @@ import org.example.backend.repository.CourseRepository;
 import org.example.backend.repository.InstructorRepository;
 import org.example.backend.repository.TaskRepository;
 import org.example.backend.repository.TaskSubmissionRepository;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class TaskService {
@@ -125,11 +123,27 @@ public class TaskService {
         }
     }
 
-    public List<ResponseTaskDTO> getInstructorTasks(String email) {
-        Optional<Instructor> instructorOptional = instructorRepository.findById(1);
+    public List<ResponseTaskDTO> getInstructorTasks(String email,Long courseId,String sortDir) {
+        Optional<Instructor> instructorOptional = instructorRepository.findByEmail(email);
+        System.out.println("instructor email: "+ email);
+
         if (instructorOptional.isPresent()) {
             Instructor instructor = instructorOptional.get();
-            List<Task> tasks = taskRepository.findTaskByInstructor(instructor);
+            System.out.println("courses : "+ Arrays.toString(instructor.getCourses().toArray()));
+
+
+            List<Task> tasks=null;
+            if(sortDir.equalsIgnoreCase("desc"))
+            {
+                tasks = taskRepository.findTaskByInstructorDesc(instructor, courseId);
+            }
+            else
+            {
+                tasks = taskRepository.findTaskByInstructorAsc(instructor, courseId);
+            }
+
+
+            System.out.println("tasks: "+ tasks.get(0).getTaskName());
             TaskMapper mapper=new TaskMapper();
             List<ResponseTaskDTO> taskDTOs = new ArrayList<>();
             for (Task task : tasks) {

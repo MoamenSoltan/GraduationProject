@@ -1,5 +1,6 @@
 package org.example.backend.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import org.example.backend.dto.courseDto.CourseDTO;
 import org.example.backend.dto.courseDto.CourseRequestDTO;
@@ -18,12 +19,17 @@ import org.example.backend.repository.*;
 import org.example.backend.service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStreamReader;
 import java.util.*;
 
 @RestController
@@ -42,8 +48,9 @@ public class AdminController {
     private final DepartmentRepository departmentRepository;
     private final UserRepository userRepository;
     private final StudentRepository studentRepository;
+    private final FileService fileService;
 
-    public AdminController(StudentService studentService, InstructorService instructorService, PasswordEncoder passwordEncoder, SemesterService service, CourseService courseService, AdminService adminService, SubmissionRequestService submissionRequestService, InstructorRepository instructorRepository, CourseRepository courseRepository, DepartmentRepository departmentRepository, UserRepository userRepository, StudentRepository studentRepository) {
+    public AdminController(StudentService studentService, InstructorService instructorService, PasswordEncoder passwordEncoder, SemesterService service, CourseService courseService, AdminService adminService, SubmissionRequestService submissionRequestService, InstructorRepository instructorRepository, CourseRepository courseRepository, DepartmentRepository departmentRepository, UserRepository userRepository, StudentRepository studentRepository, FileService fileService) {
         this.studentService = studentService;
         this.instructorService = instructorService;
         this.passwordEncoder = passwordEncoder;
@@ -57,6 +64,7 @@ public class AdminController {
         this.departmentRepository = departmentRepository;
         this.userRepository = userRepository;
         this.studentRepository = studentRepository;
+        this.fileService = fileService;
     }
 
     @PostMapping("/approve/{id}")
@@ -258,5 +266,30 @@ public class AdminController {
 
 
         return ResponseEntity.ok(updatedCourse);
+    }
+
+    @Operation(
+            summary = "Get all students in a course by course id and download as csv file",
+            description = "This endpoint retrieves all students in a course by course id and downloads the data as a CSV file."
+    )
+    @GetMapping("/course/{courseId}/students/download")
+    public ResponseEntity<?> getStudentsByCourseId(@PathVariable Long courseId) {
+        List<Student> students = courseService.getStudentsByCourseId(courseId);
+        if (students.isEmpty())
+        {
+            return ResponseEntity.notFound().build();
+        }
+       ByteArrayInputStream csvData = fileService.loadStudentForAdmin(students);
+
+        HttpHeaders headers=new HttpHeaders();
+
+        String filename = "student_"+students.get(0).getStudentCourse().get(0).getCourse().getCourseCode()+".csv";
+        headers.add("Content-Disposition", "attachment; filename="+filename);
+
+        return ResponseEntity.ok()
+                .headers(headers)
+                .contentType(MediaType.parseMediaType("text/csv"))
+                .body(new InputStreamResource(csvData));
+//        return ResponseEntity.ok(students);
     }
 }

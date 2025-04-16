@@ -46,4 +46,11 @@ public class AnnouncementService {
                 .collect(Collectors.toList());
 
     }
+
+    public List<AnnouncementResponseDTO> getAnnouncements(Instructor instructor) {
+        List<Announcement> announcements = announcementRepository.findByInstructor(instructor);
+        return announcements.stream()
+                .map(AnnouncementMapper::toResponseDTO)
+                .collect(Collectors.toList());
+    }
 }

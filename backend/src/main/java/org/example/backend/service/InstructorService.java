@@ -12,10 +12,7 @@ import org.example.backend.entity.Instructor;
 import org.example.backend.entity.Role;
 import org.example.backend.exception.ResourceNotFound;
 import org.example.backend.mapper.InstructorMapper;
-import org.example.backend.repository.DepartmentRepository;
-import org.example.backend.repository.InstructorRepository;
-import org.example.backend.repository.RoleRepository;
-import org.example.backend.repository.StudentRepository;
+import org.example.backend.repository.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -34,16 +31,18 @@ public class InstructorService {
     private final RoleRepository roleRepository;
     private final FileService fileService;
     private final StudentRepository studentRepository;
+    private final StudentCourseRepository studentCourseRepository;
 
     public InstructorService(InstructorRepository instructorRepository,
                              DepartmentRepository departmentRepository,
-                             RoleRepository roleRepository, FileService fileService, StudentRepository studentRepository) {
+                             RoleRepository roleRepository, FileService fileService, StudentRepository studentRepository, StudentCourseRepository studentCourseRepository) {
         this.instructorRepository = instructorRepository;
 
         this.departmentRepository = departmentRepository;
         this.roleRepository = roleRepository;
         this.fileService = fileService;
         this.studentRepository = studentRepository;
+        this.studentCourseRepository = studentCourseRepository;
     }
 
 //    @Transactional
@@ -238,7 +237,7 @@ public class InstructorService {
             {
             Long studentId = dto.getStudentId();
             double degree = dto.getDegree();
-            studentRepository.updateStudentDegree(studentId,degree,courseId);
+            studentCourseRepository.updateStudentCourseDegree(degree,studentId,courseId,instructorId);
             }
         }
 

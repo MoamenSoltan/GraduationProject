@@ -6,6 +6,7 @@ import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Root;
 import org.example.backend.entity.Announcement;
+import org.example.backend.entity.Instructor;
 import org.example.backend.enums.AnnouncementType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -20,5 +21,7 @@ public interface AnnouncementRepository extends JpaRepository<Announcement,Long>
 
     @Query("select a from Announcement a where a.type=:type or :type is null ")
      List<Announcement> getAllAnnouncements(@Param("type") AnnouncementType type);
+
+    List<Announcement> findByInstructor(Instructor instructor);
 //
 }

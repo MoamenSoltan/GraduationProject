@@ -4,6 +4,7 @@ import com.opencsv.CSVReader;
 import com.opencsv.CSVWriter;
 import com.opencsv.exceptions.CsvValidationException;
 import org.example.backend.dto.studentDto.StudentCourseDTO;
+import org.example.backend.entity.Student;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -109,6 +110,28 @@ public class FileService {
         }
 
 
+
+        return new ByteArrayInputStream(outputStream.toByteArray());
+    }
+
+    public ByteArrayInputStream loadStudentForAdmin(List<Student> students)
+    {
+        ByteArrayOutputStream outputStream=new ByteArrayOutputStream();
+        try(PrintWriter printWriter =new PrintWriter(outputStream))
+        {
+            printWriter.println("Student ID ,Username ,email");
+
+            for (Student student:students)
+            {
+                String[] row = new String[]{
+                        student.getStudentId().toString(),
+                        student.getUser().getFirstName()+" "+student.getUser().getLastName(),
+                        student.getUser().getEmail()
+                };
+                printWriter.println(String.join(",", row));
+            }
+            printWriter.flush();
+        }
 
         return new ByteArrayInputStream(outputStream.toByteArray());
     }
