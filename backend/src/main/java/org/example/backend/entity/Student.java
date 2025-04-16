@@ -34,6 +34,7 @@ public class Student  {
     private LocalDateTime createdAt;
 
     @OneToMany(mappedBy ="student",cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<StudentCourse> studentCourse;
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "submission_request_id")

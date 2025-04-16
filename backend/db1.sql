@@ -325,3 +325,32 @@ CREATE TABLE `task_submissions` (
     FOREIGN KEY (`student_id`) REFERENCES `students`(`student_id`) ON DELETE CASCADE
 );
 
+CREATE TABLE quizzes (
+                         quiz_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+                         title VARCHAR(255) NOT NULL,
+                         description TEXT,
+                         course_id INT NOT NULL,
+                         duration INT NOT NULL COMMENT 'Duration in minutes',
+                         total_degree INT NOT NULL COMMENT 'Total degree for the quiz',
+                         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                         FOREIGN KEY (course_id) REFERENCES courses(course_id) ON DELETE CASCADE
+);
+
+CREATE TABLE quiz_questions (
+                                question_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+                                question_text TEXT NOT NULL,
+                                question_type ENUM('MCQ', 'TRUE_FALSE', 'SHORT_ANSWER') NOT NULL DEFAULT 'MCQ',
+
+                                answer VARCHAR(255),
+                                points INT NOT NULL,
+                                quiz_id BIGINT,
+                                FOREIGN KEY (quiz_id) REFERENCES quizzes(quiz_id) ON DELETE CASCADE
+);
+
+CREATE TABLE question_options (
+                                  option_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+                                  question_id BIGINT NOT NULL,
+                                  option_text VARCHAR(255) NOT NULL,
+                                  FOREIGN KEY (question_id) REFERENCES quiz_questions(question_id) ON DELETE CASCADE
+);
+

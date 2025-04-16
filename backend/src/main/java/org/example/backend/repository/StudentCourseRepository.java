@@ -1,10 +1,12 @@
 package org.example.backend.repository;
 
+import jakarta.transaction.Transactional;
 import org.example.backend.entity.Student;
 import org.example.backend.entity.StudentCourse;
 import org.example.backend.entity.StudentCourseId;
 import org.example.backend.enums.SemesterName;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -28,6 +30,23 @@ public interface StudentCourseRepository extends JpaRepository<StudentCourse, St
             @Param("studentId") Long studentId,
             @Param("semesterName") SemesterName semesterName,
             @Param("yearLevel") Integer yearLevel);
+
+
+    @Modifying
+    @Query("""
+    UPDATE StudentCourse sc
+    SET sc.degree = :degree
+    WHERE sc.student.studentId = :studentId
+      AND sc.course.courseId = :courseId
+      AND sc.course.instructor.instructorId = :instructorId
+""")
+    @Transactional
+    void updateStudentCourseDegree(
+            @Param("degree") Double degree,
+            @Param("studentId") Long studentId,
+            @Param("courseId") Integer courseId,
+            @Param("instructorId") Integer instructorId
+    );
 
 
 }

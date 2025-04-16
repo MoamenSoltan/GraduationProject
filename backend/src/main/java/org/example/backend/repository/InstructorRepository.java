@@ -40,4 +40,6 @@ public interface InstructorRepository extends JpaRepository<Instructor,Integer> 
             "join Department dp on dp.headOfDepartment.instructorId=ins.instructorId")
     Optional<List<Instructor>> getInstructorThatMangedDepartments();
 
+    @Query("select ins from Instructor ins where  ins.user.email = :email")
+    Optional<Instructor> findByEmail(@Param("email") String email);
 }

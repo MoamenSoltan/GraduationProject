@@ -11,10 +11,7 @@ import org.example.backend.repository.StudentCourseRepository;
 import org.example.backend.repository.StudentRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class StudentCoursesService {
@@ -78,6 +75,8 @@ public class StudentCoursesService {
         // Step 3: Group courses by semester
         Map<String, DegreeCourseDTO> semesterMap = new LinkedHashMap<>();
 
+        double cumulativeTotalGradeCredits = 0;
+        double cumulativeTotalHours = 0;
         for (StudentCourse sc : studentCourses) {
             String semesterKey = sc.getSemester().getSemesterId().getSemesterName() + "-" + sc.getSemester().getSemesterId().getYearLevel();
 
@@ -97,30 +96,72 @@ public class StudentCoursesService {
             course.setHours(sc.getCourse().getCredit());
             course.setDegree(sc.getDegree());
             semesterDTO.getCourses().add(course);
+
+            if (course.getDegree() != null) {
+
+                cumulativeTotalGradeCredits += convertToPoint(course.getDegree()) * course.getHours();
+            }
+                cumulativeTotalHours += course.getHours();
+
         }
 
+        System.out.println("all hours "+cumulativeTotalHours );
+        System.out.println("all total "+cumulativeTotalGradeCredits );
+
+        double x=0;
+        int y=0;
         // Step 4: Calculate GPA for each semester
         for (DegreeCourseDTO semester : semesterMap.values()) {
-            calculateGPA(semester);
+            x+=calculateGPA(semester);
         }
+//        System.out.println(x);
+//
+//        y= semesterMap.size();
+//        System.out.println(y);
+//        System.out.println("ccc "+x/y );
 
-        // Step 5: Return the list of semesters
+        double cumulativeGPA = cumulativeTotalHours > 0 ? cumulativeTotalGradeCredits / cumulativeTotalHours : 0;
+
+
+        DegreeCourseDTO courseDTO = new DegreeCourseDTO();
+        courseDTO.setGpa(cumulativeGPA);
+        semesterMap.put("cumulative-gpa",courseDTO);
+
+
+
+        // Step 6: Return the list of semesters
         return new ArrayList<>(semesterMap.values());
     }
 
-    private void calculateGPA(DegreeCourseDTO semester) {
+    private double calculateGPA(DegreeCourseDTO semester) {
         double totalGradeCredits = 0;
         double totalHours = 0;
 
         for (DegreeCourseDTO.Course course : semester.getCourses()) {
             totalHours += course.getHours();
             if (course.getDegree() != null) {
-                totalGradeCredits += course.getDegree() * course.getHours();
+                double gradePoint = convertToPoint(course.getDegree());
+                totalGradeCredits += gradePoint * course.getHours();
             }
         }
 
         double gpa = totalHours > 0 ? totalGradeCredits / totalHours : 0;
         semester.setGpa(gpa);
+        return gpa;
+    }
+
+    private static double convertToPoint(double score) {
+        if (score >= 90 && score <= 100) {
+            return 4.0; // Grade A
+        } else if (score >= 70 && score < 90) {
+            return 3.0; // Grade B
+        } else if (score >= 50 && score < 70) {
+            return 2.0; // Grade C
+        } else if (score >= 0 && score < 50) {
+            return 0.0; // Grade F
+        } else {
+            throw new IllegalArgumentException("Score must be between 0 and 100");
+        }
     }
 
 

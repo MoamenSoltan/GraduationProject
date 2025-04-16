@@ -5,6 +5,7 @@ import org.example.backend.dto.courseDto.CourseDTO;
 import org.example.backend.dto.courseDto.CourseRequestDTO;
 import org.example.backend.dto.courseDto.CourseResponseDTO;
 import org.example.backend.dto.courseDto.DegreeCourseDTO;
+import org.example.backend.dto.studentDto.StudentResponseDTO;
 import org.example.backend.entity.*;
 import org.example.backend.enums.LevelYear;
 import org.example.backend.enums.SemesterName;
@@ -255,4 +256,16 @@ public class CourseService {
 
 
 
+    public List<Student> getStudentsByCourseId(Long courseId) {
+        Course course= courseRepo.findById(courseId)
+                .orElseThrow(() -> new ResourceNotFound("Course", "id", courseId));
+
+        List<Student> students=new ArrayList<>();
+        for (StudentCourse sc: course.getStudentCourses())
+        {
+            students.add( sc.getStudent());
+        }
+
+        return students;
+    }
 }

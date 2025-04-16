@@ -57,6 +57,18 @@ public class InstructorController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/announcement")
+    public ResponseEntity<?> getAnnouncements()
+    {
+        Authentication auth= SecurityContextHolder.getContext().getAuthentication();
+        String email = auth.getName();
+        Instructor instructor=
+                instructorRepository.getByEmail(email)
+                        .orElseThrow(()-> new ResourceNotFound("Instructor","email",email));
+
+        return ResponseEntity.ok(announcementService.getAnnouncements(instructor));
+    }
+
     @GetMapping("/profile")
     public ResponseEntity<?> getProfile()
     {
@@ -108,7 +120,7 @@ public class InstructorController {
     @GetMapping("/course/{courseId}/student/download")
     public ResponseEntity<?> downloadStudentsInCourse(@PathVariable int courseId) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String email = "insfggjkeIbmnvjhvbS@example.com";
+        String email = authentication.getName();
         List<StudentCourseDTO> students = instructorService.getStudentsInCourse(courseId, email);
         ByteArrayInputStream csvData = fileService.load(students);
 
@@ -135,5 +147,6 @@ public class InstructorController {
 
         return ResponseEntity.ok("File uploaded successfully: " + message);
     }
+
 
 }

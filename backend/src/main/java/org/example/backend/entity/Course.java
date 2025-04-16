@@ -72,6 +72,10 @@ public class Course {
     @JsonIgnore
     private List<StudentCourse> studentCourses;
 
+    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<Quiz> quizList;
+
 
 
 }
