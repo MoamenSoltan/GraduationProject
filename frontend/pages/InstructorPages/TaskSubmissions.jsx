@@ -12,7 +12,8 @@ const TaskSubmissions = () => {
   const [submissions, setSubmissions] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-
+  const [grade, setgrade] = useState({})
+  const [reFetch, setreFetch] = useState(false)
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -34,7 +35,26 @@ const TaskSubmissions = () => {
     };
 
     fetchSubmissions();
-  }, [courseId, taskId, axiosPrivate]);
+  }, [courseId, taskId, axiosPrivate,reFetch]);
+
+  const handleQuickReview =async (submissionId)=>{
+    const payload= {
+      submissionId,
+      grade:grade[submissionId]
+    }
+    try {
+      const response = await axiosPrivate.put(`/task/instructor/submissions/${courseId}/${taskId}/grade`,payload)
+      toast.success("Grade submitted successfully");
+      setreFetch(!reFetch)
+      setgrade({})
+    } catch (error) {
+      toast.error(`an error occurred : ${error}`)
+      console.log("payload :",payload);
+      console.error("error :",error);
+
+      
+    }
+  }
 
   if (loading)
     return (
@@ -60,7 +80,9 @@ const TaskSubmissions = () => {
                 <th className="py-2 px-4 border-b">Submitted At</th>
                 <th className="py-2 px-4 border-b">Grade</th>
                 <th className="py-2 px-4 border-b">Attachment</th>
+                <th className="py-2 px-4 border-b">quick Review</th>
                 <th className="py-2 px-4 border-b">Review</th>
+
               </tr>
             </thead>
             <tbody>
@@ -70,7 +92,7 @@ const TaskSubmissions = () => {
                     {submission.studentEmail}
                   </td>
                   <td className="py-2 px-4 border-b">
-                    {submission.submittedAt}
+                    {new Date(submission.submittedAt).toLocaleDateString()}
                   </td>
                   <td className="py-2 px-4 border-b">
                     {submission.grade ?? "N/A"}
@@ -89,6 +111,14 @@ const TaskSubmissions = () => {
                       "No attachment"
                     )}
                   </td>
+                  <td className="py-2 px-4 border-b flex gap-2">
+
+                    <input type="text" placeholder="enter grade" className="p-2 rounded-md border-gray-200 border-[1px] outline-none" 
+                    value={grade[submission.id]} onChange={(e)=>setgrade((prev)=>({...prev,[submission.id]:e.target.value}))} />
+
+                    <button onClick={()=>handleQuickReview(submission.id)} disabled={!grade[submission.id]} className="bg-blue-600 disabled:bg-gray-500 hover:bg-blue-700 text-white font-medium py-1.5 px-4 rounded-md transition duration-200 ease-in-out shadow-sm">Review</button>
+                    
+                  </td>
                   <td className="py-2 px-4 border-b">
                     <button
                       onClick={() =>
@@ -102,6 +132,7 @@ const TaskSubmissions = () => {
                       Review Task
                     </button>
                   </td>
+                 
                 </tr>
               ))}
             </tbody>

@@ -94,9 +94,6 @@ export const sideBarLinks = {
     {
       name : "Semesters",
       icon : RiBookShelfLine
-    },{
-      name : "Year levels",
-      icon : IoBarChart
     },
     
   ],

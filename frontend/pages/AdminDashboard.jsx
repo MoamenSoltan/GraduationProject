@@ -9,6 +9,7 @@ import CreateCourse from './AdminPages/CreateCourse'
 import DetailedSubmissionRequests from '../components/DetailedSubmissionRequests'
 import DetailedInstructor from '../components/DetailedInstructor'
 import DetailedCourses from '../components/DetailedCourses'
+import Semesters from './AdminPages/Semesters'
 const AdminDashboard = () => {
   const {activeMenu}=useStateContext()
 
@@ -41,6 +42,11 @@ const AdminDashboard = () => {
 
         <Route path='/create-Course' element={<CreateCourse/>}/>
         <Route path='/create-Course/:id' element={<DetailedCourses/>}/>
+
+
+
+        <Route path='/semesters' element={<Semesters/>}/>
+
 
 
       </Routes>
