@@ -21,6 +21,8 @@ const DetailedTasks = () => {
         const response = await axiosPrivate.get(`/task/instructor/${id}`)
         setTask(response.data)
         setLoading(false)
+        console.log("task details : ",response.data);
+        
       } catch (err) {
         setError('Failed to fetch task details.')
         toast.error('Error fetching task details')

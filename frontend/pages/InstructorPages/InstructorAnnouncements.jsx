@@ -9,7 +9,7 @@ import toast from 'react-hot-toast'
 
 const InstructorAnnouncements = () => {
   const [modal, setModal] = useState(false)
-
+  const [reFetch, setreFetch] = useState(false)
   const axiosPrivate = useAxiosPrivate()
 
   const [announcementData, setAnnouncementData] = useState({
@@ -21,6 +21,7 @@ const InstructorAnnouncements = () => {
   })
 
   const [courses, setCourses] = useState([])
+  const [announcements,setAnnouncements] = useState([])
 
   const handleChange = (e) => {
     const { name, value } = e.target
@@ -36,6 +37,7 @@ const InstructorAnnouncements = () => {
       
       
       setModal(false)
+      setreFetch(!reFetch)
       toast.success("announcement created successfully!")
     } catch (error) {
       toast.error(`an error occurred : ${error.message}`)
@@ -43,20 +45,35 @@ const InstructorAnnouncements = () => {
   }
 
   useEffect(() => {
+    const fetchAnnouncements = async ()=>{
+      try {
+        const response = await axiosPrivate.get("/instructor/announcement")
+        setAnnouncements(response.data)
+        console.log("announcements fetched :",response.data);
+        
+      } catch (error) {
+        toast.error(`an error occurred : ${error}`)
+      }
+    }
+
     const fetchCourses = async () => {
       try {
         const res = await axiosPrivate.get('/instructor/course')
         
         setCourses(res.data)
+        console.log("fetched courses",res.data);
+        
       } catch (err) {
         console.error('Error fetching courses:', err)
       }
     }
 
+    fetchAnnouncements()
+
     fetchCourses()
     
     
-  }, [])
+  }, [reFetch])
 
   return (
     <div className='md:w-[80%] w-full m-auto mt-10'>
@@ -68,6 +85,32 @@ const InstructorAnnouncements = () => {
       >
         +
       </button>
+
+      <div className="flex flex-wrap gap-4 justify-start">
+  {announcements.map((announcement) => (
+    <div
+      key={announcement.announcementId}
+      className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 w-full sm:w-[48%] md:w-[30%] lg:w-[23%] transition-transform hover:scale-105"
+    >
+      <div className="flex justify-between items-center mb-2">
+        <h3 className="text-lg font-semibold text-gray-800 truncate">{announcement.title}</h3>
+        <span className="text-xs font-medium text-blue-600 bg-blue-100 px-2 py-0.5 rounded-full uppercase">
+          {announcement.type}
+        </span>
+      </div>
+
+      <p className="text-sm text-gray-700 mb-3 line-clamp-2">{announcement.description}</p>
+
+      <div className="text-xs text-gray-600 space-y-1">
+        <p><strong>Course:</strong> {announcement.courseName}</p>
+        <p><strong>Instructor:</strong> {announcement.instructorName}</p>
+        <p><strong>Date:</strong> {dayjs(announcement.announcementDate).format('MMMM D, YYYY')}</p>
+      </div>
+    </div>
+  ))}
+</div>
+
+
 
       <Modal open={modal} onClose={() => setModal(false)}>
         <form className="w-full p-4 flex flex-col gap-4" onSubmit={handleFormSubmit}>
