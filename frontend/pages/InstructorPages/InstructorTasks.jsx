@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router'
+import { useNavigate, useSearchParams } from 'react-router'
 import useAxiosPrivate from '../../hooks/useAxiosPrivate'
 import toast from 'react-hot-toast'
 import Modal from '../../components/Modal'
@@ -14,6 +14,8 @@ const InstructorTasks = () => {
   const [courses, setCourses] = useState([])
   const [reFetch, setreFetch] = useState(false)
   const [loading, setloading] = useState(false)
+  
+  
   const [formData, setFormData] = useState({
     taskName: '',
     maxGrade: '',
@@ -25,12 +27,32 @@ const InstructorTasks = () => {
   })
   // TODO: form data and fix file and api
 
+  // const selectCourses = courses.filter((course)=>(tasks.some((task)=>(
+  //   course.courseId===task.courseId
+  // ))))
+
+
   const axiosPrivate = useAxiosPrivate()
 
+  const [searchParams,setSearchParams] = useSearchParams()
+  const selectedCourse = searchParams.get('courseId') || ""
+    const selectedSort = searchParams.get('sortDir') || ""
+    // TODO: dont forget ||''
   useEffect(() => {
+
+    
+
+    const params = new URLSearchParams()
+
+    if (selectedCourse) params.append('courseId',selectedCourse)
+    if (selectedSort) params.append('sortDir',selectedSort)
+
+
+
     const fetchTasks = async () => {
       try {
-        const response = await axiosPrivate.get("/task/instructor")
+        const response = await axiosPrivate.get(`/task/instructor?${params.toString()}`)
+        // TODO: dont forget tostring() , and ?
         setTasks(response.data)
       } catch (error) {
         toast.error(`An error occurred: ${error}`)
@@ -51,7 +73,19 @@ const InstructorTasks = () => {
     console.log("fetched courses :",courses);
     
     fetchTasks()
-  }, [reFetch])
+  }, [reFetch,selectedCourse,selectedSort])
+  // TODO: dont forget to add selectedCourse and selectedSort to dependency array
+
+  const handleFilterChange = (filterName,value)=>{
+    const newParams = new URLSearchParams(searchParams)
+    if (value)
+      newParams.set(filterName,value)
+    else
+    newParams.delete(filterName)
+
+    setSearchParams(newParams) 
+    // TODO: dont forget line 78
+  }
 
   const handleSubmit = async (e) => {
     if(loading)
@@ -104,12 +138,35 @@ const navigate = useNavigate()
 
   return (
     <div className='md:w-[80%] w-full m-auto mt-10'>
+      <div className='w-full flex justify-between'>
       <h2 className="text-2xl font-semibold mb-4 text-gray-800">Tasks</h2>
+
+      <div className='flex gap-2'>
+        <select value={selectedCourse} onChange={(e)=>handleFilterChange("courseId",e.target.value)}  className=' border-2 rounded-md outline-none' name="courseId">
+          <option value="">All Courses</option>
+          {
+            courses.map((course) => (
+              <option key={course.courseId} value={course.courseId}>{course.courseName}</option>
+            ))
+          }
+        </select>
+        <select value={selectedSort} name="sortDir" onChange={(e)=>handleFilterChange("sortDir",e.target.value)} className='w-[100px] border-2 rounded-md outline-none'>
+
+          <option value="asc">Ascending</option>
+          <option value="desc">Descending</option>
+        </select>
+      </div>
+      </div>
       <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mt-8">
   {tasks.map((task) => (
     <div onClick={()=>navigate(`/instructorDashboard/Tasks/${task.id}`)} key={task.id} className="p-4 bg-white rounded-xl shadow-md border hover:shadow-lg transition">
       <h3 className="text-xl font-semibold text-gray-800 mb-2">{task.taskName}</h3>
+      <h3 className="font-semibold text-gray-800 mb-2">
+  Course: {courses.find((course)=>(course.courseId===task.courseId))?.courseName||"unknown"}
+</h3>
+
       <p className="text-sm text-gray-600 mb-2">{task.description}</p>
+      
       <p className="text-sm text-gray-500 mb-1">
         <strong>Max Grade:</strong> {task.maxGrade}
       </p>
