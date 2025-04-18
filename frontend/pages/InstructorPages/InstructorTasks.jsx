@@ -14,7 +14,24 @@ const InstructorTasks = () => {
   const [courses, setCourses] = useState([])
   const [reFetch, setreFetch] = useState(false)
   const [loading, setloading] = useState(false)
-  
+  const [currentPage,setCurrentPage]=useState(1)
+
+  const cardsPerPage = 6
+
+  const lastIndexInPage = currentPage * cardsPerPage
+  const firstIndexInPage = lastIndexInPage - cardsPerPage
+   
+  const currentTasks = tasks.slice(firstIndexInPage,lastIndexInPage)
+
+  const prevPage = ()=>{
+    if(currentPage>1){
+      setCurrentPage(prev=>prev-1)
+    }
+  }
+  const nextPage = ()=>{
+    if(currentPage<(Math.ceil(tasks.length/cardsPerPage)))
+      setCurrentPage(prev=>prev+1)
+  }
   
   const [formData, setFormData] = useState({
     taskName: '',
@@ -158,7 +175,7 @@ const navigate = useNavigate()
       </div>
       </div>
       <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mt-8">
-  {tasks.map((task) => (
+  {currentTasks.map((task) => (
     <div onClick={()=>navigate(`/instructorDashboard/Tasks/${task.id}`)} key={task.id} className="p-4 bg-white rounded-xl shadow-md border hover:shadow-lg transition">
       <h3 className="text-xl font-semibold text-gray-800 mb-2">{task.taskName}</h3>
       <h3 className="font-semibold text-gray-800 mb-2">
@@ -183,9 +200,31 @@ const navigate = useNavigate()
       <p className="text-xs text-gray-400 mt-2">Created at: {new Date(task.createdAt).toLocaleString()}</p>
     </div>
   ))}
+    
 </div>
 
-
+       {
+      (tasks.length / cardsPerPage) >=1 &&
+      <div className="flex justify-center items-center space-x-4 mt-6">
+                <button 
+                    onClick={prevPage} 
+                    className="px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 disabled:opacity-50"
+                    disabled={currentPage === 1}
+                >
+                    Previous
+                </button>
+                <span className="text-lg font-semibold">
+                    Page {currentPage} of {Math.ceil(tasks.length / cardsPerPage)}
+                </span>
+                <button 
+                    onClick={nextPage} 
+                    className="px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 disabled:opacity-50"
+                    disabled={currentPage === Math.ceil(tasks.length / cardsPerPage)}
+                >
+                    Next
+                </button>
+            </div>
+     }
 
       <button
         onClick={() => setModal(true)}

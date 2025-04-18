@@ -27,23 +27,29 @@ const DetailedSubmissionRequests = () => {
     }, [id]);
 
     const handleAccept = async () => {
+        if(loading)
+            return
+        setLoading(true)
         try {
             await axiosPrivate.post(`/admin/approve/${id}`);
             toast.success('Submission accepted successfully');
             navigate('/adminDashboard/submission-Requests');
         } catch (error) {
             toast.error("Couldn't accept submission");
-        }
+        }finally {setLoading(false)}
     };
 
     const handleReject = async () => {
+        if (loading)
+            return
+        setLoading(true)
         try {
             await axiosPrivate.post(`/admin/reject/${id}`);
             toast.success('Submission rejected successfully');
             navigate('/adminDashboard/submission-Requests');
         } catch (error) {
             toast.error("Couldn't reject submission");
-        }
+        }finally{setLoading(false)}
     };
 
     if (loading) return <div className="text-center text-lg">Loading...</div>;

@@ -16,8 +16,8 @@ const Semesters = () => {
   const [semesterForm, setSemesterForm] = useState({
     yearLevel: "",
     semesterName: "",
-    startDate: dayjs(),
-    endDate: dayjs(),
+    startDate: null,
+    endDate: null,
     isActive: false,
   });
 
