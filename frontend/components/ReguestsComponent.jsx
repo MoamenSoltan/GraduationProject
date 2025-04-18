@@ -100,6 +100,7 @@ const RequestsComponent = () => {
             </div>
 
             {/* Pagination Controls */}
+            { (requests.length / cardsPerPage) >=1 &&
             <div className="flex justify-center items-center space-x-4 mt-6">
                 <button 
                     onClick={prevPage} 
@@ -119,6 +120,7 @@ const RequestsComponent = () => {
                     Next
                 </button>
             </div>
+}
 
             {/* Loading Indicator */}
             {loading && (
