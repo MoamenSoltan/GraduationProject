@@ -1,6 +1,7 @@
 package org.example.backend.repository;
 
 import jakarta.transaction.Transactional;
+import org.example.backend.entity.Course;
 import org.example.backend.entity.Student;
 import org.example.backend.entity.StudentCourse;
 import org.example.backend.entity.StudentCourseId;
@@ -49,4 +50,8 @@ public interface StudentCourseRepository extends JpaRepository<StudentCourse, St
     );
 
 
+    @Query("SELECT CASE WHEN COUNT(sc) > 0 THEN true ELSE false END " +
+            "FROM StudentCourse sc " +
+            "WHERE sc.student = :student AND sc.course = :course")
+    boolean isStudentEnrolledInCourse(@Param("student") Student student,@Param("course") Course course);
 }
