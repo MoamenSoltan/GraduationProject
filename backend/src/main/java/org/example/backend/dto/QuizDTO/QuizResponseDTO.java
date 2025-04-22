@@ -7,7 +7,9 @@ import lombok.Setter;
 import java.util.List;
 @Setter
 @Getter
-public class QuizRequestDTO {
+public class QuizResponseDTO {
+    @JsonProperty("id")
+    private Long quizId;
     @JsonProperty("name")
     private String quizName;
     @JsonProperty("description")
@@ -15,7 +17,7 @@ public class QuizRequestDTO {
     @JsonProperty("time")
     private int quizTime;
     @JsonProperty("questions")
-    private List<QuizQuestionDTO> quizQuestions;
+    private List<QuestionResponseDTO> quizQuestions;
     @JsonProperty("totalDegree")
     private int totalDegree;
 }

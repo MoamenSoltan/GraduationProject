@@ -354,3 +354,27 @@ CREATE TABLE question_options (
                                   FOREIGN KEY (question_id) REFERENCES quiz_questions(question_id) ON DELETE CASCADE
 );
 
+CREATE TABLE quiz_submissions (
+     submission_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+     student_id int NOT NULL,
+     quiz_id BIGINT NOT NULL,
+     submitted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+     total_score INT,
+     FOREIGN KEY (student_id) REFERENCES students(student_id) ON DELETE CASCADE,
+     FOREIGN KEY (quiz_id) REFERENCES quizzes(quiz_id) ON DELETE CASCADE
+);
+
+CREATE TABLE student_answers (
+                                 answer_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+                                 submission_id BIGINT NOT NULL,
+                                 question_id BIGINT NOT NULL,
+                                 selected_option VARCHAR(255), -- for MCQ/TRUE_FALSE
+                                 short_answer TEXT, -- for SHORT_ANSWER
+                                 is_correct BOOLEAN, -- optional: useful for evaluation
+                                 score_awarded INT, -- optional: score given for the answer
+
+                                 FOREIGN KEY (submission_id) REFERENCES quiz_submissions(submission_id) ON DELETE CASCADE,
+                                 FOREIGN KEY (question_id) REFERENCES quiz_questions(question_id) ON DELETE CASCADE
+);
+
+

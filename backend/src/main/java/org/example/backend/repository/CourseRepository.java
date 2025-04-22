@@ -19,6 +19,8 @@ public interface CourseRepository extends JpaRepository<Course,Long> {
     Optional<Course> findByCode(@Param("code") String code);
 
     Optional<List<Course>> findByInstructor(Instructor instructor);
+    @Query("SELECT c FROM Course c WHERE c.instructor = :instructor AND c.courseId = :courseId")
+    Optional<Course> findCourseByInstructorAndCourseId(Instructor instructor, Long courseId);
 
     @Modifying
     @Query("UPDATE Course c SET c.instructor = NULL WHERE c.instructor.user.id = :instructorId")
@@ -57,5 +59,10 @@ public interface CourseRepository extends JpaRepository<Course,Long> {
             "where sc.student.studentId = :studentId " +
             "order by s.semesterId.yearLevel, s.semesterId.semesterName")
     List<DegreeCourseDTO> getAllSemestersForStudent(@Param("studentId") Long studentId);
+
+    @Query("SELECT count(c)>0 FROM Course c WHERE c.courseId = :courseId AND c.instructor.user.email = :instructorEmail")
+    boolean isInstructorOfCourse(@Param("instructorEmail") String instructorEmail,@Param("courseId") Long courseId);
+
+
 
 }

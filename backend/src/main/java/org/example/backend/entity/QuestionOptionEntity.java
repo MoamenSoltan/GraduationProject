@@ -11,6 +11,7 @@ import lombok.Setter;
 public class QuestionOptionEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "option_id")
     private Long id;
 
     @Column(name = "option_text")

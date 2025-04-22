@@ -13,6 +13,7 @@ import org.example.backend.util.AuthResponse;
 import org.example.backend.util.LoginRequest;
 import org.example.backend.service.SubmissionRequestService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
@@ -42,6 +43,7 @@ public class AuthController {
         String email = request.getEmail();
         String password = request.getPassword();
         AuthResponse response=  authService.login(email,password,servletResponse);
+
 
         return ResponseEntity.ok(response);
     }
@@ -87,6 +89,13 @@ public class AuthController {
         System.out.println("authentication : "+a.getName());
         return "data";
     }
+
+//    @GetMapping("/checkAuth")
+//    public ResponseEntity<?> checkAuth()
+//    {
+//        Authentication authentication= SecurityContextHolder.getContext().getAuthentication();
+//        String email = authentication.getName();
+//    }
 
 
 }

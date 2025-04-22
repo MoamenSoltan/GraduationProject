@@ -9,11 +9,13 @@ import java.util.List;
 
 @Setter
 @Getter
-public class QuizQuestionDTO {
-
+public class QuestionResponseDTO {
+    @JsonProperty("id")
+    private Long questionId;
+    @JsonProperty("question")
     private String questionText;
     private QuestionType questionType;
-    private List<QuestionOptionDTO> options;
+    private List<OptionResponseDTO> options;
     private String correctAnswer;
     @JsonProperty("score")
     private int points;

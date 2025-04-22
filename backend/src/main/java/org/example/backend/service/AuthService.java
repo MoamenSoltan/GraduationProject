@@ -127,6 +127,7 @@ public class AuthService {
             }
         }
 
+
         return response;
     }
 
@@ -146,7 +147,7 @@ public class AuthService {
         String accessToken = jwtService.generateAccessToken(userDetails);
         String newRefreshToken = jwtService.generateRefreshToken(userDetails);
         setRefreshTokenCookie(response,newRefreshToken);
-
+        setAccessTokenCookie(response,accessToken);
         Map<String, String> tokens = new HashMap<>();
         tokens.put("accessToken", accessToken);
 
@@ -210,6 +211,18 @@ public class AuthService {
                 .sameSite("Strict") // Prevent CSRF attacks
                 .path("/auth/refreshToken") // Only used for refresh endpoint
                 .maxAge(REFRESH_VALIDITY) // 7 days
+                .build();
+
+        response.addHeader("Set-Cookie", refreshCookie.toString());
+    }
+
+    private  void setAccessTokenCookie(HttpServletResponse response, String accessToken) {
+        ResponseCookie refreshCookie = ResponseCookie.from("accessToken", accessToken)
+                .httpOnly(true) // Secure against XSS
+                .secure(true) // Use HTTPS in production
+                .sameSite("Strict") // Prevent CSRF attacks
+                .path("/") // Only used for refresh endpoint
+                .maxAge(15*60) // 7 days
                 .build();
 
         response.addHeader("Set-Cookie", refreshCookie.toString());
