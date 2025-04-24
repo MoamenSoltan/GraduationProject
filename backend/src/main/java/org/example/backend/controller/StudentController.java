@@ -4,6 +4,7 @@ import org.example.backend.dto.AnnouncementDto.AnnouncementResponseDTO;
 import org.example.backend.dto.StudentCourseRequestDTO;
 import org.example.backend.dto.courseDto.CourseResponseDTO;
 import org.example.backend.dto.courseDto.DegreeCourseDTO;
+import org.example.backend.dto.instructorDto.InstructorResponseDTO;
 import org.example.backend.dto.studentDto.StudentProfile;
 import org.example.backend.dto.studentDto.UpdateStudent;
 import org.example.backend.entity.Student;
@@ -93,12 +94,12 @@ public class StudentController {
         return ResponseEntity.ok(announcements);
     }
     @GetMapping("/instructors")
-    public ResponseEntity<?> getInstructorOfCoursesRegistered()
+    public ResponseEntity<List<InstructorResponseDTO>> getInstructorOfCoursesRegistered()
     {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email =authentication.getName();
-//        System.out.println(authentication.getAuthorities());
-        return ResponseEntity.ok(instructorService.getCoursesInstructorsForStudent(email));
+        List<InstructorResponseDTO> responseDTOS= instructorService.getCoursesInstructorsForStudent(email);
+        return ResponseEntity.ok(responseDTOS);
     }
 
     @GetMapping("/courses")

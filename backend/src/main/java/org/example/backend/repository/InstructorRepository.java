@@ -31,7 +31,7 @@ public interface InstructorRepository extends JpaRepository<Instructor,Integer> 
             "join User u_in on s.user.id = u_in.id " +
             "where u_st.email=:studentEmail"
     )
-    Optional<Instructor> getCoursesInstructorForStudent(@Param("studentEmail") String studentEmail);
+    List<Instructor> getCoursesInstructorForStudent(@Param("studentEmail") String studentEmail);
 
 
     boolean existsByUserEmail(@NotBlank(message = "Email is required") @Email(message = "Email must be valid") @Size(max = 100, message = "Email must not exceed 100 characters") String email);
