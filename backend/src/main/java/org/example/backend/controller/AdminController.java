@@ -27,6 +27,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStreamReader;
@@ -70,10 +72,24 @@ public class AdminController {
     @PostMapping("/approve/{id}")
     public ResponseEntity<?> approveSubmissionRequest(@PathVariable int id) {
 
-        String approved = adminService.approveSubmissionRequest(id);
+        Student approved = adminService.approveSubmissionRequest(id);
         Map<String, String> response = new HashMap<>();
-        response.put("message", approved);
+        response.put("message", "Submission request approved successfully!");
+
+        sendDataToBubble(approved);
         return ResponseEntity.ok(response);
+    }
+    private String sendDataToBubble(Student student)
+    {
+        RestTemplate restTemplate = new RestTemplate();
+        String url ="https://profiletrackerai.bubbleapps.io/version-test/api/1.1/wf/insert_user";
+        String addurl= UriComponentsBuilder.fromHttpUrl(url)
+                .queryParam("email",student.getUser().getEmail())
+                .queryParam("password", student.getUser().getPassword())
+                .queryParam("name",student.getUser().getFirstName()+" "+student.getUser().getLastName())
+                .toUriString();
+
+        return restTemplate.getForObject(addurl,  String.class);
     }
 
     @PostMapping("/reject/{id}")

@@ -33,12 +33,12 @@ public class AdminService {
         this.mailService = mailService;
     }
 
-    public String approveSubmissionRequest(int id)
+    public Student approveSubmissionRequest(int id)
     {
         SubmissionRequest request = submissionReqRepository.findById(id)
                 .orElseThrow(()->new ResourceNotFound("SubmissionRequest", "id", id));
         if(request.getAdmissionStatus()!= AdmissionStatus.PENDING)
-            return "This request is already approved or rejected!";
+            throw new RuntimeException( "This request is already approved or rejected!");
         request.setAdmissionStatus(AdmissionStatus.ACCEPTED);
 
         Student student= SubmissionRequestMapper.mapToStudent(request);
@@ -49,8 +49,10 @@ public class AdminService {
         studentRepository.save(student);
 
 
+
         mailService.sendEmail(createMail(request.getEmail(), "Accepted"));
-        return "Submission request approved successfully!";
+        return student;
+//        return "Submission request approved successfully!";
     }
     private MailBody createMail(String email,String status)
     {
