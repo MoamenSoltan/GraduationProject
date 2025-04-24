@@ -1,10 +1,28 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom'; // Fixed import
-import { coursesData } from '../data/dummy';
+
 import CoursesCard from './CoursesCard';
 import { MdLibraryBooks } from 'react-icons/md'; // New Icon for Empty State
+import useAxiosPrivate from '../hooks/useAxiosPrivate';
+import toast from 'react-hot-toast';
 
 const Courses = ({preview}) => {
+  const axiosPrivate = useAxiosPrivate()
+
+  const [courses, setcourses] = useState([])
+  useEffect(()=>{
+    const fetchCourses = async ()=>{
+      try {
+        const response = await axiosPrivate.get("student/courses")
+        setcourses(response.data)
+        console.log("fetched courses = :",response.data);
+        
+      } catch (error) {
+        toast.error(`an error occurred : ${error}`)
+      }
+    }
+    fetchCourses()
+  },[])
   return (
     <div className="flex flex-col items-center justify-center w-full mt-5">
       {/* Header */}
@@ -21,31 +39,30 @@ const Courses = ({preview}) => {
       {/*  get call  , store in state here or as needed , if the method is to be used multiple time , define it in context , and use it here in useEffect  */}
       {/* Courses List */}
       <div className="flex flex-wrap gap-4 w-full mr-auto mt-5">
-        {coursesData && coursesData.length > 0&& preview ? (
-          coursesData.slice(0,3).map((course) => (
+        {courses && courses.length > 0&& preview ? (
+          courses.slice(0,3).map((course) => (
             <CoursesCard
-              key={course.id}
-              name={course.name}
-              code={course.code}
-              schedule={course.schedule}
-              credits={course.credits}
-              instructor={course.instructor}
-              studentsEnrolled={course.studentsEnrolled}
-              type={course.type}
+            key={course.courseId}
+            name={course.courseName}
+            code={course.courseCode}
+            schedule={course.schedule}
+            credits={course.credit}
+            instructor={course?.instructor?.firstName + " " + course?.instructor?.lastName}
+            studentsEnrolled={course.studentEnrolled}
+            type={course.type}
             />
           ))
-        ) :coursesData && coursesData.length > 0&& preview===false ? (
-          coursesData.map((course) => (
+        ) :courses && courses.length > 0&& preview===false ? (
+          courses.map((course) => (
             <CoursesCard
-              key={course.id}
-              name={course.name}
-              code={course.code}
-              schedule={course.schedule}
-              credits={course.credits}
-              instructor={course.instructor}
-              studentsEnrolled={course.studentsEnrolled}
-              type={course.type}
-              
+            key={course.courseId}
+            name={course.courseName}
+            code={course.courseCode}
+            schedule={course.schedule}
+            credits={course.credit}
+            instructor={course?.instructor?.firstName + " " + course?.instructor?.lastName}
+            studentsEnrolled={course.studentEnrolled}
+            type={course.type}
             />
           ))
         ) : (

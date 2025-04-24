@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import CoursesCard from "../../components/CoursesCard";
-import { coursesData } from "../../data/dummy";
+import useAxiosPrivate from "../../hooks/useAxiosPrivate";
+import toast from "react-hot-toast";
+
 /**
  * steps to use url parameters for data fetching
  * 1- add /:year?
@@ -17,9 +19,25 @@ const Courses = () => {
   const { year } = useParams(); // Get year from URL
   const navigate = useNavigate();
 
+  const axiosPrivate = useAxiosPrivate()
+
+  const [courses, setcourses] = useState([])
+  useEffect(()=>{
+    const fetchCourses = async ()=>{
+      try {
+        const response = await axiosPrivate.get("student/courses")
+        setcourses(response.data)
+        console.log("fetched courses = :",response.data);
+        
+      } catch (error) {
+        toast.error(`an error occurred : ${error}`)
+      }
+    }
+    fetchCourses()
+  },[])
   const filteredCourses = year
-    ? coursesData.filter((course) => course.year === year)
-    : coursesData; // Show all if no year is selected
+    ? courses?.filter((course) => course.year === year)
+    : courses; // Show all if no year is selected
 
   return (
     <div className="flex flex-col  w-[80%]   m-auto">
@@ -31,10 +49,10 @@ const Courses = () => {
           onChange={(e) => navigate(`/studentDashboard/courses/${e.target.value}`)}
         >
           <option value="">All Years</option>
-          <option value="FirstYear">First Year</option>
-          <option value="SecondYear">Second Year</option>
-          <option value="ThirdYear">Third Year</option>
-          <option value="FourthYear">Fourth Year</option>
+          <option value="FIRST_YEAR">First Year</option>
+          <option value="SECOND_YEAR">Second Year</option>
+          <option value="THIRD_YEAR">Third Year</option>
+          <option value="FOURTH_YEAR">Fourth Year</option>
         </select>
       </div>
 
@@ -43,18 +61,18 @@ const Courses = () => {
         <div key={type}>
           <h2 className="text-xl font-semibold text-left mt-10">{type}</h2>
           <div className="mt-5 flex flex-row gap-1 flex-wrap">
-            {filteredCourses.filter((course) => course.type === type).length > 0 ? (
+            {filteredCourses.filter((course) => course.type.toUpperCase() === type.toUpperCase()).length > 0 ? (
               filteredCourses
-                .filter((course) => course.type === type)
+                .filter((course) => course.type.toUpperCase() === type.toUpperCase())
                 .map((course) => (
                   <CoursesCard
-                    key={course.id}
-                    name={course.name}
-                    code={course.code}
+                    key={course.courseId}
+                    name={course.courseName}
+                    code={course.courseCode}
                     schedule={course.schedule}
-                    credits={course.credits}
-                    instructor={course.instructor}
-                    studentsEnrolled={course.studentsEnrolled}
+                    credits={course.credit}
+                    instructor={course?.instructor?.firstName + " " + course?.instructor?.lastName}
+                    studentsEnrolled={course.studentEnrolled}
                     type={course.type}
                   />
                 ))

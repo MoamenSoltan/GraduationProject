@@ -1,18 +1,36 @@
 // Announcements.jsx
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import AnnouncementCard from "../../components/AnnouncementCard";
-import { announcementsData } from "../../data/dummy";
+
 import { h2 } from "motion/react-client";
+import useAxiosPrivate from "../../hooks/useAxiosPrivate";
+import toast from "react-hot-toast";
 
 
 const Announcements = () => {
   const { type } = useParams(); // Get type from URL
   const navigate = useNavigate();
+  const [announcementsData, setannouncementsData] = useState([])
+  const axiosPrivate = useAxiosPrivate()
+
+  useEffect(()=>{
+    const fetchAnnouncements = async ()=>{
+      try {
+        const response = await axiosPrivate.get("student/announcements")
+        setannouncementsData(response.data)
+        console.log("fetched announcements :",response.data);
+        
+      } catch (error) {
+        toast.error(`an error occurred : ${error}`)
+      }
+    }
+    fetchAnnouncements()
+  },[])
   
   //TODO: API Call here , or called before and fetched from context
   const filteredAnnouncements = type
-    ? announcementsData.filter((announcement) => announcement.type === type)
+    ? announcementsData.filter((announcement) => announcement.type.toLowerCase() === type.toLowerCase())
     : announcementsData;
 
   return (
@@ -39,7 +57,7 @@ const Announcements = () => {
       {filteredAnnouncements.length > 0 ? (
         <div className="mt-5 flex flex-row gap-1 flex-wrap">
           {filteredAnnouncements.map((announcement) => (
-            <AnnouncementCard key={announcement.id} {...announcement} />
+            <AnnouncementCard key={announcement.announcementId} title={announcement.title} course={announcement.courseName} date={announcement.announcementDate.toLocaleString()} description={announcement.description} instructor={announcement.instructorName} type={announcement.type}  />
           ))}
         </div>
       ) : (
