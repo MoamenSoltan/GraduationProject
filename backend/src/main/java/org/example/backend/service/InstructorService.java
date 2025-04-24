@@ -119,19 +119,20 @@ public class InstructorService {
         return responseDTOList;
     }
 
-    public InstructorResponseDTO getCoursesInstructorsForStudent(String studentEmail)
+    public List<InstructorResponseDTO> getCoursesInstructorsForStudent(String studentEmail)
     {
-        Optional<Instructor> opt = instructorRepository.getCoursesInstructorForStudent(studentEmail);
-        if(!opt.isPresent())
-        {
-            throw new RuntimeException("you don't signed any courses");
-        }
+        List<Instructor> opt = instructorRepository.getCoursesInstructorForStudent(studentEmail);
 
-        Instructor instructor = opt.get();
+
+
 //        System.out.println(instructor.getCourses().get(0).getCourseCode());
 //        instructor.getCourses().forEach(c-> System.out.println(c.getCourseCode()));
         //return InstructorMapper.entityToResponseDTO(instructor,studentRepository.findStudentByEmail(studentEmail).get());
-        return InstructorMapper.entityToResponseDTO(instructor);
+        List<InstructorResponseDTO> responseDTOList = new ArrayList<>();
+        for (Instructor instructor1 : opt) {
+            responseDTOList.add(InstructorMapper.entityToResponseDTO(instructor1));
+        }
+        return responseDTOList;
     }
 
     public InstructorProfile getInstructorProfile(String email) {
