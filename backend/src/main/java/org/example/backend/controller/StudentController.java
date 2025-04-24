@@ -46,13 +46,18 @@ public class StudentController {
     }
 
     @PostMapping("/course")
-    ResponseEntity<?> signCourseForStudent(@RequestBody StudentCourseRequestDTO requestDTO)
+    ResponseEntity<String> signCourseForStudent(@RequestBody List<StudentCourseRequestDTO> requestDTO)
     {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Student student= studentRepository.findStudentByEmail(authentication.getName())
                 .orElseThrow(()-> new ResourceNotFound("Student", "email", authentication.getName()));
-         studentCoursesService.enrollStudentInCourse(requestDTO,student);
-         return ResponseEntity.ok().build();
+
+//        for (var dto:requestDTO)
+//        {
+//            System.out.println("course id :" +dto.getCourseId());
+//        }
+         String response=studentCoursesService.enrollStudentInCourse(requestDTO,student);
+         return ResponseEntity.ok(response);
     }
     @GetMapping("/profile")
     public ResponseEntity<?> getStudent()
@@ -101,7 +106,7 @@ public class StudentController {
     {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
-        System.out.println();
+//        System.out.println("email : "+email);
         List<CourseResponseDTO> courses =courseService.getCoursesForRegistration(email);
 
         return ResponseEntity.ok(courses);

@@ -9,7 +9,7 @@ import org.example.backend.enums.SemesterName;
 public class StudentCourseRequestDTO {
 
     private Long courseId;
-    private Integer yearLevel;         // Part of composite key for Semester
-    private SemesterName semesterName; // Part of composite key for Semester
+//    private Integer yearLevel;         // Part of composite key for Semester
+//    private SemesterName semesterName; // Part of composite key for Semester
     private Double grade = 0.0;
 }

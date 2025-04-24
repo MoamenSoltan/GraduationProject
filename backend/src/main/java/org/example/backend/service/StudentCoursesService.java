@@ -10,6 +10,7 @@ import org.example.backend.repository.SemesterRepository;
 import org.example.backend.repository.StudentCourseRepository;
 import org.example.backend.repository.StudentRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
@@ -27,37 +28,44 @@ public class StudentCoursesService {
         this.studentCourseRepository = studentCourseRepository;
     }
 
-    public void enrollStudentInCourse(StudentCourseRequestDTO requestDTO,Student student) {
-//        Student student=studentRepository.findById(requestDTO.getStudentId())
-//                .orElseThrow(() -> new ResourceNotFound("Student", "id", requestDTO.getStudentId()));;
+    @Transactional
+    public String enrollStudentInCourse(List<StudentCourseRequestDTO> requestDTO, Student student) {
+        Semester semester = semesterRepository.findTopSemester()
+                .orElseThrow(() -> new RuntimeException("semester not found"));
+
         SemesterId semesterId = new SemesterId();
-        semesterId.setYearLevel(requestDTO.getYearLevel());
-        semesterId.setSemesterName(requestDTO.getSemesterName());
+        semesterId.setYearLevel(semester.getSemesterId().getYearLevel());
+        semesterId.setSemesterName(semester.getSemesterId().getSemesterName());
 
-        Semester semester = semesterRepository.findById(semesterId)
-                .orElseThrow(() -> new ResourceNotFound(
-                        "Semester",
-                        "yearLevel and semesterName",
-                        requestDTO.getYearLevel() + " and " + requestDTO.getSemesterName()
-                ));
+        for (StudentCourseRequestDTO dto : requestDTO) {
+            Optional<StudentCourse> existingEnrollment = studentCourseRepository
+                    .findByStudentAndCourseAndSemester(student, dto.getCourseId(), semester);
 
-        Course course = courseRepository.findById(requestDTO.getCourseId())
-                .orElseThrow(() -> new ResourceNotFound("Course", "id", requestDTO.getCourseId()));
-        StudentCourseId id = new StudentCourseId();
-        id.setStudentId(student.getStudentId());
-        id.setCourseId(requestDTO.getCourseId());
-        id.setYearLevel(requestDTO.getYearLevel());
-        id.setSemesterName(requestDTO.getSemesterName().name());
+            if (existingEnrollment.isPresent()) {
+                throw new RuntimeException("Student is already enrolled in course ID: " + dto.getCourseId());
+            }
 
-        StudentCourse studentCourse=new StudentCourse();
-        studentCourse.setId(id);
-        studentCourse.setCourse(course);
-        studentCourse.setStudent(student);
-        studentCourse.setSemester(semester);
+            Course course = courseRepository.findById(dto.getCourseId())
+                    .orElseThrow(() -> new ResourceNotFound("Course", "id", dto.getCourseId()));
 
-        studentCourseRepository.save(studentCourse);
+            StudentCourseId id = new StudentCourseId();
+            id.setStudentId(student.getStudentId());
+            id.setCourseId(dto.getCourseId());
+            id.setYearLevel(semesterId.getYearLevel());
+            id.setSemesterName(semesterId.getSemesterName().name());
 
+            StudentCourse studentCourse = new StudentCourse();
+            studentCourse.setId(id);
+            studentCourse.setCourse(course);
+            studentCourse.setStudent(student);
+            studentCourse.setSemester(semester);
+
+            studentCourseRepository.save(studentCourse);
+        }
+
+        return "course signed successfully";
     }
+
 
     public List<DegreeCourseDTO> getCoursesWithDegreeByStudentAndSemester(String email,SemesterName semesterName, Integer yearLevel) {
         // Step 1: Find the student by email

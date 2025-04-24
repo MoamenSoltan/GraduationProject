@@ -3,6 +3,7 @@ package org.example.backend.repository;
 import org.example.backend.dto.courseDto.DegreeCourseDTO;
 import org.example.backend.entity.Course;
 import org.example.backend.entity.Instructor;
+import org.example.backend.entity.Semester;
 import org.example.backend.enums.LevelYear;
 import org.example.backend.enums.SemesterName;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -64,5 +65,6 @@ public interface CourseRepository extends JpaRepository<Course,Long> {
     boolean isInstructorOfCourse(@Param("instructorEmail") String instructorEmail,@Param("courseId") Long courseId);
 
 
-
+    @Query("select c from Course c where c.year=:academicYear and c.semester=:semester")
+    List<Course> getCoursesBySemesterAndYearAcademic(@Param("academicYear") LevelYear academicYear,@Param("semester") Semester semester);
 }
