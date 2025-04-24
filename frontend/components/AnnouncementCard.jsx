@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { trimText } from "../utils/trim";
 import Modal from "./Modal";
 
-const AnnouncementCard = ({ title, description, date, time, instructor, course, type }) => {
+const AnnouncementCard = ({ title, description, date, instructor, course, type }) => {
   const [open, setOpen] = useState(false)
 
   return (
@@ -12,15 +12,15 @@ const AnnouncementCard = ({ title, description, date, time, instructor, course, 
       <p className="text-gray-500 text-sm">{trimText(description, 50)}</p>
       <p className="text-gray-700 text-sm">Instructor: {instructor}</p>
       <p className="text-gray-700 text-sm">Course: {course}</p>
-      <p className="text-gray-700 text-sm">Date: {date} at {time}</p>
+      <p className="text-gray-700 text-sm">Date: {date} </p>
 
       <div className="flex flex-row justify-between mt-2">
-        <p className="text-gray-500 text-sm">Time: {time}</p>
-        {type === "Assignment" ? (
+       
+        {type === "ASSIGNMENT" ? (
           <div className="p-[5px] text-[#1165ef] bg-[#ebf2ff] rounded-lg">Assignment</div>
-        ) : type === "Event" ? (
+        ) : type === "EVENT" ? (
           <div className="p-[5px] text-[#08875d] bg-[#edfdf8] rounded-lg">Event</div>
-        ) : type === "Exam" ? (
+        ) : type === "EXAM" ? (
           <div className="p-[5px] text-[#b25e09] bg-[#f2ebdf] rounded-lg">Exam</div>
         ) : null}
       </div>
@@ -31,15 +31,15 @@ const AnnouncementCard = ({ title, description, date, time, instructor, course, 
       <p className="text-gray-500 text-sm">{description}</p>
       <p className="text-gray-700 text-sm">Instructor: {instructor}</p>
       <p className="text-gray-700 text-sm">Course: {course}</p>
-      <p className="text-gray-700 text-sm">Date: {date} at {time}</p>
+      <p className="text-gray-700 text-sm">Date: {date} </p>
 
       <div className="flex flex-row justify-between mt-2">
-        <p className="text-gray-500 text-sm">Time: {time}</p>
-        {type === "Assignment" ? (
+       
+        {type === "ASSIGNMENT" ? (
           <div className="p-[5px] text-[#1165ef] bg-[#ebf2ff] rounded-lg">Assignment</div>
-        ) : type === "Event" ? (
+        ) : type === "EVENT" ? (
           <div className="p-[5px] text-[#08875d] bg-[#edfdf8] rounded-lg">Event</div>
-        ) : type === "Exam" ? (
+        ) : type === "EXAM" ? (
           <div className="p-[5px] text-[#b25e09] bg-[#f2ebdf] rounded-lg">Exam</div>
         ) : null}
       </div>

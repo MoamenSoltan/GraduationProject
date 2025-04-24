@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Slider from "react-slick";
-import { instructorsData } from "../data/dummy";
+
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { trimText } from "../utils/trim";
@@ -10,9 +10,13 @@ import useAxiosPrivate from "../hooks/useAxiosPrivate";
 
 const InstructorsComponent = ({ preview }) => {
   const [loading, setLoading] = useState(false);
-  const [instructors, setInstructors] = useState([]);
+
+  const [instructorsData, setinstructorsData] = useState([])
 
   const axiosPrivate = useAxiosPrivate()
+
+
+  
 
   const sliderSettings = {
     dots: true,
@@ -34,7 +38,7 @@ const InstructorsComponent = ({ preview }) => {
         if (loading) return;
         setLoading(true);
         const response = await axiosPrivate.get("/student/instructors");
-        setInstructors(response.data);
+        setinstructorsData(response.data);
         console.log("Instructors data :",response.data);
         
       } catch (error) {
@@ -70,8 +74,8 @@ const InstructorsComponent = ({ preview }) => {
           <div className="flex justify-center -space-x-4 mt-2">
             {instructorsData.slice(0, 5).map((instructor, index) => (
               <img
-                key={instructor.id}
-                src={instructor.image}
+                key={instructor.instructorId}
+                src={instructor.personalImage}
                 alt={`Instructor ${index + 1}`}
                 className="w-16 h-16 rounded-full border-2 border-white shadow-lg transition-transform hover:scale-110"
                 style={{ zIndex: instructorsData.length - index }}
@@ -101,12 +105,12 @@ const InstructorsComponent = ({ preview }) => {
       ) : (
         <Slider {...sliderSettings}>
           {instructorsData.map((instructor) => (
-            <div key={instructor.id} className="p-4">
+            <div key={instructor.instructorId} className="p-4">
               <div className="bg-white shadow-md rounded-xl overflow-hidden hover:scale-105 transition-all transform duration-300">
                 <div className="relative">
                   <div className="w-full h-2 bg-gradient-to-r from-purple-500 to-indigo-500"></div>
                   <img
-                    src={instructor.image}
+                    src={instructor.personalImage}
                     alt={instructor.firstName}
                     className="w-48 h-48 object-cover -translate-y-2 rounded-full m-auto"
                   />
@@ -119,10 +123,10 @@ const InstructorsComponent = ({ preview }) => {
                   <h3 className="text-gray-600 text-sm">
                     {instructor.managedDepartment
                       ? `${instructor.managedDepartment} Department Manager`
-                      : `${instructor.department} Department`}
+                      : `${instructor?.department?.departmentName} Department`}
                   </h3>
                   <p className="text-gray-500 text-sm mt-3">
-                    {trimText(instructor.description, 200)}
+                    {trimText(instructor?.description, 200)}
                   </p>
                 </div>
               </div>

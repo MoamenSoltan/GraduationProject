@@ -13,9 +13,9 @@ const CoursesCard = ({ name, code, instructor, schedule, credits, studentsEnroll
       <div className='flex flex-row justify-between'>
       <p className="text-gray-500 text-sm">Students: {studentsEnrolled}</p>
       {
-        type ==="Required" ? <div className=' p-[5px] text-[#1165ef] bg-[#ebf2ff] rounded-lg'>Required</div> :
-        type ==="Recommended" ? <div className=' p-[5px] text-[#08875d] bg-[#edfdf8] rounded-lg'>Recommended</div> :
-        type ==="Optional" && <div className=' p-[5px] text-[#b25e09] bg-[#f2ebdf] rounded-lg'>Optional</div>
+        type ==="REQUIRED" ? <div className=' p-[5px] text-[#1165ef] bg-[#ebf2ff] rounded-lg'>Required</div> :
+        type ==="RECOMMENDED" ? <div className=' p-[5px] text-[#08875d] bg-[#edfdf8] rounded-lg'>Recommended</div> :
+        type ==="OPTIONAL" && <div className=' p-[5px] text-[#b25e09] bg-[#f2ebdf] rounded-lg'>Optional</div>
         
       }
       </div>
