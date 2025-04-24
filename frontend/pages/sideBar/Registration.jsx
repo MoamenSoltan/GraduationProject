@@ -13,6 +13,7 @@ const Registration = () => {
   const [fetchedCourses, setfetchedCourses] = useState([])
   const [selectedCourses, setSelectedCourses] = useState([]);
   const [loading, setloading] = useState(false)
+  const [reFetch, setRefetch] = useState(false)
   const axiosPrivate = useAxiosPrivate()
   // use a state to control the input filed -- checkbox
   // very important
@@ -33,7 +34,7 @@ const Registration = () => {
       }
     }
     fetchCourses()
-  },[])
+  },[reFetch])
 
   // Handle checkbox toggle
   const handleCheckboxChange = (courseId) => {
@@ -65,10 +66,12 @@ const Registration = () => {
     
     try {
       const response = await axiosPrivate.post("/student/course",registeredCourses)
+      setRefetch(prev=>!prev)
       toast.success(`Courses registered successfully!`)
     } catch (error) {
-      toast.error(`an error occurred : ${error}`)
-    } finally {
+      toast.error(error.response.data.detail)
+    }
+     finally {
       setloading(false)
     }
   };

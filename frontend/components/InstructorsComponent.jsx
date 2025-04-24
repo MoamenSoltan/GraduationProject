@@ -20,7 +20,7 @@ const InstructorsComponent = ({ preview }) => {
 
   const sliderSettings = {
     dots: true,
-    infinite: true,
+    infinite: false,
     speed: 500,
     slidesToShow: 3,
     slidesToScroll: 1,
@@ -43,7 +43,7 @@ const InstructorsComponent = ({ preview }) => {
         
       } catch (error) {
         console.error("Error fetching instructors:", error.response.data.detail);
-        toast.error(`Error fetching instructors: ${error.response.data.detail}`);
+        toast.error(`Error fetching instructors: ${error?.response?.data?.detail}`);
       } finally {
         setLoading(false);
       }
@@ -66,7 +66,7 @@ const InstructorsComponent = ({ preview }) => {
         <div className="flex justify-center my-5">
           <div className="w-10 h-10 border-4 border-gray-300 border-t-purple-500 rounded-full animate-spin"></div>
         </div>
-      ) : instructorsData.length === 0 ? (
+      ) : instructorsData?.length === 0 ? (
         <p className="text-center text-gray-500 mt-3">No instructors found.</p>
       ) : (
         <>
@@ -78,7 +78,7 @@ const InstructorsComponent = ({ preview }) => {
                 src={instructor.personalImage}
                 alt={`Instructor ${index + 1}`}
                 className="w-16 h-16 rounded-full border-2 border-white shadow-lg transition-transform hover:scale-110"
-                style={{ zIndex: instructorsData.length - index }}
+                style={{ zIndex: instructorsData?.length - index }}
               />
             ))}
           </div>
@@ -100,7 +100,7 @@ const InstructorsComponent = ({ preview }) => {
         <div className="flex justify-center">
           <div className="w-10 h-10 border-4 border-gray-300 border-t-purple-500 rounded-full animate-spin"></div>
         </div>
-      ) : instructorsData.length === 0 ? (
+      ) : instructorsData?.length === 0 ? (
         <p className="text-center text-gray-500">No instructors found.</p>
       ) : (
         <Slider {...sliderSettings}>
@@ -112,7 +112,7 @@ const InstructorsComponent = ({ preview }) => {
                   <img
                     src={instructor.personalImage}
                     alt={instructor.firstName}
-                    className="w-48 h-48 object-cover -translate-y-2 rounded-full m-auto"
+                    className="w-48 h-48 object-cover border-2 border-black  rounded-full m-auto"
                   />
                 </div>
 
@@ -122,11 +122,12 @@ const InstructorsComponent = ({ preview }) => {
                   </h2>
                   <h3 className="text-gray-600 text-sm">
                     {instructor.managedDepartment
-                      ? `${instructor.managedDepartment} Department Manager`
+                      ? `${instructor?.managedDepartment?.departmentName} Department Manager`
                       : `${instructor?.department?.departmentName} Department`}
                   </h3>
-                  <p className="text-gray-500 text-sm mt-3">
-                    {trimText(instructor?.description, 200)}
+                  <p className="text-gray-500 min-h-[100px] text-sm mt-3">
+                  {trimText(instructor?.bio ?? "", 200)}
+
                   </p>
                 </div>
               </div>
