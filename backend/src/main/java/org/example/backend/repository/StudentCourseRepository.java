@@ -1,10 +1,7 @@
 package org.example.backend.repository;
 
 import jakarta.transaction.Transactional;
-import org.example.backend.entity.Course;
-import org.example.backend.entity.Student;
-import org.example.backend.entity.StudentCourse;
-import org.example.backend.entity.StudentCourseId;
+import org.example.backend.entity.*;
 import org.example.backend.enums.SemesterName;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -54,4 +51,14 @@ public interface StudentCourseRepository extends JpaRepository<StudentCourse, St
             "FROM StudentCourse sc " +
             "WHERE sc.student = :student AND sc.course = :course")
     boolean isStudentEnrolledInCourse(@Param("student") Student student,@Param("course") Course course);
+
+    // Returns Optional<StudentCourse>
+    @Query("select sc from StudentCourse sc " +
+            "where sc.student = :student and sc.course.courseId = :courseId and sc.semester = :semester")
+    Optional<StudentCourse> findByStudentAndCourseAndSemester(
+            @Param("student") Student student,
+            @Param("courseId") Long courseId,
+            @Param("semester") Semester semester);
+
+
 }

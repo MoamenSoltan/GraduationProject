@@ -224,17 +224,28 @@ public class CourseService {
     }
 
     public List<CourseResponseDTO> getCoursesForRegistration(String email) {
-        Student student=studentRepository.findStudentByEmail(email).get();
-        List<Course> courses =courseRepo.getCourseByYear(student.getAcademicYear()).get();
-        List<CourseResponseDTO> courseDTO = new ArrayList<>();
+        // 1. Fetch the student
+        Student student = studentRepository.findStudentByEmail(email)
+                .orElseThrow(() -> new ResourceNotFound("Student", "email", email));
 
-        for (var i:courses)
-        {
-           courseDTO.add( CourseMapper.toResponseDTO(i));
-        }
-        return courseDTO;
+        // 2. Fetch the top/active semester
+        Semester semester = semesterRepository.findTopSemester()
+                .orElseThrow(() -> new ResourceNotFound("Semester", "current", "active"));
 
+//        System.out.println("Student Academic Year: " + student.getAcademicYear());
+//        System.out.println("Semester: " + semester.getSemesterId().getSemesterName());
+//        System.out.println("Year Level: " + semester.getSemesterId().getYearLevel());
+
+
+        // 3. Fetch the courses for the student's academic year and current semester
+        List<Course> courses = courseRepo.getCoursesBySemesterAndYearAcademic(student.getAcademicYear(), semester);
+
+        // 4. Map to DTO
+        return courses.stream()
+                .map(CourseMapper::toResponseDTO)
+                .collect(Collectors.toList());
     }
+
 
     public List<CourseResponseDTO> getCoursesCompletedByStudent(String studentEmail, LevelYear year) {
         List<Course> completedCourses = courseRepo.getCoursesByStudentAndYear(studentEmail, year);
