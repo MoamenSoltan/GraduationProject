@@ -130,7 +130,9 @@ public class InstructorService {
         //return InstructorMapper.entityToResponseDTO(instructor,studentRepository.findStudentByEmail(studentEmail).get());
         List<InstructorResponseDTO> responseDTOList = new ArrayList<>();
         for (Instructor instructor1 : opt) {
-            responseDTOList.add(InstructorMapper.entityToResponseDTO(instructor1));
+            InstructorResponseDTO instructorResponseDTO = InstructorMapper.entityToResponseDTO(instructor1);
+            instructorResponseDTO.setBio(instructor1.getBio());
+            responseDTOList.add(instructorResponseDTO);
         }
         return responseDTOList;
     }

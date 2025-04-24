@@ -18,7 +18,7 @@ public class InstructorResponseDTO {
     private String email;
     private GenderType gender;
     private String personalImage;
-
+    private String bio;
     private DepartmentDTO department;
     private DepartmentDTO managedDepartment;
     private List<CourseDTO> courses ;
