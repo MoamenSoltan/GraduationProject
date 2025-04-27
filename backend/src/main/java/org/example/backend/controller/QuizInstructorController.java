@@ -3,6 +3,7 @@ package org.example.backend.controller;
 import org.example.backend.dto.QuizDTO.*;
 import org.example.backend.service.QuizService;
 import org.example.backend.service.QuizSubmissionService;
+import org.example.backend.util.CurrentUser;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -78,5 +79,16 @@ public class QuizInstructorController {
         Authentication authentication= SecurityContextHolder.getContext().getAuthentication();
         String instructorEmail = authentication.getName();
         return ResponseEntity.ok(quizSubmissionService.getQuizSubmission(courseId, instructorEmail, quizId, studentId));
+    }
+
+    @GetMapping("/{quizId}/course/{courseId}/student/submission")
+    public ResponseEntity<List<?>> getAllStudentSubmission(
+            @PathVariable("quizId") Long quizId,
+            @PathVariable("courseId") Long courseId,
+            @CurrentUser String instructorEmail
+    )
+    {
+        List<?> submissionInstructors=quizSubmissionService.getAllStudentSubmission(quizId,courseId,instructorEmail);
+        return ResponseEntity.ok( submissionInstructors);
     }
 }

@@ -296,7 +296,7 @@ create table forgot_password
     user_id int,
     foreign key (user_id) REFERENCES users(id)
 
-)
+);
 
 CREATE TABLE `tasks` (
     `task_id` INT PRIMARY KEY AUTO_INCREMENT,

@@ -4,6 +4,7 @@ import com.opencsv.CSVReader;
 import com.opencsv.CSVWriter;
 import com.opencsv.exceptions.CsvValidationException;
 import org.example.backend.dto.studentDto.StudentCourseDTO;
+import org.example.backend.dto.studentDto.StudentCourseGradeDTO;
 import org.example.backend.entity.Student;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -113,6 +114,50 @@ public class FileService {
 
         return new ByteArrayInputStream(outputStream.toByteArray());
     }
+
+
+    public ByteArrayInputStream loadAllDegrees(List<StudentCourseGradeDTO> dtoList)  {
+
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        try(CSVWriter writer = new CSVWriter(new OutputStreamWriter(outputStream))){
+
+            writer.writeNext(new String[]{"Student ID", "Username", "Email", "Final Exam Degree" ,"Quizzes Degree","Tasks Degree"});
+
+            for (StudentCourseGradeDTO dto : dtoList) {
+                if(dto.getFinalDegree()==null)
+                {
+                    dto.setFinalDegree(0.0);
+                }
+                if(dto.getTotalQuizGrade()==null)
+                {
+                    dto.setTotalQuizGrade(0.0);
+                }
+                if(dto.getTotalTaskGrade()==null)
+                {
+                    dto.setTotalTaskGrade(0.0);
+                }
+                String[] row = new String[]{
+                        dto.getStudentId().toString(),
+                        dto.getUsername(),
+                        dto.getEmail(),
+                        dto.getFinalDegree().toString(),
+                        dto.getTotalQuizGrade().toString(),
+                        dto.getTotalTaskGrade().toString()
+                };
+                writer.writeNext(row);
+            }
+            writer.flush();
+        }catch (IOException e)
+        {
+            throw new RuntimeException("Failed to generate CSV file", e);
+        }
+
+
+
+        return new ByteArrayInputStream(outputStream.toByteArray());
+    }
+
+
 
     public ByteArrayInputStream loadStudentForAdmin(List<Student> students)
     {

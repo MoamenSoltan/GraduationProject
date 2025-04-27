@@ -5,12 +5,14 @@ import org.example.backend.dto.AnnouncementDto.AnnouncementResponseDTO;
 import org.example.backend.dto.courseDto.CourseDTO;
 import org.example.backend.dto.instructorDto.UpdateInstructor;
 import org.example.backend.dto.studentDto.StudentCourseDTO;
+import org.example.backend.dto.studentDto.StudentCourseGradeDTO;
 import org.example.backend.entity.Instructor;
 import org.example.backend.exception.ResourceNotFound;
 import org.example.backend.repository.InstructorRepository;
 import org.example.backend.service.AnnouncementService;
 import org.example.backend.service.FileService;
 import org.example.backend.service.InstructorService;
+import org.example.backend.util.CurrentUser;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -148,5 +150,28 @@ public class InstructorController {
         return ResponseEntity.ok("File uploaded successfully: " + message);
     }
 
+    @GetMapping("/course/{courseId}/student/result/download")
+    public ResponseEntity<?> downloadStudentsInCourseWithFinalDegrees(
+            @PathVariable int courseId,
+            @CurrentUser String email
+    ) {
+
+        List<StudentCourseGradeDTO> students = instructorService.getStudentsWithFinalDegree((long) courseId, email);
+        String courseName=students.get(0).getCourseName();
+        ByteArrayInputStream csvData = fileService.loadAllDegrees(students);
+
+
+        HttpHeaders headers = new HttpHeaders();
+        String fileName="students_degrees_course_"+courseName+".csv";
+        headers.add("Content-Disposition", "attachment; filename="+fileName);
+
+        // Return the CSV data as a downloadable resource
+        return ResponseEntity.ok()
+                .headers(headers)
+                .contentType(MediaType.parseMediaType("text/csv"))
+                .body(new InputStreamResource(csvData));
+
+
+    }
 
 }
