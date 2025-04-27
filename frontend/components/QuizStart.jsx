@@ -9,7 +9,7 @@ const QuizStart = () => {
   const navigate = useNavigate();
   const axiosPrivate = useAxiosPrivate()
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [answers, setAnswers] = useState({}); // Object to store answers: { questionId: selectedOption }
+  const [answers, setAnswers] = useState([]); // Object to store answers: { questionId: selectedOption }
   const quiz = state?.quiz;  // Destructure quiz from the location state
 
   // Early return if there's no quiz data provided
@@ -22,13 +22,24 @@ const QuizStart = () => {
   // Get the current question based on currentIndex
   const currentQuestion = quiz.questions[currentIndex];
 
-  const handleAnswerChange = (value) => {
-    // Update the answers state with the selected option or essay answer
-    setAnswers({
-      ...answers,
-      [currentQuestion.id]: value,
+  const handleAnswerChange = (questionId, value) => {
+    //function returns means it sets the state , because we are using {} not () ''instant return
+    setAnswers(prevAnswers => {
+      const existingAnswerIndex = prevAnswers.findIndex(ans => ans.questionId === questionId);
+  
+      if (existingAnswerIndex !== -1) {
+        // Question was already answered, so update it
+        const updatedAnswers = [...prevAnswers];
+        updatedAnswers[existingAnswerIndex] = { ...updatedAnswers[existingAnswerIndex], answer: value };
+        return updatedAnswers;
+      } else {
+        // New answer, add it
+        return [...prevAnswers, { questionId, answer: value }];
+      }
     });
   };
+  
+  
 
   const handleNext = () => {
     // Move to the next question
@@ -44,18 +55,24 @@ const QuizStart = () => {
     }
   };
 
-  const handleSubmit = async() => {
-    console.log("answers : ",answers);
-    
+  const handleSubmit = async () => {
+    console.log("answers:", answers);
+  
     try {
-      const response = axiosPrivate.post(`/student/quiz/${quizId}/course/${courseId}/submit`,answers)
-      toast.success("Quiz submitted successfully!")
+      const response = await axiosPrivate.post(
+        `/student/quiz/${quizId}/course/${courseId}/submit`,
+         answers   // Send answers in the body
+      );
+      toast.success("Quiz submitted successfully!");
+      console.log(response.data); // Optional: see what backend returns
+      // After successful submit, maybe navigate to summary
+      navigate(`/studentDashboard/Quizzes/${quizId}/${courseId}/summary`, { state: { answers, quiz } });
     } catch (error) {
-      toast.error(`an error occurred : ${error.response.data.detail}`)
+      console.error("Submission Error:", error);
+      toast.error(`An error occurred: ${error.response?.data?.detail || error.message}`);
     }
-    console.log("Submitted Answers:", answers);
-    navigate(`/studentDashboard/Quizzes/${quizId}/${courseId}/summary`, { state: { answers, quiz } });
   };
+  
 
   return (
     <div className="max-w-3xl mx-auto mt-10 p-4 bg-white shadow rounded-lg">
@@ -77,20 +94,21 @@ const QuizStart = () => {
                 type="radio"
                 name={`question-${currentQuestion.id}`}
                 value={opt.optionId}
-                checked={answers[currentQuestion.id] === opt.optionId}
-                onChange={() => handleAnswerChange(opt.optionId)}
+                checked={answers.find((ans)=>(ans.questionId===currentQuestion.id))?.answer===opt.option}
+                onChange={() => handleAnswerChange(currentQuestion.id,opt.option)}
               />
               <label>{opt.option}</label>
             </div>
           ))}
 
         {/* Render essay input (if applicable) */}
-        {currentQuestion.questionType === "essay" && (
+        {currentQuestion.questionType === "SHORT_ANSWER" && (
           <textarea
             rows={5}
             className="w-full border p-2 mt-2"
-            value={answers[currentQuestion.id] || ''}
-            onChange={(e) => handleAnswerChange(e.target.value)}
+            value={answers.find(ans => ans.questionId === currentQuestion.id)?.answer || ''}
+            onChange={(e) => handleAnswerChange(currentQuestion.id, e.target.value)}
+            
             placeholder="Write your answer here..."
           />
         )}
