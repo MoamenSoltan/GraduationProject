@@ -1,46 +1,48 @@
 import React, { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import useAxiosPrivate from "../hooks/useAxiosPrivate"; // make sure this is set up correctly
 import toast from "react-hot-toast";
 
 const QuizSummary = () => {
-  const { state } = useLocation();
+  const { quizId, courseId } = useParams(); // Get quizId and courseId from the URL params
+  const { state } = useLocation(); // Retrieve the state passed by the navigation
   const navigate = useNavigate();
-  const axiosPrivate = useAxiosPrivate();
+  const axiosPrivate = useAxiosPrivate(); // Custom Axios hook for private requests
 
-  const { quiz, answers } = state || {};
+  const [quiz, setQuiz] = useState(null);
+  const [answers, setAnswers] = useState(null);
   const [score, setScore] = useState(null);
 
   useEffect(() => {
-    if (quiz && answers) {
-      // ✅ Calculate score
-      const totalCorrect = quiz.questions.reduce((count, question) => {
-        if (question.type === "mcq" && answers[question.id] === question.correctAnswer) {
-          return count + 1;
-        }
-        return count;
-      }, 0);
+    // Fetch quiz result data from the backend when the component mounts
+    const fetchQuizResult = async () => {
+      try {
+        const response = await axiosPrivate.get(
+          `/student/quiz/${quizId}/course/${courseId}/result`
+        );
+        const result = response.data;
 
-      setScore(totalCorrect);
+        // Assuming the response data contains 'quiz' and 'answers' data
+        setQuiz(result.quiz);
+        setAnswers(result.answers);
 
-      // ✅ Send to backend
-      const sendResults = async () => {
-        try {
-          await axiosPrivate.post("/student/quiz/submit", {
-            quizId: quiz.ID, // assuming quiz has ID
-            answers,
-            score: totalCorrect,
-          });
-          toast.success("Results submitted successfully!");
-        } catch (err) {
-          toast.error("Failed to submit results");
-          console.error(err);
-        }
-      };
+        // Calculate score
+        const totalCorrect = result.quiz.questions.reduce((count, question) => {
+          if (question.type === "mcq" && result.answers[question.id] === question.correctAnswer) {
+            return count + 1;
+          }
+          return count;
+        }, 0);
 
-      sendResults();
-    }
-  }, [quiz, answers, axiosPrivate]);
+        setScore(totalCorrect);
+      } catch (err) {
+        toast.error(`Failed to fetch quiz results,${err.response.data.detail}`);
+        console.error(err.response.data.detail);
+      }
+    };
+
+    fetchQuizResult();
+  }, [quizId, courseId, axiosPrivate]);
 
   if (!quiz || !answers) {
     return (
