@@ -25,6 +25,7 @@ import StudentTasks from "./StudentPages/StudentTasks";
 import DetailedStudentTasks from "./StudentPages/DetailedStudentTasks";
 import TasksforaCourse from "./StudentPages/TasksforaCourse";
 import QuizzesForaCourse from "./StudentPages/QuizzesForaCourse";
+import Tools from "./StudentPages/Tools";
 
 // conditional rendering based on route 
 
@@ -81,7 +82,7 @@ const StudentDashboard = () => {
         <Route path="/Tasks"  element={<StudentTasks/>}/>
         <Route path="/Tasks/:id"  element={<DetailedStudentTasks/>}/>
         <Route path="/Tasks/all/:courseId"  element={<TasksforaCourse/>}/>
-
+        <Route path="/Tools"  element={<Tools/>}/>
 
 
 

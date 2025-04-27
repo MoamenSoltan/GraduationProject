@@ -14,6 +14,7 @@ import { MdDataUsage } from "react-icons/md";
 import { RiUserCommunityLine } from "react-icons/ri";
 import { RiBookShelfLine } from "react-icons/ri";
 import { IoBarChart } from "react-icons/io5";
+import { VscTools } from "react-icons/vsc";
 
 
 
@@ -57,6 +58,10 @@ export const sideBarLinks = {
   {
     name : "Tasks",
     icon : AiOutlineFileDone
+  },
+  {
+    name : "Tools",
+    icon : VscTools 
   },
   {
     name : "Results",
