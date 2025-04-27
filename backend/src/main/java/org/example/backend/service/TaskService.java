@@ -15,6 +15,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.*;
 
 @Service
@@ -169,6 +170,21 @@ public class TaskService {
         return taskDTOs;
     }
 
+    public List<ResponseTaskDTO> getUpcomingDeadlines(String email,Long courseId) {
+        LocalDate currentDate=LocalDate.now();
+
+        Course course=courseRepository.findById(courseId).
+                orElseThrow(() -> new IllegalArgumentException("Course not found with ID: " + courseId));
+        List<Task> tasks= taskRepository.findUpcomingDeadlinesForStudentAndCourse(email,currentDate,courseId);
+        TaskMapper mapper = new TaskMapper();
+        List<ResponseTaskDTO> taskDTOs = new ArrayList<>();
+        for (Task task : tasks) {
+            ResponseTaskDTO taskDTO = mapper.toResponseDTO(task);
+            taskDTOs.add(taskDTO);
+        }
+        return taskDTOs;
+    }
+
     public List<ResponseTaskDTO> getPastDeadlines(String email) {
         Date currentDate = new Date();
 
@@ -182,8 +198,36 @@ public class TaskService {
         return taskDTOs;
     }
 
+    public List<ResponseTaskDTO> getPastDeadlines(String email,Long courseId) {
+        LocalDate currentDate =LocalDate.now();
+
+        Course course=courseRepository.findById(courseId).
+                orElseThrow(() -> new IllegalArgumentException("Course not found with ID: " + courseId));
+        List<Task> tasks= taskRepository.findPastDeadlinesForStudent(email,currentDate,courseId);
+        TaskMapper mapper = new TaskMapper();
+        List<ResponseTaskDTO> taskDTOs = new ArrayList<>();
+        for (Task task : tasks) {
+            ResponseTaskDTO taskDTO = mapper.toResponseDTO(task);
+            taskDTOs.add(taskDTO);
+        }
+        return taskDTOs;
+    }
+
     public List<ResponseTaskDTO> getCompletedTasks(String email) {
         List<TaskSubmission> taskSubmissions=taskSubmissionRepository.getALLTaskSubmittedByStudent(email);
+        TaskMapper mapper = new TaskMapper();
+        List<ResponseTaskDTO> taskDTOs = new ArrayList<>();
+        for (TaskSubmission taskSubmission : taskSubmissions) {
+            ResponseTaskDTO taskDTO = mapper.toResponseDTO(taskSubmission.getTask());
+            taskDTOs.add(taskDTO);
+        }
+        return taskDTOs;
+    }
+
+    public List<ResponseTaskDTO> getCompletedTasks(String email,Long courseId) {
+        Course course=courseRepository.findById(courseId).
+                orElseThrow(() -> new IllegalArgumentException("Course not found with ID: " + courseId));
+        List<TaskSubmission> taskSubmissions=taskSubmissionRepository.getALLTaskSubmittedByStudent(email,courseId);
         TaskMapper mapper = new TaskMapper();
         List<ResponseTaskDTO> taskDTOs = new ArrayList<>();
         for (TaskSubmission taskSubmission : taskSubmissions) {

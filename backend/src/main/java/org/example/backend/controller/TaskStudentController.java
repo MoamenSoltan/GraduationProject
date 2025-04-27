@@ -5,6 +5,7 @@ import org.example.backend.dto.taskDTO.ResponseTaskSubmissionDTO;
 import org.example.backend.dto.taskDTO.TaskSubmissionDTO;
 import org.example.backend.service.TaskService;
 import org.example.backend.service.TaskSubmissionService;
+import org.example.backend.util.CurrentUser;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -72,5 +73,38 @@ public class TaskStudentController {
         String email = authentication.getName();
         List<ResponseTaskSubmissionDTO> tasks = taskSubmissionService.getAllTaskSubmittedByStudent(email);
         return ResponseEntity.ok(tasks);
+    }
+
+    @GetMapping("/course/{courseId}/upcoming-deadline")
+    public ResponseEntity<List<ResponseTaskDTO>> getCourseTasks(
+            @PathVariable int courseId,
+            @CurrentUser String email
+    ) {
+       return ResponseEntity.ok( taskService.getUpcomingDeadlines(email, (long) courseId));
+
+
+
+    }
+
+    @GetMapping("/course/{courseId}/past-deadline")
+    public ResponseEntity<List<ResponseTaskDTO>> getCourseTasksForPastDeadline(
+            @PathVariable int courseId,
+            @CurrentUser String email
+    ) {
+        return ResponseEntity.ok( taskService.getPastDeadlines(email, (long) courseId));
+
+
+
+    }
+
+    @GetMapping("/course/{courseId}/complete")
+    public ResponseEntity<List<ResponseTaskDTO>> getCourseTasksForCompleted(
+            @PathVariable int courseId,
+            @CurrentUser String email
+    ) {
+        return ResponseEntity.ok( taskService.getCompletedTasks(email, (long) courseId));
+
+
+
     }
 }
