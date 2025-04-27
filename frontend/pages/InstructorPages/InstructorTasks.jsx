@@ -58,7 +58,7 @@ const InstructorTasks = () => {
   useEffect(() => {
 
     
-
+//params for fetching
     const params = new URLSearchParams()
 
     if (selectedCourse) params.append('courseId',selectedCourse)
@@ -94,7 +94,10 @@ const InstructorTasks = () => {
   // TODO: dont forget to add selectedCourse and selectedSort to dependency array
 
   const handleFilterChange = (filterName,value)=>{
+    //params to change the searchparams not used in api call
     const newParams = new URLSearchParams(searchParams)
+    //if (value) means , if a select all, means its value is "" which is falsy , therefore remove the filter name , otherwise will be 
+    // api?filterName="" , because its an empty string ,we want to remove the filtername if all is selected
     if (value)
       newParams.set(filterName,value)
     else
