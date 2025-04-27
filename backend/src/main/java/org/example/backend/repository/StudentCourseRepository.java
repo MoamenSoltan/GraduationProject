@@ -1,6 +1,7 @@
 package org.example.backend.repository;
 
 import jakarta.transaction.Transactional;
+import org.example.backend.dto.studentDto.StudentCourseGradeDTO;
 import org.example.backend.entity.*;
 import org.example.backend.enums.SemesterName;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -59,6 +60,30 @@ public interface StudentCourseRepository extends JpaRepository<StudentCourse, St
             @Param("student") Student student,
             @Param("courseId") Long courseId,
             @Param("semester") Semester semester);
+
+
+    @Query("""
+    SELECT new org.example.backend.dto.studentDto.StudentCourseGradeDTO(
+        sc.student.studentId,
+        sc.course.courseId,
+        (SELECT COALESCE(SUM(ts.grade), 0) 
+            FROM TaskSubmission ts WHERE ts.student.studentId = sc.student.studentId 
+                AND ts.task.course.courseId = sc.course.courseId),
+        (SELECT COALESCE(SUM(qs.score), 0) 
+            FROM QuizSubmission qs WHERE qs.student.studentId = sc.student.studentId 
+                AND qs.quiz.course.courseId = sc.course.courseId),
+        sc.degree,
+        concat( sc.student.user.firstName   ,' ' , sc.student.user.lastName),
+        sc.student.user.email,
+        sc.course.courseCode
+                
+             
+    )
+    FROM StudentCourse sc
+    WHERE sc.course.courseId = :courseId
+""")
+    List<StudentCourseGradeDTO> getStudentCourseGrades(@Param("courseId") Long courseId);
+
 
 
 }

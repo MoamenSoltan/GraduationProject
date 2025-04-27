@@ -234,4 +234,29 @@ public class QuizSubmissionService {
         quizSubmissionInstructor.setStudentAnswersShort(shortAnswerList);
         return quizSubmissionInstructor;
     }
+
+    public List<?> getAllStudentSubmission(Long quizId, Long courseId, String instructorEmail) {
+        Course course=courseRepository.findById(courseId)
+                .orElseThrow(()->new RuntimeException("Course not found"));
+        boolean isInstructor=courseRepository.isInstructorOfCourse(instructorEmail,courseId);
+        if(!isInstructor)
+        {
+            throw new RuntimeException("Instructor is not enrolled in this course");
+        }
+
+        List<QuizSubmission> quizSubmissions=quizSubmissionRepository.findAllByCourse(course,quizId);
+        List<Map<String,Object>> quizSubmissionInstructors=new ArrayList<>();
+        for (QuizSubmission quizSubmission:quizSubmissions)
+        {
+            Map<String,Object> quizSubmissionInstructor=new HashMap<>();
+            quizSubmissionInstructor.put("studentId",quizSubmission.getStudent().getStudentId());
+            quizSubmissionInstructor.put("submissionTime",quizSubmission.getSubmittedAt());
+            quizSubmissionInstructor.put("username",quizSubmission.getStudent().getUser().getFirstName()+" "+quizSubmission.getStudent().getUser().getLastName());
+            quizSubmissionInstructor.put("email",quizSubmission.getStudent().getUser().getEmail());
+            quizSubmissionInstructors.add(quizSubmissionInstructor);
+
+        }
+
+        return quizSubmissionInstructors;
+    }
 }

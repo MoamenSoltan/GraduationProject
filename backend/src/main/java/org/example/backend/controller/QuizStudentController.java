@@ -2,8 +2,10 @@ package org.example.backend.controller;
 
 import org.example.backend.dto.QuizDTO.QuizDTO;
 import org.example.backend.dto.QuizDTO.QuizResponseDTO;
+import org.example.backend.dto.QuizDTO.QuizResult;
 import org.example.backend.dto.QuizDTO.QuizSubmissionRequest;
 import org.example.backend.service.QuizSubmissionService;
+import org.example.backend.util.CurrentUser;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -22,7 +24,7 @@ public class QuizStudentController {
     }
 
     @PostMapping("/{quizId}/course/{courseId}/submit")
-    public ResponseEntity<?> submitQuiz(
+    public ResponseEntity<String> submitQuiz(
             @RequestBody QuizSubmissionRequest submissionRequest
             , @PathVariable("quizId") Long quizId,
             @PathVariable("courseId") Long courseId) {
@@ -57,7 +59,7 @@ public class QuizStudentController {
 
     }
     @GetMapping("{quizId}/course/{courseId}/result")
-    ResponseEntity<?> getQuizResult(
+    ResponseEntity<QuizResult> getQuizResult(
             @PathVariable("quizId") Long quizId,
             @PathVariable("courseId") Long courseId)
     {
@@ -67,5 +69,11 @@ public class QuizStudentController {
 
         return ResponseEntity.ok(quizSubmissionService.getQuizResult(quizId, courseId, studentEmail));
 
+    }
+
+    @GetMapping("/{quizId}/course/{courseId}/submission")
+    public ResponseEntity<?> viewSubmittedAnswer(@CurrentUser String email)
+    {
+        return ResponseEntity.ok(email);
     }
 }

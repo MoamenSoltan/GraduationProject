@@ -7,9 +7,8 @@ import org.example.backend.dto.instructorDto.InstructorResponseDTO;
 import org.example.backend.dto.instructorDto.UpdateInstructor;
 import org.example.backend.dto.semesterDto.SemesterDTO;
 import org.example.backend.dto.studentDto.StudentCourseDTO;
-import org.example.backend.entity.Department;
-import org.example.backend.entity.Instructor;
-import org.example.backend.entity.Role;
+import org.example.backend.dto.studentDto.StudentCourseGradeDTO;
+import org.example.backend.entity.*;
 import org.example.backend.exception.ResourceNotFound;
 import org.example.backend.mapper.InstructorMapper;
 import org.example.backend.repository.*;
@@ -32,10 +31,11 @@ public class InstructorService {
     private final FileService fileService;
     private final StudentRepository studentRepository;
     private final StudentCourseRepository studentCourseRepository;
+    private final CourseRepository courseRepository;
 
     public InstructorService(InstructorRepository instructorRepository,
                              DepartmentRepository departmentRepository,
-                             RoleRepository roleRepository, FileService fileService, StudentRepository studentRepository, StudentCourseRepository studentCourseRepository) {
+                             RoleRepository roleRepository, FileService fileService, StudentRepository studentRepository, StudentCourseRepository studentCourseRepository, CourseRepository courseRepository) {
         this.instructorRepository = instructorRepository;
 
         this.departmentRepository = departmentRepository;
@@ -43,6 +43,7 @@ public class InstructorService {
         this.fileService = fileService;
         this.studentRepository = studentRepository;
         this.studentCourseRepository = studentCourseRepository;
+        this.courseRepository = courseRepository;
     }
 
 //    @Transactional
@@ -245,5 +246,15 @@ public class InstructorService {
         }
 
         return "degree update ";
+    }
+
+    public List<StudentCourseGradeDTO> getStudentsWithFinalDegree(Long courseId, String email) {
+        boolean isInstructorOfCourse=courseRepository.isInstructorOfCourse(email,courseId);
+
+       List<StudentCourseGradeDTO> studentCourses=studentCourseRepository.getStudentCourseGrades(courseId);
+
+       return studentCourses;
+
+
     }
 }
