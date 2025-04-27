@@ -13,7 +13,7 @@ const Courses = ({preview}) => {
   useEffect(()=>{
     const fetchCourses = async ()=>{
       try {
-        const response = await axiosPrivate.get("student/courses")
+        const response = await axiosPrivate.get("student/courses/signed")
         setcourses(response.data)
         console.log("fetched courses = :",response.data);
         
