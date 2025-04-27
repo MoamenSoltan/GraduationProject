@@ -3,15 +3,13 @@ package org.example.backend.service;
 import org.example.backend.dto.QuizDTO.*;
 import org.example.backend.entity.*;
 import org.example.backend.enums.QuestionType;
+import org.example.backend.exception.QuizAlreadySubmittedException;
 import org.example.backend.mapper.QuizMapper;
 import org.example.backend.repository.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class QuizSubmissionService {
@@ -35,7 +33,7 @@ public class QuizSubmissionService {
     }
 
     @Transactional
-    public void submitQuiz(QuizSubmissionRequest submissionRequest, Long quizId, Long courseId,String studentEmail) {
+    public void submitQuiz(List<AnswerDTO> dtos, Long quizId, Long courseId,String studentEmail) {
         Student student=studentRepository.findStudentByEmail(studentEmail)
                 .orElseThrow(()->new RuntimeException("Student not found"));
 
@@ -50,6 +48,11 @@ public class QuizSubmissionService {
         Quiz quiz=quizRepository.findQuizByCourseAndQuizId(courseId,quizId)
                 .orElseThrow(()->new RuntimeException("Quiz not found"));
 
+        Optional<QuizSubmission> existingSubmissionOpt = quizSubmissionRepository.findByQuizAndStudent(quiz, student);
+        if (existingSubmissionOpt.isPresent()) {
+            QuizSubmission existingSubmission = existingSubmissionOpt.get();
+            throw new QuizAlreadySubmittedException(existingSubmission.getScore());
+        }
 
         QuizSubmission quizSubmission=new QuizSubmission();
         quizSubmission.setQuiz(quiz);
@@ -59,10 +62,10 @@ public class QuizSubmissionService {
         quizSubmission=quizSubmissionRepository.save(quizSubmission);
 
         int totalScore=0;
-        for(Map.Entry<Long,String> entry:submissionRequest.getAnswers().entrySet())
+        for(AnswerDTO dto:dtos)
         {
-            Long questionId=entry.getKey();
-            String studentAnswer=entry.getValue();
+            Long questionId=dto.getQuestionId();
+            String studentAnswer=dto.getAnswer();
 
             QuizQuestion question=quizQuestionRepository.findById(questionId)
                     .orElseThrow(()->new RuntimeException("Question not found"));
@@ -94,6 +97,9 @@ public class QuizSubmissionService {
 
 
         }
+
+
+
 
         quizSubmission.setScore(totalScore);
         quizSubmissionRepository.save(quizSubmission);

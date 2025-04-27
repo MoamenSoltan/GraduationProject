@@ -1,9 +1,7 @@
 package org.example.backend.controller;
 
-import org.example.backend.dto.QuizDTO.QuizDTO;
-import org.example.backend.dto.QuizDTO.QuizResponseDTO;
-import org.example.backend.dto.QuizDTO.QuizResult;
-import org.example.backend.dto.QuizDTO.QuizSubmissionRequest;
+import org.example.backend.dto.QuizDTO.*;
+import org.example.backend.exception.QuizAlreadySubmittedException;
 import org.example.backend.service.QuizSubmissionService;
 import org.example.backend.util.CurrentUser;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +10,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("student/quiz")
@@ -24,17 +23,44 @@ public class QuizStudentController {
     }
 
     @PostMapping("/{quizId}/course/{courseId}/submit")
-    public ResponseEntity<String> submitQuiz(
-            @RequestBody QuizSubmissionRequest submissionRequest
+    public ResponseEntity<?> submitQuiz(
+            @RequestBody List<AnswerDTO> answers
             , @PathVariable("quizId") Long quizId,
             @PathVariable("courseId") Long courseId) {
 
         Authentication authentication= SecurityContextHolder.getContext().getAuthentication();
         String studentEmail = authentication.getName();
 
-        quizSubmissionService.submitQuiz(submissionRequest, quizId, courseId, studentEmail);
+        quizSubmissionService.submitQuiz(answers, quizId, courseId, studentEmail);
+
+        try {
+            quizSubmissionService.submitQuiz(answers, quizId, courseId, studentEmail);
+            return ResponseEntity.ok(Map.of(
+                    "message", "Quiz submitted successfully",
+                    "status", "unsubmitted"
+            ));
+        } catch (QuizAlreadySubmittedException e) {
+            return ResponseEntity.ok(Map.of(
+                    "message", "Quiz already submitted",
+                    "status", "submitted"
+            ));
+        }
+
+    }
+
+   // @PostMapping("/{quizId}/course/{courseId}/submit")
+    public ResponseEntity<String> submitQuizz(
+            @RequestBody List<AnswerDTO> answers
+            , @PathVariable("quizId") Long quizId,
+            @PathVariable("courseId") Long courseId) {
+
+        Authentication authentication= SecurityContextHolder.getContext().getAuthentication();
+        String studentEmail = authentication.getName();
+
+        quizSubmissionService.submitQuiz(answers, quizId, courseId, studentEmail);
         return ResponseEntity.ok("Quiz submitted successfully");
     }
+
     @GetMapping("/{quizId}/course/{courseId}/get")
     public ResponseEntity<QuizResponseDTO> getQuizForStudent(
             @PathVariable("quizId") Long quizId,
