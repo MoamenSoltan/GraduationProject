@@ -270,7 +270,7 @@ const Profile = () => {
                       key={index}
                       className="px-2 rounded-lg bg-blue-100 gap-2"
                     >
-                      <span className="font-light">{trimText(course, 15)}</span>
+                      <span className="font-light truncate">{course.courseName}</span>
                     </div>
                   ))
                 ) : (
