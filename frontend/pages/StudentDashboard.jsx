@@ -21,6 +21,10 @@ import StudentDetailedQuizzes from "../components/StudentDetailedQuizzes";
 import QuizStart from "../components/QuizStart";
 import QuizSummary from "../components/QuizSummary";
 import QuizResults from "../components/QuizResults";
+import StudentTasks from "./StudentPages/StudentTasks";
+import DetailedStudentTasks from "./StudentPages/DetailedStudentTasks";
+import TasksforaCourse from "./StudentPages/TasksforaCourse";
+import QuizzesForaCourse from "./StudentPages/QuizzesForaCourse";
 
 // conditional rendering based on route 
 
@@ -67,10 +71,18 @@ const StudentDashboard = () => {
         <Route path="/Courses/:year?"  element={<Courses/>}/>
         <Route path="/Payment"  element={<Payment/>}/>
         <Route path="/Quizzes"  element={<StudentQuizzes/>}/>
-        <Route path="/Quizzes/:id"  element={<StudentDetailedQuizzes/>}/>
-        <Route path="/Quizzes/:id/start"  element={<QuizStart/>}/>
-        <Route path="/Quizzes/summary"  element={<QuizSummary/>}/>
+        <Route path="/Quizzes/all/:courseId"  element={<QuizzesForaCourse/>}/>
+
+        <Route path="/Quizzes/:quizId/course/:courseId"  element={<StudentDetailedQuizzes/>}/>
+        <Route path="/Quizzes/:quizId/:courseId/start"  element={<QuizStart/>}/>
+        <Route path="/Quizzes/:quizId/:courseId/summary"  element={<QuizSummary/>}/>
         <Route path="/Quizzes/result/:id"  element={<QuizResults/>}/>
+
+        <Route path="/Tasks"  element={<StudentTasks/>}/>
+        <Route path="/Tasks/:id"  element={<DetailedStudentTasks/>}/>
+        <Route path="/Tasks/all/:courseId"  element={<TasksforaCourse/>}/>
+
+
 
 
 

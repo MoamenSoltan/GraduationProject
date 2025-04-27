@@ -28,7 +28,7 @@ const SideBar = () => {
         <>
           <div className="mt-[100px] flex flex-col  gap-3 pr-2">
             {links.map((link) => (
-              <NavLink
+              <NavLink onClick={()=>setActiveMenu(false)}
                 to={`/${role}Dashboard/${link?.name?.replace(/\s+/g, "-")}`}
                 key={link.name}
                 style={({ isActive }) => ({
