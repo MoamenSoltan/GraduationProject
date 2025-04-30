@@ -32,6 +32,11 @@ const QuizzesForaCourse = () => {
       toast.error('All MCQ options must be filled');
       return;
     }
+    if(currentQuestion.correctAnswerIndex===null&&currentQuestion.type==="mcq")
+    {
+      toast.error("Correct answer must be choosen")
+      return
+    }
     setQuestions([...questions, currentQuestion]);
     setCurrentQuestion({
       type: 'mcq',
@@ -220,6 +225,7 @@ const QuizzesForaCourse = () => {
                     <input
                       type="radio"
                       name="correct"
+                      required
                       checked={currentQuestion.correctAnswerIndex === idx}
                       onChange={() =>
                         setCurrentQuestion({ ...currentQuestion, correctAnswerIndex: idx })
@@ -235,7 +241,7 @@ const QuizzesForaCourse = () => {
           {/* Modal Action Buttons */}
           <div className="flex justify-between mt-6">
             <button
-              className="bg-gray-100 hover:bg-gray-200 text-gray-800 px-4 py-2 rounded"
+              className="bg-gray-100 disabled:text-gray-200 disabled:hover:bg-gray-100 hover:bg-gray-200 text-gray-800 px-4 py-2 rounded"
               onClick={handleAddQuestion}
               disabled={loading}
             >
