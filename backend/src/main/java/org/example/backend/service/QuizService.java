@@ -1,13 +1,12 @@
 package org.example.backend.service;
 
+import org.example.backend.dto.MailBody;
 import org.example.backend.dto.QuizDTO.*;
 import org.example.backend.entity.*;
 import org.example.backend.mapper.QuizMapper;
-import org.example.backend.repository.CourseRepository;
-import org.example.backend.repository.InstructorRepository;
-import org.example.backend.repository.QuizQuestionRepository;
-import org.example.backend.repository.QuizRepository;
+import org.example.backend.repository.*;
 
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,12 +21,16 @@ public class QuizService {
     private final InstructorRepository instructorRepository;
     private final QuizQuestionRepository questionRepository;
     private final QuizMapper quizMapper=new QuizMapper();
+    private final StudentRepository studentRepository;
+    private final MailService mailService;
 
-    public QuizService(QuizRepository quizRepository, CourseRepository courseRepository, InstructorRepository instructorRepository, QuizQuestionRepository questionRepository) {
+    public QuizService(QuizRepository quizRepository, CourseRepository courseRepository, InstructorRepository instructorRepository, QuizQuestionRepository questionRepository, StudentRepository studentRepository, MailService mailService) {
         this.quizRepository = quizRepository;
         this.courseRepository = courseRepository;
         this.instructorRepository = instructorRepository;
         this.questionRepository = questionRepository;
+        this.studentRepository = studentRepository;
+        this.mailService = mailService;
     }
 
     public String createQuiz(Long courseId, String instructorEmail , QuizRequestDTO quizRequestDTO) {
@@ -57,6 +60,7 @@ public class QuizService {
 
 
         quizRepository.save(quiz);
+        sendMailToStudents(courseId,quizRequestDTO.getQuizName(), quizRequestDTO.getQuizTime(), course.getCourseName());
 
         return "done : "+course.getCourseCode();
     }
@@ -73,6 +77,28 @@ public class QuizService {
 
         return quizMapper.toQuizResponseDTO(quiz);
     }
+
+    @Async
+    protected void sendMailToStudents(Long courseId, String taskName, int deadline, String courseName) {
+        List<Student> students =studentRepository.getStudentsInCourse(courseId);
+        for (Student student:students)
+        {
+            mailService.sendEmail(createMail(student.getUser().getEmail(),courseName,taskName,deadline));
+            System.out.println("Sending mail to student: " + student.getUser().getEmail());
+        }
+    }
+    private MailBody createMail(String email, String course, String taskName , int deadline)
+    {
+        MailBody mailBody =new MailBody();
+        mailBody.setTo(email);
+        mailBody.setSubject("new quiz added");
+        mailBody.setText("this quiz "+taskName+" for course "+course+" is added\n" +
+                "the time  for quiz  \n" + deadline +" minutes\n"
+        );
+        return mailBody;
+    }
+
+
 
     public String deleteQuiz(Long courseId, String instructorEmail, Long quizId) {
         Instructor instructor = instructorRepository.getByEmail(instructorEmail)

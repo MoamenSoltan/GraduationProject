@@ -5,17 +5,12 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.example.backend.config.CustomUserDetails;
 import org.example.backend.config.JWt.JwtService;
-import org.example.backend.entity.Instructor;
-import org.example.backend.entity.RefreshToken;
-import org.example.backend.entity.Student;
-import org.example.backend.entity.User;
+import org.example.backend.entity.*;
+import org.example.backend.enums.AdmissionStatus;
 import org.example.backend.exception.ResourceNotFound;
 import org.example.backend.mapper.InstructorMapper;
 import org.example.backend.mapper.StudentMapper;
-import org.example.backend.repository.InstructorRepository;
-import org.example.backend.repository.RefreshTokenRepository;
-import org.example.backend.repository.StudentRepository;
-import org.example.backend.repository.UserRepository;
+import org.example.backend.repository.*;
 import org.example.backend.util.AuthResponse;
 import org.example.backend.util.JwtResponse;
 import org.springframework.beans.factory.annotation.Value;
@@ -35,6 +30,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class AuthService {
+    private final SubmissionReqRepository submissionReqRepository;
     @Value("${application.security.jwt.refresh-token-expiration}")
     private  long REFRESH_VALIDITY ;
     private final AuthenticationManager manager;
@@ -47,7 +43,7 @@ public class AuthService {
     private final RefreshTokenRepository refreshTokenRepository;
 
 
-    public AuthService(AuthenticationManager manager, JwtService jwtService, UserRepository userRepository, StudentRepository studentRepository, InstructorRepository instructorRepository, FileService fileService, RefreshTokenService refreshTokenService, RefreshTokenRepository refreshTokenRepository) {
+    public AuthService(AuthenticationManager manager, JwtService jwtService, UserRepository userRepository, StudentRepository studentRepository, InstructorRepository instructorRepository, FileService fileService, RefreshTokenService refreshTokenService, RefreshTokenRepository refreshTokenRepository, SubmissionReqRepository submissionReqRepository) {
         this.manager = manager;
         this.jwtService = jwtService;
         this.userRepository = userRepository;
@@ -56,6 +52,7 @@ public class AuthService {
         this.fileService = fileService;
         this.refreshTokenService = refreshTokenService;
         this.refreshTokenRepository = refreshTokenRepository;
+        this.submissionReqRepository = submissionReqRepository;
     }
 
     public boolean isAdmin(UserDetails userDetails)
@@ -83,8 +80,21 @@ public class AuthService {
 
     public AuthResponse login(String email, String password,HttpServletResponse servletResponse)
     {
+        Optional<SubmissionRequest> request=submissionReqRepository.getByEmail(email);
+        String status="";
+        if(request.isPresent())
+        {
+            SubmissionRequest request1= request.get();
+            if(!request1.getAdmissionStatus().equals(AdmissionStatus.ACCEPTED))
+            {
+                status=request1.getAdmissionStatus().toString();
+                throw new RuntimeException("User not accepted yet "+status);
+            }
+        }
+
+
         User user = userRepository.getUserByEmail(email)
-                .orElseThrow(() -> new BadCredentialsException("Invalid email or password."));
+                .orElseThrow(() -> new BadCredentialsException("Invalidd email or password."));
 
         var auth = isAuthenticated(email, password);
         if (auth == null || !auth.isAuthenticated()) {
@@ -182,6 +192,7 @@ public class AuthService {
 
     private void populateStudentResponse(AuthResponse response, Student student) {
         response.setPersonalImage(fileService.getFileName(student.getSubmissionRequest().getPersonalPhoto()));
+
         response.setRoles(student.getUser().getRoleList().stream()
                 .map(role -> role.getRoleName().toString())
                 .collect(Collectors.toList()));
