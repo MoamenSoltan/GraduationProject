@@ -22,7 +22,7 @@ public class CustomExceptionHandler {
     // Handle authentication errors
     @ExceptionHandler(BadCredentialsException.class)
     public ProblemDetail handleBadCredentialsException(BadCredentialsException ex) {
-        return createProblemDetail(HttpStatus.UNAUTHORIZED, "Authentication failed", "Invalid email or password.");
+        return createProblemDetail(HttpStatus.UNAUTHORIZED, "Authentication failed", ex.getMessage());
     }
 
     @ExceptionHandler(AccessDeniedException.class)

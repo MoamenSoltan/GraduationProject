@@ -1,5 +1,6 @@
 package org.example.backend.service;
 
+import org.example.backend.dto.MailBody;
 import org.example.backend.dto.courseDto.CourseDTO;
 import org.example.backend.dto.instructorDto.InstructorProfile;
 import org.example.backend.dto.instructorDto.InstructorRequestDTO;
@@ -14,6 +15,7 @@ import org.example.backend.mapper.InstructorMapper;
 import org.example.backend.repository.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -32,10 +34,11 @@ public class InstructorService {
     private final StudentRepository studentRepository;
     private final StudentCourseRepository studentCourseRepository;
     private final CourseRepository courseRepository;
+    private final MailService mailService;
 
     public InstructorService(InstructorRepository instructorRepository,
                              DepartmentRepository departmentRepository,
-                             RoleRepository roleRepository, FileService fileService, StudentRepository studentRepository, StudentCourseRepository studentCourseRepository, CourseRepository courseRepository) {
+                             RoleRepository roleRepository, FileService fileService, StudentRepository studentRepository, StudentCourseRepository studentCourseRepository, CourseRepository courseRepository, MailService mailService) {
         this.instructorRepository = instructorRepository;
 
         this.departmentRepository = departmentRepository;
@@ -44,6 +47,7 @@ public class InstructorService {
         this.studentRepository = studentRepository;
         this.studentCourseRepository = studentCourseRepository;
         this.courseRepository = courseRepository;
+        this.mailService = mailService;
     }
 
 //    @Transactional
@@ -234,6 +238,8 @@ public class InstructorService {
         Instructor instructor = instructorRepository.getByEmail(email)
                 .orElseThrow(() -> new ResourceNotFound("Instructor", "email", email));
 
+        Course course= courseRepository.findCourseByInstructorAndCourseId(instructor, (long) courseId)
+                .orElseThrow(() -> new ResourceNotFound("Course", "courseId", courseId));
         int instructorId = instructor.getInstructorId();
 
         for (StudentCourseDTO dto : dtos) {
@@ -244,8 +250,32 @@ public class InstructorService {
             studentCourseRepository.updateStudentCourseDegree(degree,studentId,courseId,instructorId);
             }
         }
+        sendMailToStudents((long) courseId,instructor.getUser().getEmail(),course.getCourseName());
 
         return "degree update ";
+    }
+
+    @Async
+    protected void sendMailToStudents(Long courseId, String instructor, String courseName) {
+        List<Student> students =studentRepository.getStudentsInCourse(courseId);
+        for (Student student:students)
+        {
+            mailService.sendEmail(createMail(student.getUser().getEmail(),courseName,instructor));
+            System.out.println("Sending mail to student: " + student.getUser().getEmail());
+        }
+    }
+    private MailBody createMail(String email, String course , String instructorName)
+    {
+        MailBody mailBody =new MailBody();
+        mailBody.setTo(email);
+        mailBody.setSubject("Degree Added for Course: " + course);
+        mailBody.setText("Dear Student,\n\n" +
+                "The degree for \""  + "\"  the course \"" + course + "\" has been added by the instructor.\n" +
+                instructorName+
+                " Please check your student portal for details.\n\n" +
+                "Best regards,\n" +
+                "Academic Affairs");
+        return mailBody;
     }
 
     public List<StudentCourseGradeDTO> getStudentsWithFinalDegree(Long courseId, String email) {

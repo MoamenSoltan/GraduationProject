@@ -41,4 +41,8 @@ public interface StudentRepository extends JpaRepository<Student,Long> {
     @Transactional
     void updateStudentDegree(@Param("studentId") Long studentId, @Param("degree") Double degree, @Param("courseId") int courseId);
 
+    @Query("select s from Student s join StudentCourse sc on s.studentId = sc.student.studentId" +
+            " join Course c on sc.course.courseId = c.courseId " +
+            "where c.courseId=:courseId" )
+    List<Student> getStudentsInCourse(@Param("courseId") Long courseId);
 }

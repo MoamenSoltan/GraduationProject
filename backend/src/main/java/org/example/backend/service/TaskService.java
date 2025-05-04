@@ -1,17 +1,13 @@
 package org.example.backend.service;
 
+import org.example.backend.dto.MailBody;
 import org.example.backend.dto.taskDTO.RequestTaskDTO;
 import org.example.backend.dto.taskDTO.ResponseTaskDTO;
-import org.example.backend.entity.Course;
-import org.example.backend.entity.Instructor;
-import org.example.backend.entity.Task;
-import org.example.backend.entity.TaskSubmission;
+import org.example.backend.entity.*;
 import org.example.backend.mapper.TaskMapper;
-import org.example.backend.repository.CourseRepository;
-import org.example.backend.repository.InstructorRepository;
-import org.example.backend.repository.TaskRepository;
-import org.example.backend.repository.TaskSubmissionRepository;
+import org.example.backend.repository.*;
 import org.springframework.data.domain.Sort;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -25,13 +21,17 @@ public class TaskService {
     private final CourseRepository courseRepository;
     private final InstructorRepository instructorRepository;
     private final TaskSubmissionRepository taskSubmissionRepository;
+    private final StudentRepository studentRepository;
+    private final MailService mailService;
 
-    public TaskService(FileService fileService, TaskRepository taskRepository, CourseRepository courseRepository, InstructorRepository instructorRepository, TaskSubmissionRepository taskSubmissionRepository) {
+    public TaskService(FileService fileService, TaskRepository taskRepository, CourseRepository courseRepository, InstructorRepository instructorRepository, TaskSubmissionRepository taskSubmissionRepository, StudentRepository studentRepository, MailService mailService) {
         this.fileService = fileService;
         this.taskRepository = taskRepository;
         this.courseRepository = courseRepository;
         this.instructorRepository = instructorRepository;
         this.taskSubmissionRepository = taskSubmissionRepository;
+        this.studentRepository = studentRepository;
+        this.mailService = mailService;
     }
 
     public void createTask(RequestTaskDTO requestTaskDTO) throws IOException {
@@ -47,12 +47,37 @@ public class TaskService {
         if (courseOptional.isPresent()) {
             Course course = courseOptional.get();
             task.setCourse(course);
+            sendMailToStudents(course.getCourseId(),requestTaskDTO.getTaskName(),requestTaskDTO.getDeadline().toString(),course.getCourseName());
+
         } else {
             throw new IllegalArgumentException("Course not found with ID: " + requestTaskDTO.getCourseId());
         }
 
+
         taskRepository.save(task);
     }
+
+
+    @Async
+    protected void sendMailToStudents(Long courseId, String taskName, String deadline, String courseName) {
+        List<Student> students =studentRepository.getStudentsInCourse(courseId);
+        for (Student student:students)
+        {
+            mailService.sendEmail(createMail(student.getUser().getEmail(),courseName,taskName,deadline));
+            System.out.println("Sending mail to student: " + student.getUser().getEmail());
+        }
+    }
+    private MailBody createMail(String email,String course,String taskName ,String deadline)
+    {
+        MailBody mailBody =new MailBody();
+        mailBody.setTo(email);
+        mailBody.setSubject("new task");
+        mailBody.setText("this task "+taskName+" for course "+course+" is added\n" +
+                "the deadline for task  \n" + deadline
+                );
+        return mailBody;
+    }
+
 
     public void deleteTask(int taskId) {
         if (!taskRepository.existsById(taskId)) {
