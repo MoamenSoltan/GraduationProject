@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import toast from 'react-hot-toast';
 
 const TextSummarization = () => {
   const [file, setFile] = useState(null);
@@ -23,7 +24,7 @@ const TextSummarization = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!file) return alert('Please upload a PDF file');
+    if (!file) return toast.error('Please upload a PDF file');
 
     try {
       setLoading(true);

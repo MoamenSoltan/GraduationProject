@@ -16,6 +16,7 @@ import { useEffect } from "react"
 import ProtectedRoutes from "../components/ProtectedRoutes"
 import { Toaster } from "react-hot-toast"
 import axios from "../api/axios"
+import LandingPage from "../pages/LandingPage/LandingPage"
 /**
  * e-commerce app for better understanding of filtering and query parameters
  * 
@@ -72,7 +73,7 @@ function App() {
          
          {/* public routes */}
 
-          <Route path="/" element={<Registration />} />
+          <Route path="/" element={<LandingPage/>} />
           <Route path="/registration" element={<Registration />} />
           <Route path="/registration/splash" element={<Splash />} />
           <Route path="/registration/step1" element={<Step1 />} />
