@@ -1,15 +1,15 @@
 import React from "react";
-import UniLogo from "C:\\Users\\moame\\OneDrive\\Desktop\\Graduation project\\frontend\\data\\uni_en 1.svg";
-import figure from "C:\\Users\\moame\\OneDrive\\Desktop\\Graduation project\\frontend\\data\\BG Shape.svg";
+import UniLogo from "/data/uni_en 1.svg";
+import figure from "/data/BG Shape.svg";
 import { i } from "motion/react-client";
 
-import frame from "C:\\Users\\moame\\OneDrive\\Desktop\\Graduation project\\frontend\\data\\Frame 1000007003.svg";
-import person from "C:\\Users\\moame\\OneDrive\\Desktop\\Graduation project\\frontend\\data\\image-1742414625841 1.svg";
+import frame from "/data/Frame 1000007003.svg";
+import person from "/data/image-1742414625841 1.svg";
 import { motion } from "motion/react";
-import aboutImage from "C:\\Users\\moame\\OneDrive\\Desktop\\Graduation project\\frontend\\data\\About Image.png";
-import container from "C:\\Users\\moame\\OneDrive\\Desktop\\Graduation project\\frontend\\data\\Container.png";
-import profile from "C:\\Users\\moame\\OneDrive\\Desktop\\Graduation project\\frontend\\data\\Profile.png";
-import signature from "C:\\Users\\moame\\OneDrive\\Desktop\\Graduation project\\frontend\\data\\Signature.svg";
+import aboutImage from "/data/About Image.png";
+import container from "/data/Container.png";
+import profile from "/data/Profile.png";
+import signature from "/data/Signature.svg";
 const LandingPage = () => {
   return (
     <div>
