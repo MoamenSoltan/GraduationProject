@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import toast from 'react-hot-toast';
 
 const ImageToText = () => {
   const [image, setImage] = useState(null);
@@ -21,7 +22,8 @@ const ImageToText = () => {
   };
 
   const handleSubmit = async () => {
-    if (!base64Image || !inputText) return; // Ensure both image and input text are provided
+    if (!base64Image ) return toast.error("please privide an image"); // Ensure both image and input text are provided
+    if (!inputText) return toast.error("please provide a prompt")
 
     setIsLoading(true);
     try {
