@@ -51,7 +51,7 @@ const LandingPage = () => {
           <motion.div
             initial={{ transform: "translateX(-1000px)" }}
             animate={{ transform: "translateX(0px)" }}
-            transition={{ type: "tween", duration: 0.8 }}
+            transition={{ type: "tween", duration: 0.5 }}
             className="relative z-10"
           >
             <p className="text-[#06625f] text-sm sm:text-base mb-8 font-bold">
