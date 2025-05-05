@@ -1,15 +1,15 @@
 import React from "react";
 import UniLogo from "../../data/uni_en1.svg";
-import figure from "../../data\\BG Shape.svg";
+import figure from "../../data/BG Shape.svg";
 import { i } from "motion/react-client";
 
-import frame from "../../data\\Frame 1000007003.svg";
-import person from "../../data\\image-1742414625841 1.svg";
+import frame from "../../data/Frame 1000007003.svg";
+import person from "../../data/image-1742414625841 1.svg";
 import { motion } from "motion/react";
-import aboutImage from "../../data\\About Image.png";
-import container from "../../data\\Container.png";
-import profile from "../../data\\profile.png";
-import signature from "../../data\\Signature.svg";
+import aboutImage from "../../data/About Image.png";
+import container from "../../data/Container.png";
+import profile from "../../data/profile.png";
+import signature from "../../data/Signature.svg";
 const LandingPage = () => {
   return (
     <div>
