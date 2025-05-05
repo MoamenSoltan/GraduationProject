@@ -51,7 +51,7 @@ const LandingPage = () => {
           <motion.div
             initial={{ transform: "translateX(-1000px)" }}
             animate={{ transform: "translateX(0px)" }}
-            transition={{ type: "tween", duration: 0.5 }}
+            transition={{ type: "tween", duration: 1 }}
             className="relative z-10"
           >
             <p className="text-[#06625f] text-sm sm:text-base mb-8 font-bold">
@@ -132,7 +132,7 @@ const LandingPage = () => {
             {/* animate from right */}
             <motion.div initial={{ transform: "translateX(+200px)" }}
                 whileInView={{ transform: "translateX(0px)" }}
-                viewport={{ once: true, amount: 0.9 }}
+                viewport={{ once: true, amount: 0.3 }}
                 transition={{ type: "tween", duration: 1 }}>
               <span className="text-[#06625F] border-b-2 border-[#06625F] font-semibold text-lg">
                 SINCE 1976
