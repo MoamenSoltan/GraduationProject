@@ -8,6 +8,12 @@ body {
     background-color: #FAFBFB;
     
   }
+  .text-stroke {
+    color: white;
+    -webkit-text-stroke: 1px #06625f;
+    text-stroke: 1px #06625f; /* optional fallback */
+  }
+  
 
   .sidebar {
     box-shadow: rgb(113 122 131 / 11%) 0px 7px 30px 0px;
