@@ -1,7 +1,7 @@
 import React from "react";
-import icon1 from "../../data/icon 1.svg";
-import icon2 from "../../data/icon 2.svg";
-import icon3 from "../../data/icon 3.svg";
+import icon1 from "../../data/icon-1.svg";
+import icon2 from "../../data/icon-2.svg";
+import icon3 from "../../data/icon-3.svg";
 import { motion } from "motion/react";
 
 const Qualities = () => {
