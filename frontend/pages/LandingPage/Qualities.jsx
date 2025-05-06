@@ -5,6 +5,7 @@ import icon3 from "../../data/icon-3.svg";
 import { motion } from "motion/react";
 
 const Qualities = () => {
+  // this is a test
   return (
     <div
      className="min-h-[843px] py-10 overflow-y-auto w-full flex flex-col justify-center items-center bg-[#06625f]">
