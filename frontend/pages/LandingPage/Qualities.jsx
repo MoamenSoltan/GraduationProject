@@ -1,6 +1,6 @@
 import React from "react";
 import icon1 from "../../data/icon-1.svg";
-import icon2 from "../../data/icon-2.svg";
+
 import icon3 from "../../data/icon-3.svg";
 import { motion } from "motion/react";
 
@@ -41,7 +41,7 @@ const Qualities = () => {
         </motion.div>
 
         <div className="flex flex-col gap-5 justify-center items-center w-[390px] border-x-[1px] border-y-4 border-gray-400 border-opacity-45 p-8 text-center min-h-[364px]">
-          <img src={icon2} alt="icon2" />
+          <img src={icon1} alt="icon2" />
           <h2 className="w-[275px] text-[26px] leading-[33px] text-white font-semibold">
             Advanced Academic Programs
           </h2>
