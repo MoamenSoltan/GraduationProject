@@ -23,6 +23,7 @@ public class QuizDTO {
     private LocalDateTime createdAt;
     private InstructorDTO instructor;
     private boolean isDeleted;
+    private String status;
 
 
 }

@@ -87,15 +87,40 @@ public class TaskService {
     }
 
     public List<ResponseTaskDTO> getAllTasksByCourseId(int courseId) {
+
+
         List<Task> tasks = taskRepository.findTaskByCourseId(courseId);
         if (tasks.isEmpty()) {
             throw new IllegalArgumentException("No tasks found for course ID: " + courseId);
         }
 
+
         TaskMapper mapper=new TaskMapper();
         List<ResponseTaskDTO> taskDTOs = new ArrayList<>();
+
         for (Task task : tasks) {
+            boolean isSubmitted=false;
             ResponseTaskDTO taskDTO = mapper.toResponseDTO(task);
+            for (TaskSubmission taskSubmission: task.getTaskSubmission())
+            {
+                if(taskSubmission.getTask().getId()==task.getId())
+                {
+                    taskDTO.setStatus("submitted");
+                    isSubmitted=true;
+                    break;
+
+                }
+
+            }
+
+            if(!isSubmitted)
+            {
+                taskDTO.setStatus("unsubmitted");
+            }
+
+
+
+
             taskDTOs.add(taskDTO);
         }
 

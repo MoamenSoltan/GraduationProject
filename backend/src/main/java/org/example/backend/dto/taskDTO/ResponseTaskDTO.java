@@ -17,4 +17,5 @@ public class ResponseTaskDTO {
     private LocalDateTime createdAt;
     private LocalDate deadline;
     private Long courseId;
+    private String status;
 }

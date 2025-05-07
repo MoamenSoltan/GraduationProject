@@ -20,4 +20,5 @@ public class QuizResponseDTO {
     private List<QuestionResponseDTO> quizQuestions;
     @JsonProperty("totalDegree")
     private int totalDegree;
+    private String status;
 }

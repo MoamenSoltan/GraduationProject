@@ -81,14 +81,19 @@ public class AuthService {
     public AuthResponse login(String email, String password,HttpServletResponse servletResponse)
     {
         Optional<SubmissionRequest> request=submissionReqRepository.getByEmail(email);
-        String status="";
+
+        AuthResponse response = new AuthResponse();
         if(request.isPresent())
         {
             SubmissionRequest request1= request.get();
             if(!request1.getAdmissionStatus().equals(AdmissionStatus.ACCEPTED))
             {
-                status=request1.getAdmissionStatus().toString();
-                throw new RuntimeException("User not accepted yet "+status);
+
+                response.setEmail(email);
+                response.setFirstName(request1.getFirstName());
+                response.setFirstName(request1.getLastName());
+                response.setStatus(request1.getAdmissionStatus().toString());
+                return response;
             }
         }
 
@@ -112,7 +117,7 @@ public class AuthService {
         String refreshToken = jwtService.generateRefreshToken(userDetails);
         setRefreshTokenCookie(servletResponse,refreshToken);
 
-        AuthResponse response = new AuthResponse();
+
         response.setAccessToken(accessToken);
         response.setRefreshToken(refreshToken);
         response.setEmail(user.getEmail());
