@@ -25,6 +25,7 @@ public class AuthResponse {
     private String personalImage;
     @JsonIgnore
     private String refreshToken;
+    private String status;
 
 
 

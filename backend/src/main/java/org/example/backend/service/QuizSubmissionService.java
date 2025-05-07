@@ -123,7 +123,13 @@ public class QuizSubmissionService {
         Quiz quiz=quizRepository.findQuizByCourseAndQuizId(courseId,quizId)
                 .orElseThrow(()->new RuntimeException("Quiz not found"));
 
+
+
+
+
+
         QuizResponseDTO dto = quizMapper.toQuizResponseDTO(quiz);
+
         for(QuestionResponseDTO question: dto.getQuizQuestions())
         {
             question.setCorrectAnswer(null);
@@ -147,7 +153,24 @@ public class QuizSubmissionService {
         List<QuizDTO> quizDTOList=new ArrayList<>();
         for(Quiz dto:quizzes)
         {
+            boolean isSubmitted=false;
             QuizDTO quizDTO= quizMapper.toQuizDTO(dto);
+            for (QuizSubmission quizSubmission:dto.getSubmissions())
+            {
+
+                if(quizSubmission.getStudent().getStudentId().equals(student.getStudentId()))
+                {
+                    quizDTO.setStatus("submitted");
+                    isSubmitted=true;
+                    break;
+                }
+            }
+
+            if(!isSubmitted)
+            {
+                quizDTO.setStatus("unsubmitted");
+            }
+
             quizDTOList.add(quizDTO);
         }
         return quizDTOList;
