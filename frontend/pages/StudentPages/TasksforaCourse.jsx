@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 import useAxiosPrivate from '../../hooks/useAxiosPrivate';
 import toast from 'react-hot-toast';
 
@@ -8,11 +8,11 @@ const TasksforaCourse = () => {
   const [selectedDeadline, setSelectedDeadline] = useState("");
   const { courseId } = useParams(); 
   const axiosPrivate = useAxiosPrivate();
-
+  const navigate = useNavigate()
   useEffect(() => {
     const fetchTasks = async () => {
       try {
-        const response = await axiosPrivate.get(`/task/student/course/${courseId}`);
+        const response = await axiosPrivate.get(`/task/student/course/${courseId}${selectedDeadline}`);
         setTasks(response.data);
         console.log("tasks fetched", response.data);
       } catch (error) {
@@ -21,7 +21,7 @@ const TasksforaCourse = () => {
     };
 
     fetchTasks();
-  }, [courseId, axiosPrivate]);
+  }, [courseId, axiosPrivate,selectedDeadline]);
 
   const openAttachment = (url) => {
     window.open(url, '_blank');
@@ -38,16 +38,16 @@ const TasksforaCourse = () => {
           className='border-2 rounded-md outline-none p-2'
         >
           <option value="">All</option>
-          <option value="upcoming-deadline">Upcoming deadline</option>
-          <option value="past-deadline">Past deadline</option>
-          <option value="submitted">Submitted</option>
+          <option value="/upcoming-deadline">Upcoming deadline</option>
+          <option value="/past-deadline">Past deadline</option>
+          <option value="/complete">Submitted</option>
         </select>
       </div>
 
       <div className="flex flex-wrap gap-6">
         {tasks.length > 0 ? (
           tasks.map((task) => (
-            <div
+            <div onClick={()=>navigate(`/studentDashboard/Tasks/${task.id}`)}
               key={task.id}
               className="w-80 bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow p-6"
             >

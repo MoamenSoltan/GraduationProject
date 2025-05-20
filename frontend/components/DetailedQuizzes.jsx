@@ -111,7 +111,7 @@ const DetailedQuizzes = () => {
           Delete quiz
         </button>
         <button
-          onClick={() => navigate(`/instructorDashboard/quizzes/${quiz.id}/submissions`)}
+          onClick={() => navigate(`/instructorDashboard/quizzes/${quiz.id}/course/${courseId}/submissions`)}
           className="px-6 py-3 bg-green-600 hover:bg-green-700 text-white rounded-lg shadow transition-all"
         >
           View Submissions

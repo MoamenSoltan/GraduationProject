@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router';
+import { useParams, useNavigate, useLocation } from 'react-router';
 import useAxiosPrivate from '../hooks/useAxiosPrivate';
 import toast from 'react-hot-toast';
 import Modal from '../components/Modal';
@@ -11,12 +11,18 @@ const StudentDetailedQuizzes = () => {
 
   const [quiz, setQuiz] = useState(null);
   const [modal, setModal] = useState(false);
+  const location = useLocation()
+  const {status} = location.state
 
   useEffect(() => {
     const fetchQuiz = async () => {
       try {
         const res = await axiosPrivate.get(`/student/quiz/${quizId}/course/${courseId}/get`);
         setQuiz(res.data);
+        console.log("fetched quiz :",res.data);
+        console.log("quiz status :",status);
+
+        
       } catch (err) {
         toast.error("Failed to fetch quiz details");
       }
@@ -32,7 +38,7 @@ const StudentDetailedQuizzes = () => {
   if (!quiz) return <div className="text-center">Loading quiz details...</div>;
 
   return (
-    <div className="w-full md:w-[80%] m-auto mt-10 p-6 bg-white rounded-lg shadow-lg">
+    <div className="w-full md:w-[80%]  m-auto mt-10 p-6 bg-white rounded-lg shadow-lg">
       <h1 className="text-3xl font-bold text-gray-800">{quiz.name}</h1>
       <p className="text-gray-600 mt-2">{quiz.description}</p>
       <p className="text-sm text-gray-500 mt-1">Total Questions: {quiz.questions.length}</p>
@@ -62,12 +68,21 @@ const StudentDetailedQuizzes = () => {
       </div>
 
       <div className="flex justify-center mt-6">
-        <button
+        {
+          status==="unsubmitted" 
+          ?<button
           onClick={() => setModal(true)}
           className="px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
         >
           Start Quiz
         </button>
+        :<button
+          onClick={() => navigate(`/studentDashboard/Quizzes/${quizId}/${courseId}/summary`)}
+          className="px-6 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+        >
+          view result
+        </button>
+        }
       </div>
 
       {/* Modal */}

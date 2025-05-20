@@ -5,7 +5,7 @@ const DetailedStudentTasks = () => {
     const {id} = useParams()
   return (
     <div>
-        
+        <h1>task id is : {id}</h1>
     </div>
   )
 }
