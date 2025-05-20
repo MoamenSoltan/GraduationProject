@@ -15,6 +15,7 @@ import DetailedTasks from './InstructorPages/DetailedTasks'
 import TaskSubmissions from './InstructorPages/TaskSubmissions'
 import ReviewTasks from './InstructorPages/ReviewTasks'
 import QuizzesForaCourse from './InstructorPages/QuizzesForaCourse'
+import QuizSubmissions from '../components/QuizSubmissions'
 const InstructorDashboard = () => {
     const {activeMenu}=useStateContext()
   
@@ -55,7 +56,8 @@ const InstructorDashboard = () => {
 
 
 {/* TODO: might need refinements */}
-<Route path='/quizzes/:id/submissions' element={<InstructorQuizSubmissionDetails/>}/>
+<Route path='/quizzes/:quizId/course/:courseId/submissions' element={<QuizSubmissions/>}/>
+<Route path='/quizzes/:quizId/course/:courseId/student/:studentId/submissions' element={<InstructorQuizSubmissionDetails/>}/>
 
 <Route path='/tasks' element={<InstructorTasks/>}/>
 <Route path='/tasks/:id' element={<DetailedTasks/>}/>

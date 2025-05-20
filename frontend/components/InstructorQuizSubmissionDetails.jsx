@@ -2,109 +2,76 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import useAxiosPrivate from '../hooks/useAxiosPrivate';
 
-
 const InstructorQuizSubmissionDetails = () => {
-  const { quizId, studentId } = useParams();
-  const [submission, setSubmission] = useState(null);
-  const [essayScores, setEssayScores] = useState({});
+  const { courseId, quizId, studentId } = useParams();
+  const axiosPrivate = useAxiosPrivate();
 
-  const axiosPrivate = useAxiosPrivate()
+  const [submission, setSubmission] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
 
   useEffect(() => {
-    const fetchSubmission = async () => {
+    const fetchSubmissionDetails = async () => {
       try {
-        const res = await axiosPrivate.get(`/instructor/quiz/${quizId}/student/${studentId}/submission`);
-        setSubmission(res.data);
-
-        // Initialize essay score fields
-        const initialScores = {};
-        res.data.quiz.questions.forEach((q) => {
-          if (q.type === 'essay') {
-            initialScores[q.id] = '';
-          }
-        });
-        setEssayScores(initialScores);
-      } catch (error) {
-        console.error('Error fetching submission:', error);
+        const response = await axiosPrivate.get(
+          `/instructor/quiz/${quizId}/course/${courseId}/student/${studentId}/submission`
+        );
+        setSubmission(response.data);
+      } catch (err) {
+        setError('Failed to load submission details.');
+      } finally {
+        setLoading(false);
       }
     };
 
-    fetchSubmission();
-  }, [quizId, studentId]);
+    fetchSubmissionDetails();
+  }, [courseId, quizId, studentId]);
 
-  const handleScoreChange = (questionId, value) => {
-    setEssayScores((prev) => ({ ...prev, [questionId]: value }));
-  };
-
-  const handleSubmitFinalScore = async () => {
-    try {
-      await axiosPrivate.post(`/instructor/quiz/${quizId}/student/${studentId}/submit-score`, {
-        essayScores,
-      });
-      alert('Final score submitted successfully.');
-    } catch (error) {
-      console.error('Error submitting final score:', error);
-    }
-  };
-
-  if (!submission) {
-    return <div className="text-center mt-10 text-gray-500">Loading submission...</div>;
-  }
+  if (loading) return <div className="text-center py-6 text-[#0096C1]">Loading submission details...</div>;
+  if (error) return <div className="text-center py-6 text-red-500">{error}</div>;
+  if (!submission) return <div className="text-center py-6 text-gray-600">No submission found.</div>;
 
   return (
-    <div className="max-w-4xl mx-auto mt-10 bg-white p-6 rounded-lg shadow-md">
-      <h2 className="text-2xl font-bold mb-4 text-blue-700">
-        Submission Details - {submission.student.name}
-      </h2>
+    <div className="w-[90%] max-w-3xl mx-auto mt-10 bg-white shadow-lg rounded-xl p-6 border border-gray-200">
+      <h2 className="text-2xl font-bold text-[#0096C1] mb-4 border-b pb-2">Quiz Submission Details</h2>
 
-      {submission.quiz.questions.map((q, index) => {
-        const studentAnswer = submission.answers[q.id];
-        const isCorrect = q.type === 'mcq' && studentAnswer === q.correctAnswer;
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-gray-800 mb-6">
+        <div><span className="font-medium text-[#0096C1]">Student ID:</span> {submission.studentId}</div>
+        <div><span className="font-medium text-[#0096C1]">Quiz ID:</span> {submission.quizId}</div>
+        <div><span className="font-medium text-[#0096C1]">Quiz Title:</span> {submission.quizTitle}</div>
+        <div><span className="font-medium text-[#0096C1]">Total Questions:</span> {submission.totalQuestions}</div>
+        <div><span className="font-medium text-[#0096C1]">MCQ Score:</span> {submission.mcqScore}</div>
+        <div><span className="font-medium text-[#0096C1]">Submitted At:</span> {new Date(submission.submittedAt).toLocaleString()}</div>
+      </div>
 
-        return (
-          <div key={q.id} className="mb-6 border-b pb-4">
-            <p className="font-medium">{index + 1}. {q.text}</p>
+      <div className="mb-6">
+        <h3 className="text-lg font-semibold text-[#0096C1] mb-2">MCQ Answers</h3>
+        {submission.answers_MCQ && Object.keys(submission.answers_MCQ).length > 0 ? (
+          <ul className="space-y-2 pl-2">
+            {Object.entries(submission.answers_MCQ).map(([questionId, answer], index) => (
+              <li key={index} className="bg-gray-50 p-3 rounded border border-gray-200">
+                <strong className="text-black">Q{questionId}:</strong> <span className="text-gray-700">{answer}</span>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p className="text-gray-600">No MCQ answers submitted.</p>
+        )}
+      </div>
 
-            {q.type === 'mcq' ? (
-              <div className="mt-2">
-                {q.options.map((option, i) => (
-                  <div
-                    key={i}
-                    className={`border p-2 rounded mt-1 ${
-                      i === q.correctAnswer ? 'bg-green-100 border-green-500 font-semibold' : ''
-                    } ${
-                      i === studentAnswer && i !== q.correctAnswer ? 'bg-red-100 border-red-500' : ''
-                    }`}
-                  >
-                    {option}
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <div className="mt-2">
-                <p><span className="font-semibold">Student Answer:</span> {studentAnswer || "Not answered"}</p>
-                <label className="block mt-2 text-sm font-medium text-gray-700">
-                  Score for this question:
-                  <input
-                    type="number"
-                    value={essayScores[q.id] || ''}
-                    onChange={(e) => handleScoreChange(q.id, e.target.value)}
-                    className="mt-1 block w-24 px-2 py-1 border rounded"
-                  />
-                </label>
-              </div>
-            )}
-          </div>
-        );
-      })}
-
-      <div className="text-center mt-6">
-        <button
-          onClick={handleSubmitFinalScore}
-          className="px-6 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition"
-        >
-          Submit Final Score
-        </button>
+      <div>
+        <h3 className="text-lg font-semibold text-[#0096C1] mb-2">Short Answers</h3>
+        {submission.answers_short && submission.answers_short.length > 0 ? (
+          <ul className="space-y-2 pl-2">
+            {submission.answers_short.map((answer, index) => (
+              <li key={index} className="bg-gray-50 p-3 rounded border border-gray-200">
+                <span className="text-gray-700">{answer}</span>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p className="text-gray-600">No short answers submitted.</p>
+        )}
       </div>
     </div>
   );
