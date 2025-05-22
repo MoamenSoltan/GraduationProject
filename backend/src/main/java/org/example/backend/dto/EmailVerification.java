@@ -5,8 +5,6 @@ import lombok.Setter;
 
 @Setter
 @Getter
-public class ResetPasswordDTO {
+public class EmailVerification {
     private String email;
-    private String password;
-    private String confirmPassword;
 }
