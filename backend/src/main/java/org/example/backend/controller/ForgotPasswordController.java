@@ -1,6 +1,8 @@
 package org.example.backend.controller;
 
+import org.example.backend.dto.EmailVerification;
 import org.example.backend.dto.MailBody;
+import org.example.backend.dto.OtpDTO;
 import org.example.backend.dto.ResetPasswordDTO;
 import org.example.backend.entity.ForgotPassword;
 import org.example.backend.entity.User;
@@ -35,9 +37,10 @@ public class ForgotPasswordController {
     }
 
     // send email for email confirmation
-    @PostMapping("/verify-email/{email}")
-    public ResponseEntity<String> sendEmailVerification(@PathVariable String email) {
+    @PostMapping("/verify-email/")
+    public ResponseEntity<String> sendEmailVerification(@RequestBody EmailVerification obj) {
         // Get the user by email
+        String email=obj.getEmail();
         User user = userRepository.getUserByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("Please provide a valid email"));
 
@@ -48,7 +51,7 @@ public class ForgotPasswordController {
 
         if (existingOtp != null) {
             // If an OTP exists and hasn't expired, return a message indicating the user can only request one OTP at a time
-            return new ResponseEntity<>("You already have a pending OTP. Please try again later.", HttpStatus.BAD_REQUEST);
+            throw new RuntimeException("You already have a pending OTP. Please try again later.");
         }
 
         // Generate new OTP
@@ -76,12 +79,14 @@ public class ForgotPasswordController {
     }
 
 
-    @PostMapping("/verify-otp/{otp}/{email}")
+    @PostMapping("/verify-otp/")
     public ResponseEntity<String> verifyOtp(
-            @PathVariable Integer otp,
-            @PathVariable String email
-    )
+            @RequestBody OtpDTO dto
+            )
     {
+        String email= dto.getEmail();
+        Integer otp = dto.getOtp();
+
         User user = userRepository.getUserByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("pleas provide an valid email "));
 
@@ -98,12 +103,13 @@ public class ForgotPasswordController {
     }
 
     // reset password
-    @PostMapping("/reset-password/{email}")
+    @PostMapping("/reset-password/")
     public ResponseEntity<String> resetPassword(
-            @RequestBody ResetPasswordDTO passwordDTO,
-            @PathVariable String email
+            @RequestBody ResetPasswordDTO passwordDTO
+
             )
     {
+        String email=passwordDTO.getEmail();
         if(!Objects.equals(passwordDTO.getPassword(),passwordDTO.getConfirmPassword()))
         {
             return new ResponseEntity<>("Passwords do not match", HttpStatus.EXPECTATION_FAILED);
