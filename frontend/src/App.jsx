@@ -17,6 +17,9 @@ import ProtectedRoutes from "../components/ProtectedRoutes"
 import { Toaster } from "react-hot-toast"
 import axios from "../api/axios"
 import LandingPage from "../pages/LandingPage/LandingPage"
+import Email from "../pages/ForgetPassword/Email"
+import OTP from "../pages/ForgetPassword/OTP"
+import ResetPassword from "../pages/ForgetPassword/ResetPassword"
 /**
  * e-commerce app for better understanding of filtering and query parameters
  * 
@@ -75,6 +78,9 @@ function App() {
 
           <Route path="/" element={<LandingPage/>} />
           <Route path="/registration" element={<Registration />} />
+          <Route path="/forget-password" element={<Email />} />
+          <Route path="/OTP" element={<OTP />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="/registration/splash" element={<Splash />} />
           <Route path="/registration/step1" element={<Step1 />} />
           <Route path="/registration/step2" element={<Step2 />} />

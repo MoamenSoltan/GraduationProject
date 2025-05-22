@@ -133,6 +133,7 @@ const Registration = () => {
             }}
           />
           {error && <p className="error-text">{error}</p>}
+          <p onClick={()=>navigate("/forget-password")} className="mt-3 underline hover:cursor-pointer text-[#0096C1]">forgot password?</p>
 
           <button
             className="custom-button hover:scale-105 transition-all"
