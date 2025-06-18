@@ -83,7 +83,7 @@ const StudentDashboard = () => {
         <Route path="/Quizzes/result/:id"  element={<QuizResults/>}/>
 
         <Route path="/Tasks"  element={<StudentTasks/>}/>
-        <Route path="/Tasks/:id"  element={<DetailedStudentTasks/>}/>
+        <Route path="/Tasks/:courseId/:taskId"  element={<DetailedStudentTasks/>}/>
         <Route path="/Tasks/all/:courseId"  element={<TasksforaCourse/>}/>
         <Route path="/Tools"  element={<Tools/>}>
             <Route path='/Tools/' element={<TextSummarization/>}/>

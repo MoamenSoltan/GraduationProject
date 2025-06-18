@@ -22,10 +22,10 @@ const OTP = () => {
     const sendOTP = async ()=>{
         try {
             //TODO: check if backend expects an object of objects or array
-            const response = await axios.post(`/forgot-password/verify-otp`,{otp,email})
+            const response = await axios.post(`/forgot-password/verify-otp/`,{otp,email})
             navigate("/reset-password",{state:{email:email}})
         } catch (error) {
-            toast.error(`an error occurred ${error}`)
+            toast.error(`an error occurred ${error.response.data.detail}`)
         }
     }
     sendOTP()
