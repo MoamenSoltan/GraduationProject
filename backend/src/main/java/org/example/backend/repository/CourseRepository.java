@@ -65,6 +65,6 @@ public interface CourseRepository extends JpaRepository<Course,Long> {
     boolean isInstructorOfCourse(@Param("instructorEmail") String instructorEmail,@Param("courseId") Long courseId);
 
 
-    @Query("select c from Course c where c.year=:academicYear and c.semester=:semester")
+    @Query("select c from Course c where c.year=:academicYear and c.semester=:semester ")
     List<Course> getCoursesBySemesterAndYearAcademic(@Param("academicYear") LevelYear academicYear,@Param("semester") Semester semester);
 }

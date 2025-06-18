@@ -107,4 +107,12 @@ public class TaskStudentController {
 
 
     }
+
+    @GetMapping("/task/{taskId}")
+    public ResponseEntity<ResponseTaskDTO> getTaskById(@PathVariable int courseId, @PathVariable int taskId )
+    {
+        ResponseTaskDTO task = taskService.getTaskById(taskId);
+        return ResponseEntity.ok(task);
+    }
+
 }

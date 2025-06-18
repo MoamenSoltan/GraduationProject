@@ -89,7 +89,8 @@ public class CourseService {
         Course course = courseRepo.findById(id)
                         .orElseThrow(()-> new ResourceNotFound("course", "id", id));
         courseRepo.delete(course);
-
+//        course.getStudentCourses().stream()
+//                .forEach(e-> System.out.println(e.getStudent().getUser().getEmail()));
         return "Course with id " + id + " deleted successfully";
     }
 

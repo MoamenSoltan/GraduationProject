@@ -14,6 +14,7 @@ import java.io.*;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @Service
@@ -180,6 +181,41 @@ public class FileService {
 
         return new ByteArrayInputStream(outputStream.toByteArray());
     }
+
+
+    public ByteArrayInputStream saveQuizResults(List<Map<String, Object>> quizSubmissionInstructors) {
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+
+        try (PrintWriter printWriter = new PrintWriter(outputStream)) {
+            // CSV header
+            printWriter.println("Student ID,Username,Email,Submission Time,Student Score,Total Degree");
+
+            for (Map<String, Object> student : quizSubmissionInstructors) {
+                String studentId = String.valueOf(student.get("studentId"));
+                String username = String.valueOf(student.get("username"));
+                String email = String.valueOf(student.get("email"));
+                String submissionTime = String.valueOf(student.get("submissionTime"));
+                String score = String.valueOf(student.get("score"));
+                String totalDegree = String.valueOf(student.get("totalDegree"));
+
+                String[] row = new String[] {
+                        studentId,
+                        username,
+                        email,
+                        submissionTime,
+                        score,
+                        totalDegree
+                };
+
+                printWriter.println(String.join(",", row));
+            }
+
+            printWriter.flush();
+        }
+
+        return new ByteArrayInputStream(outputStream.toByteArray());
+    }
+
 
     public List<StudentCourseDTO> parseCSV(MultipartFile file)
     {
