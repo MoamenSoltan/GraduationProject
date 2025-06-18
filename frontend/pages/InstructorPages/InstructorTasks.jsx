@@ -108,9 +108,7 @@ const InstructorTasks = () => {
   }
 
   const handleSubmit = async (e) => {
-    if(loading)
-      return
-    setloading(true)
+
     e.preventDefault()
 
     // Optional: validate required fields
@@ -120,7 +118,9 @@ const InstructorTasks = () => {
 
     try {
      
-
+    if(loading)
+      return
+    setloading(true)
       const newformData = new FormData()
 
       for (const key in formData) {
@@ -295,7 +295,7 @@ const navigate = useNavigate()
          </select>
 
           <button type="submit" className="custom-button">
-            Submit Task
+            {loading?"loading...":"Submit Task"}
           </button>
         </form>
       </Modal>

@@ -27,7 +27,7 @@ const ResetPassword = () => {
       
       const resetPassword = async () => {
         try {
-            const response = await axios.post(`/forgot-password/reset-password`,{password:newPassword,confirmPassword,email})
+            const response = await axios.post(`/forgot-password/reset-password/`,{password:newPassword,confirmPassword,email})
             toast.success("password reset successfully!")
             navigate("/registration");
         } catch (error) {

@@ -31,7 +31,7 @@ const Email = () => {
 
         const response = await axios.post(
           `/forgot-password/verify-email/`,
-          email
+          {email}
         );
         navigate("/OTP", { state: { email: email } });
       } catch (error) {

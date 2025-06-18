@@ -8,7 +8,7 @@ import Modal from '../../components/Modal';
 const QuizzesForaCourse = () => {
   const { courseId } = useParams();
   const [allQuizzes, setAllQuizzes] = useState([]);
-  const [quizInfo, setQuizInfo] = useState({ name: '', description: '', image: null, courseId });
+  const [quizInfo, setQuizInfo] = useState({ name: '', description: '', image: null, courseId,time:0,showResults:false });
   const [modal, setModal] = useState(false);
   const [questions, setQuestions] = useState([]);
   const [currentQuestion, setCurrentQuestion] = useState({
@@ -45,6 +45,10 @@ const QuizzesForaCourse = () => {
       correctAnswerIndex: null,
     });
   };
+
+  const handleCheckBox = ()=>{
+    setQuizInfo({...quizInfo,showResults:!quizInfo.showResults})
+  }
 
   const handleFinishQuiz = async () => {
     if (questions.length === 0) {
@@ -176,6 +180,19 @@ const QuizzesForaCourse = () => {
                            file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 transition"
                 onChange={(e) => setQuizInfo({ ...quizInfo, image: e.target.files[0] })}
               />
+            </div>
+
+            <div className="flex items-center gap-3 mt-2">
+              <input
+                type="checkbox"
+                id="show-results-checkbox"
+                checked={quizInfo.showResults}
+                onChange={handleCheckBox}
+                className="w-5 h-5 accent-blue-600 rounded focus:ring-2 focus:ring-blue-300 border-gray-300"
+              />
+              <label htmlFor="show-results-checkbox" className="text-gray-700 font-medium select-none cursor-pointer">
+                Viewable Results
+              </label>
             </div>
           </div>
 

@@ -47,7 +47,7 @@ const TasksforaCourse = () => {
       <div className="flex flex-wrap gap-6">
         {tasks.length > 0 ? (
           tasks.map((task) => (
-            <div onClick={()=>navigate(`/studentDashboard/Tasks/${task.id}`)}
+            <div onClick={()=>navigate(`/studentDashboard/Tasks/${courseId}/${task.id}`)}
               key={task.id}
               className="w-80 bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow p-6"
             >
