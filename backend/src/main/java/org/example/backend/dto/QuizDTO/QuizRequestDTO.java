@@ -18,4 +18,7 @@ public class QuizRequestDTO {
     private List<QuizQuestionDTO> quizQuestions;
     @JsonProperty("totalDegree")
     private int totalDegree;
+    @JsonProperty("showResults")
+    private Boolean showResults = false;
+
 }

@@ -4,11 +4,15 @@ import org.example.backend.dto.QuizDTO.*;
 import org.example.backend.service.QuizService;
 import org.example.backend.service.QuizSubmissionService;
 import org.example.backend.util.CurrentUser;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.ByteArrayInputStream;
 import java.util.List;
 
 @RestController
@@ -91,4 +95,26 @@ public class QuizInstructorController {
         List<?> submissionInstructors=quizSubmissionService.getAllStudentSubmission(quizId,courseId,instructorEmail);
         return ResponseEntity.ok( submissionInstructors);
     }
+
+    @GetMapping("/{quizId}/course/{courseId}/result/download")
+    public ResponseEntity<InputStreamResource> downloadQuizResult(
+            @PathVariable("quizId") Long quizId,
+            @PathVariable("courseId") Long courseId,
+            @CurrentUser String instructorEmail
+    ) {
+        ByteArrayInputStream csvData = quizSubmissionService.downloadQuizResult(quizId, courseId, instructorEmail);
+        HttpHeaders headers=new HttpHeaders();
+
+        String filename = "quiz_" + quizId + "_results.csv";
+        headers.add("Content-Disposition", "attachment; filename="+filename);
+
+        return ResponseEntity.ok()
+                .headers(headers)
+                .contentType(MediaType.parseMediaType("text/csv"))
+                .body(new InputStreamResource(csvData));
+
+    }
+
+
+
 }

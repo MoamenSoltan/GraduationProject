@@ -9,6 +9,7 @@ import org.example.backend.repository.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.ByteArrayInputStream;
 import java.util.*;
 
 @Service
@@ -21,8 +22,9 @@ public class QuizSubmissionService {
     private final CourseRepository courseRepository;
     private final QuizQuestionRepository quizQuestionRepository;
     private final QuizMapper quizMapper=new QuizMapper();
+    private final FileService fileService;
 
-    public QuizSubmissionService(QuizRepository quizRepository, StudentRepository studentRepository, StudentCourseRepository studentCourseRepository, QuizSubmissionRepository quizSubmissionRepository, StudentAnswerRepository studentAnswerRepository, CourseRepository courseRepository, QuizQuestionRepository quizQuestionRepository) {
+    public QuizSubmissionService(QuizRepository quizRepository, StudentRepository studentRepository, StudentCourseRepository studentCourseRepository, QuizSubmissionRepository quizSubmissionRepository, StudentAnswerRepository studentAnswerRepository, CourseRepository courseRepository, QuizQuestionRepository quizQuestionRepository, FileService fileService) {
         this.quizRepository = quizRepository;
         this.studentRepository = studentRepository;
         this.studentCourseRepository = studentCourseRepository;
@@ -30,6 +32,7 @@ public class QuizSubmissionService {
         this.studentAnswerRepository = studentAnswerRepository;
         this.courseRepository = courseRepository;
         this.quizQuestionRepository = quizQuestionRepository;
+        this.fileService = fileService;
     }
 
     @Transactional
@@ -190,16 +193,23 @@ public class QuizSubmissionService {
         Quiz quiz=quizRepository.findQuizByCourseAndQuizId(courseId,quizId)
                 .orElseThrow(()->new RuntimeException("Quiz not found"));
 
-        System.out.println("Quiz ID: " +quiz.getId() );
-        System.out.println("Student ID: " +student.getStudentId() );
-        System.out.println("course ID: " +course.getCourseId() );
+//        if(quiz.getShowResults()==null || !quiz.getShowResults())
+//        {
+//           // quiz.getQuestions().stream().forEach(e->e.setAnswer(null));
+//            System.out.println("Quiz results are not available yet");
+//        }
+//
+//        System.out.println("results are available : " + quiz.getShowResults());
+//        System.out.println("Quiz ID: " +quiz.getId() );
+//        System.out.println("Student ID: " +student.getStudentId() );
+//        System.out.println("course ID: " +course.getCourseId() );
         QuizSubmission quizSubmission=quizSubmissionRepository.findByQuizIdAndStudentId(quiz.getId(),student.getStudentId())
                 .orElseThrow(()->new RuntimeException("Quiz submission not found"));
 
         List<StudentAnswer> answers=studentAnswerRepository.findAllBySubmission(quizSubmission);
 
         QuizResult result=new QuizResult();
-        result.setQuiz(quizMapper.toQuizResponseDTO(quiz));
+        result.setQuiz(quizMapper.toQuizResponseDTO(quiz,quiz.getShowResults()));
         result.setMaxMarks(quiz.getTotalDegree());
         result.setTotalMarks(quizSubmission.getScore());
 
@@ -287,5 +297,32 @@ public class QuizSubmissionService {
         }
 
         return quizSubmissionInstructors;
+    }
+
+    public ByteArrayInputStream  downloadQuizResult(Long quizId, Long courseId, String instructorEmail) {
+        Course course=courseRepository.findById(courseId)
+                .orElseThrow(()->new RuntimeException("Course not found"));
+        boolean isInstructor=courseRepository.isInstructorOfCourse(instructorEmail,courseId);
+        if(!isInstructor)
+        {
+            throw new RuntimeException("Instructor is not enrolled in this course");
+        }
+
+        List<QuizSubmission> quizSubmissions=quizSubmissionRepository.findAllByCourse(course,quizId);
+        List<Map<String,Object>> quizSubmissionInstructors=new ArrayList<>();
+        for (QuizSubmission quizSubmission:quizSubmissions)
+        {
+            Map<String,Object> quizSubmissionInstructor=new HashMap<>();
+            quizSubmissionInstructor.put("studentId",quizSubmission.getStudent().getStudentId());
+            quizSubmissionInstructor.put("submissionTime",quizSubmission.getSubmittedAt());
+            quizSubmissionInstructor.put("username",quizSubmission.getStudent().getUser().getFirstName()+" "+quizSubmission.getStudent().getUser().getLastName());
+            quizSubmissionInstructor.put("email",quizSubmission.getStudent().getUser().getEmail());
+            quizSubmissionInstructor.put("score",quizSubmission.getScore());
+            quizSubmissionInstructor.put("totalDegree",quizSubmission.getQuiz().getTotalDegree());
+            quizSubmissionInstructors.add(quizSubmissionInstructor);
+
+        }
+        ByteArrayInputStream res=fileService.saveQuizResults(quizSubmissionInstructors);
+        return res;
     }
 }

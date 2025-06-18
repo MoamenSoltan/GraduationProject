@@ -18,6 +18,7 @@ public class QuizMapper {
         quiz.setDescription(quizRequestDTO.getQuizDescription());
         quiz.setDuration(quizRequestDTO.getQuizTime());
         quiz.setTotalDegree(quizRequestDTO.getTotalDegree());
+        quiz.setShowResults(quizRequestDTO.getShowResults());
 
         return quiz;
     }
@@ -87,6 +88,64 @@ public class QuizMapper {
             questionDTOs.add(dto);
         }
         quizResponseDTO.setQuizQuestions(questionDTOs);
+
+        return quizResponseDTO;
+    }
+    public QuizResponseDTO toQuizResponseDTO(Quiz quiz,boolean showResults) {
+
+        QuizResponseDTO quizResponseDTO = new QuizResponseDTO();
+        quizResponseDTO.setQuizId(quiz.getId());
+        quizResponseDTO.setQuizName(quiz.getTitle());
+        quizResponseDTO.setQuizDescription(quiz.getDescription());
+        quizResponseDTO.setQuizTime(quiz.getDuration());
+        quizResponseDTO.setTotalDegree(quiz.getTotalDegree());
+
+        List<QuizQuestion> questions = quiz.getQuestions();
+        List<QuestionResponseDTO> questionDTOs = new ArrayList<>();
+        if (showResults) {
+
+            for (QuizQuestion question : questions) {
+                QuestionResponseDTO dto = new QuestionResponseDTO();
+                dto.setQuestionId(question.getId());
+                dto.setQuestionText(question.getQuestionText());
+                dto.setQuestionType(question.getQuestionType());
+                dto.setPoints(question.getPoints());
+                dto.setCorrectAnswer(question.getAnswer());
+                List<OptionResponseDTO> optionDTOs = new ArrayList<>();
+                if (question.getOptions() != null) {
+                    for (QuestionOptionEntity option : question.getOptions()) {
+                        OptionResponseDTO optionDTO = new OptionResponseDTO();
+                        optionDTO.setOptionId(option.getId());
+                        optionDTO.setOptionText(option.getOption());
+                        optionDTOs.add(optionDTO);
+                    }
+                    dto.setOptions(optionDTOs);
+                }
+                questionDTOs.add(dto);
+            }
+            quizResponseDTO.setQuizQuestions(questionDTOs);
+        }else {
+            for (QuizQuestion question : questions) {
+                QuestionResponseDTO dto = new QuestionResponseDTO();
+                dto.setQuestionId(question.getId());
+                dto.setQuestionText(question.getQuestionText());
+                dto.setQuestionType(question.getQuestionType());
+                dto.setPoints(question.getPoints());
+                dto.setCorrectAnswer(null);
+                List<OptionResponseDTO> optionDTOs = new ArrayList<>();
+                if (question.getOptions() != null) {
+                    for (QuestionOptionEntity option : question.getOptions()) {
+                        OptionResponseDTO optionDTO = new OptionResponseDTO();
+                        optionDTO.setOptionId(option.getId());
+                        optionDTO.setOptionText(option.getOption());
+                        optionDTOs.add(optionDTO);
+                    }
+                    dto.setOptions(optionDTOs);
+                }
+                questionDTOs.add(dto);
+            }
+            quizResponseDTO.setQuizQuestions(questionDTOs);
+        }
 
         return quizResponseDTO;
     }

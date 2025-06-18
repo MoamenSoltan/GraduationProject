@@ -23,12 +23,14 @@ public class Quiz {
     @Column(name = "total_degree")
     private int totalDegree;
     private int duration;
+    @Column(name = "show_results")
+    private Boolean showResults= false;
     private LocalDateTime createdAt= LocalDateTime.now();
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "course_id")
     private Course course;
 
-    @OneToMany(mappedBy = "quiz", cascade = CascadeType.ALL, orphanRemoval = false)
+    @OneToMany(mappedBy = "quiz", cascade = CascadeType.ALL)
     private List<QuizQuestion> questions;
 
     @OneToMany(mappedBy = "quiz", cascade = CascadeType.ALL, orphanRemoval = false)
