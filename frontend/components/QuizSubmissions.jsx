@@ -17,7 +17,7 @@ const QuizSubmissions = () => {
           `/instructor/quiz/${quizId}/course/${courseId}/student/submission`
         );
         setSubmissions(response.data);
-      } catch (err) {
+      } catch {
         setError('Failed to load submissions.');
       } finally {
         setLoading(false);
@@ -31,6 +31,25 @@ const QuizSubmissions = () => {
     navigate(`/instructorDashboard/quizzes/${quizId}/course/${courseId}/student/${studentId}/submissions`);
   };
 
+  const handleDownloadCSV = async () => {
+    try {
+      const response = await axiosPrivate.get(
+        `/instructor/quiz/${quizId}/course/${courseId}/result/download`,
+        { responseType: 'blob' }
+      );
+      // Create a blob URL and trigger download
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', `quiz_${quizId}_course_${courseId}_results.csv`);
+      document.body.appendChild(link);
+      link.click();
+      link.parentNode.removeChild(link);
+    } catch {
+      setError('Failed to download CSV.');
+    }
+  };
+
   if (loading) return <div className="text-center mt-10">Loading submissions...</div>;
   if (error) return <div className="text-red-500 text-center mt-10">{error}</div>;
 
@@ -40,6 +59,12 @@ const QuizSubmissions = () => {
       <p className="text-sm text-gray-500 mb-6">
         Quiz ID: <span className="font-medium">{quizId}</span> | Course ID: <span className="font-medium">{courseId}</span>
       </p>
+      <button
+        onClick={handleDownloadCSV}
+        className="mb-6 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition"
+      >
+        Download CSV
+      </button>
 
       {submissions.length === 0 ? (
         <p className="text-gray-600">No submissions found.</p>

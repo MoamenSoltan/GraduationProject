@@ -194,6 +194,19 @@ const QuizzesForaCourse = () => {
                 Viewable Results
               </label>
             </div>
+
+            <div>
+              <label htmlFor="countdown-timer" className="block text-sm font-medium text-gray-700">Countdown Timer (minutes)</label>
+              <input
+                type="number"
+                id="countdown-timer"
+                className="w-full border rounded px-3 py-2 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-300"
+                placeholder="Enter time in minutes"
+                min={1}
+                value={quizInfo.time}
+                onChange={e => setQuizInfo({ ...quizInfo, time: e.target.value })}
+              />
+            </div>
           </div>
 
           <hr />
