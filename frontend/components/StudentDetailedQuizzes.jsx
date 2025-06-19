@@ -43,6 +43,8 @@ const StudentDetailedQuizzes = () => {
       <p className="text-gray-600 mt-2">{quiz.description}</p>
       <p className="text-sm text-gray-500 mt-1">Total Questions: {quiz.questions.length}</p>
       <p className="text-sm text-gray-500 mt-1">Total Marks: {quiz.totalDegree}</p>
+      <p className='text-sm text-gray-500 mt-1'>Time :</p>
+      {/* TODO:ADD time */}
 
       <div className="mt-6">
         <h2 className="text-2xl font-semibold text-gray-800">Questions</h2>

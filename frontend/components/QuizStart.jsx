@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import useAxiosPrivate from '../hooks/useAxiosPrivate';
 import toast from 'react-hot-toast';
@@ -11,6 +11,52 @@ const QuizStart = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [answers, setAnswers] = useState([]); // Object to store answers: { questionId: selectedOption }
   const quiz = state?.quiz;  // Destructure quiz from the location state
+
+  // Countdown timer state
+  const [timeLeft, setTimeLeft] = useState(null); // in seconds
+  const timerRef = useRef();
+
+  // useEffect #1: Initialize timer when quiz data is available or changes
+  // This effect sets the timer based on the quiz.time (in minutes) when the quiz is loaded.
+  useEffect(() => {
+    if (quiz && quiz.time && !isNaN(quiz.time) && Number(quiz.time) > 0) {
+      setTimeLeft(Number(quiz.time) * 60); // Convert minutes to seconds
+    }
+  }, [quiz]);
+  // It's good practice to use multiple useEffect hooks for different concerns.
+  // Here, one useEffect is responsible for initializing the timer when quiz data changes.
+
+  // useEffect #2: Countdown logic and auto-submit
+  // This effect handles the countdown by decrementing timeLeft every second.
+  // When timeLeft reaches zero, it automatically submits the quiz.
+  useEffect(() => {
+    if (timeLeft === null) return; // Timer not initialized yet
+    if (timeLeft <= 0) {
+      handleSubmit(); // Auto-submit when timer finishes
+      return;
+    }
+
+    /**
+     * Summary:
+Use setInterval for repeated actions (like a countdown timer).
+Use setTimeout for a one-time delayed action.
+Let me know if you want code examples for a specific use case!
+     */
+    // Set up interval to decrement timer every second
+    timerRef.current = setInterval(() => {
+      setTimeLeft((prev) => (prev > 0 ? prev - 1 : 0));
+    }, 1000);
+    // Clean up interval on unmount or when timeLeft changes
+    return () => clearInterval(timerRef.current);
+  }, [timeLeft]);
+  // Using a separate useEffect for the countdown logic keeps concerns isolated and code maintainable.
+
+  // Format time as mm:ss for display
+  const formatTime = (secs) => {
+    const m = Math.floor(secs / 60).toString().padStart(2, '0');
+    const s = (secs % 60).toString().padStart(2, '0');
+    return `${m}:${s}`;
+  };
 
   // Early return if there's no quiz data provided
   if (!quiz) {
@@ -76,6 +122,15 @@ const QuizStart = () => {
 
   return (
     <div className="max-w-3xl mx-auto mt-10 p-4 bg-white shadow rounded-lg">
+      {/* Countdown Timer */}
+      {quiz.time && !isNaN(quiz.time) && Number(quiz.time) > 0 && timeLeft !== null && (
+        <div className="mb-4 flex items-center justify-center">
+          {/* Timer display updates every second, shows minutes and seconds */}
+          <span className="text-lg font-semibold text-red-600 bg-gray-100 px-4 py-2 rounded shadow">
+            Time Left: {formatTime(timeLeft)}
+          </span>
+        </div>
+      )}
       <h2 className="text-xl font-bold mb-4">{quiz.name}</h2>
       <p className="mb-2 text-gray-600">{quiz.description}</p>
 
