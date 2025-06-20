@@ -377,4 +377,16 @@ CREATE TABLE student_answers (
                                  FOREIGN KEY (question_id) REFERENCES quiz_questions(question_id) ON DELETE CASCADE
 );
 
+CREATE TABLE materials (
+                           material_id bigint PRIMARY KEY,
+                           course_id BIGINT NOT NULL,
+                           title VARCHAR(255) NOT NULL,
+                           description TEXT,
+                           file_url TEXT NOT NULL,
+                           upload_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                           is_deleted BOOLEAN DEFAULT FALSE,
+
+                           CONSTRAINT fk_course FOREIGN KEY (course_id) REFERENCES courses(course_id)
+);
+
 

@@ -26,6 +26,10 @@ public class Quiz {
     @Column(name = "show_results")
     private Boolean showResults= false;
     private LocalDateTime createdAt= LocalDateTime.now();
+    @Column(name = "start_date")
+    private LocalDateTime startDate;
+    @Column(name = "end_date")
+    private LocalDateTime endDate;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "course_id")
     private Course course;
