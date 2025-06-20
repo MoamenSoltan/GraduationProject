@@ -76,6 +76,10 @@ public class Course {
     @JsonIgnore
     private List<Quiz> quizList;
 
+    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    @JsonIgnore
+    private List<Material> materials;
+
 
 
 }

@@ -6,6 +6,10 @@ import org.example.backend.entity.QuestionOptionEntity;
 import org.example.backend.entity.Quiz;
 import org.example.backend.entity.QuizQuestion;
 
+import javax.swing.text.DateFormatter;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,12 +17,17 @@ public class QuizMapper {
 
     public Quiz toEntityQuiz(QuizRequestDTO quizRequestDTO)
     {
+        final DateTimeFormatter formatter= DateTimeFormatter.ofPattern("yyyy-MM-dd");
         Quiz quiz=new Quiz();
         quiz.setTitle(quizRequestDTO.getQuizName());
         quiz.setDescription(quizRequestDTO.getQuizDescription());
         quiz.setDuration(quizRequestDTO.getQuizTime());
         quiz.setTotalDegree(quizRequestDTO.getTotalDegree());
         quiz.setShowResults(quizRequestDTO.getShowResults());
+        LocalDate startDate = LocalDate.parse(quizRequestDTO.getStartDate(), formatter);
+        LocalDate endDate = LocalDate.parse(quizRequestDTO.getEndDate(), formatter);
+        quiz.setStartDate(startDate.atStartOfDay());
+        quiz.setEndDate(endDate.atStartOfDay());
 
         return quiz;
     }

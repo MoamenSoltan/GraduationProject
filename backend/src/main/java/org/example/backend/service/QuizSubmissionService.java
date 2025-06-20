@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.ByteArrayInputStream;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
@@ -61,9 +63,14 @@ public class QuizSubmissionService {
         quizSubmission.setQuiz(quiz);
         quizSubmission.setStudent(student);
         quizSubmission.setScore(0);
-
+       // quizSubmission.setStartedAt(LocalDateTime.now());
         quizSubmission=quizSubmissionRepository.save(quizSubmission);
-
+/*
+        Duration elapsed = Duration.between(quizSubmission.getStartedAt(), LocalDateTime.now());
+        if (elapsed.toMinutes() > quiz.getDuration()) {
+            throw new RuntimeException("Time is up. You cannot submit the quiz.");
+        }
+*/
         int totalScore=0;
         for(AnswerDTO dto:dtos)
         {
@@ -123,9 +130,8 @@ public class QuizSubmissionService {
         {
             throw new RuntimeException("Student is not enrolled in this course");
         }
-        Quiz quiz=quizRepository.findQuizByCourseAndQuizId(courseId,quizId)
+        Quiz quiz=quizRepository.getQizIsAvailableById(courseId,quizId, LocalDateTime.now())
                 .orElseThrow(()->new RuntimeException("Quiz not found"));
-
 
 
 
@@ -156,6 +162,7 @@ public class QuizSubmissionService {
         List<QuizDTO> quizDTOList=new ArrayList<>();
         for(Quiz dto:quizzes)
         {
+
             boolean isSubmitted=false;
             QuizDTO quizDTO= quizMapper.toQuizDTO(dto);
             for (QuizSubmission quizSubmission:dto.getSubmissions())
@@ -167,6 +174,14 @@ public class QuizSubmissionService {
                     isSubmitted=true;
                     break;
                 }
+            }
+            if(dto.getStartDate()!=null && dto.getEndDate()!=null) {
+                if (dto.getStartDate().isAfter(LocalDateTime.now()) || dto.getEndDate().isBefore(LocalDateTime.now())) {
+                    quizDTO.setDeleted(true);
+                    ; // skip quizzes that are not available
+                }
+            }else if(dto.getStartDate()==null && dto.getEndDate()==null) {
+                quizDTO.setDeleted(true);
             }
 
             if(!isSubmitted)

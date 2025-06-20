@@ -12,6 +12,7 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -26,10 +27,11 @@ import java.util.Arrays;
 import java.util.Collections;
 
 @Configuration
+@EnableMethodSecurity
 public class SecurityConfig {
     private static final String[] PUBLIC_URLS = {
             "/auth/login", "/auth/register","auth/refreshToken","auth/refresh_token","/forgot-password/**","/task/course/**",
-            "/test/**", "/api/**",
+            "/test/**",
             "/v2/api-docs", "/v3/api-docs",
             "/v3/api-docs/**", "/swagger-resources",
             "/swagger-resources/**", "/configuration/ui",
@@ -60,7 +62,7 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(PUBLIC_URLS).permitAll()
-                        .requestMatchers("/admin/**","/api/**").permitAll()
+                        .requestMatchers("/admin/**").permitAll()
                         .requestMatchers("/auth/data").hasAuthority("ROLE_INSTRUCTOR")
                         .requestMatchers("/instructor/**","/task/create").hasAuthority("ROLE_INSTRUCTOR")
                         .requestMatchers("/student/**").hasAuthority("ROLE_STUDENT")

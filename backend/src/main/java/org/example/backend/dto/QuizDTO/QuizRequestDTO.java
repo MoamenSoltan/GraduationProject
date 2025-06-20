@@ -20,5 +20,9 @@ public class QuizRequestDTO {
     private int totalDegree;
     @JsonProperty("showResults")
     private Boolean showResults = false;
+    @JsonProperty("startDate")
+    private String startDate;
+    @JsonProperty("endDate")
+    private String endDate;
 
 }
