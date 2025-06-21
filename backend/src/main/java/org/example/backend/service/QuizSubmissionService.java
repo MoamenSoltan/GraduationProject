@@ -138,6 +138,7 @@ public class QuizSubmissionService {
 
 
         QuizResponseDTO dto = quizMapper.toQuizResponseDTO(quiz);
+        dto.setShowResults(quiz.getShowResults());
 
         for(QuestionResponseDTO question: dto.getQuizQuestions())
         {
