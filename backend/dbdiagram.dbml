@@ -1,0 +1,245 @@
+// Enums
+enum role_name {
+  ADMIN
+  STUDENT
+  INSTRUCTOR
+}
+enum user_type {
+  STUDENT
+  INSTRUCTOR
+}
+enum admission_status {
+  PENDING
+  ACCEPTED
+  REJECTED
+}
+enum gender {
+  MALE
+  FEMALE
+}
+enum department_name {
+  CS
+  IT
+  IS
+  general
+}
+enum fees_status {
+  paid
+  pending
+}
+enum academic_year {
+  FIRST_YEAR
+  SECOND_YEAR
+  THIRD_YEAR
+  FOURTH_YEAR
+}
+enum semester_name {
+  Fall
+  Spring
+  Summer
+}
+enum status {
+  SUBMITTED
+  GRADED
+}
+enum question_type {
+  MCQ
+  TRUE_FALSE
+  SHORT_ANSWER
+}
+
+// Tables
+table roles {
+  id int [pk, increment]
+  role_name role_name [default: 'STUDENT']
+}
+
+table users {
+  id int [pk, increment]
+  first_name varchar
+  last_name varchar
+  gender gender
+  email varchar [unique]
+  password varchar
+}
+
+table user_roles {
+  user_id int [ref: > users.id]
+  role_id int [ref: > roles.id]
+  primary key (user_id, role_id)
+}
+
+table department {
+  department_id int [pk, increment]
+  department_name department_name [default: 'general']
+  head_of_department_id int [ref: - instructors.instructor_id]
+  created_at timestamp
+}
+
+table submission_request {
+  id int [pk, increment]
+  first_name varchar
+  last_name varchar
+  email varchar [unique]
+  password varchar
+  user_type user_type [default: 'STUDENT']
+  academic_year academic_year [default: 'FIRST_YEAR']
+  high_school_name varchar
+  graduation_year varchar
+  high_school_gpa double
+  high_school_certificate varchar
+  phone_number varchar
+  id_photo varchar
+  personal_photo varchar
+  country varchar
+  city varchar
+  address varchar
+  admission_status admission_status [default: 'PENDING']
+  gender gender
+  created_at timestamp
+}
+
+table students {
+  student_id int [pk, increment]
+  user_id int [ref: > users.id]
+  academic_year academic_year [default: 'FIRST_YEAR']
+  gpa double
+  department_id int [ref: > department.department_id]
+  fees_status fees_status
+  created_at timestamp
+  submission_request_id int [ref: > submission_request.id]
+}
+
+table instructors {
+  instructor_id int [pk, increment]
+  user_id int [ref: > users.id]
+  department_id int [ref: > department.department_id]
+  created_at timestamp
+  bio text
+  personal_image varchar
+}
+
+table semester {
+  year_level int
+  semester_name semester_name
+  start_date date
+  end_date date
+  is_active boolean [default: false]
+  created_at timestamp
+  primary key (year_level, semester_name)
+}
+
+table courses {
+  course_id int [pk, increment]
+  course_name varchar
+  course_code varchar [unique]
+  credit int
+  department_id int [ref: > department.department_id]
+  semester_year_level int
+  semester_name semester_name
+  instructor_id int [ref: - instructors.instructor_id]
+  prerequisites_course_id int [ref: > courses.course_id]
+  course_description text
+  created_at timestamp
+}
+
+table student_course {
+  student_id int [ref: > students.student_id]
+  course_id int [ref: > courses.course_id]
+  semester_year_level int
+  semester_name semester_name
+  degree double
+  enrollment_date timestamp
+  primary key (student_id, course_id, semester_year_level, semester_name)
+}
+
+table refresh_tokens {
+  id bigint [pk, increment]
+  token varchar [unique]
+  user_id int [ref: > users.id]
+  expiry_date timestamp
+  revoked boolean [default: false]
+}
+
+table forgot_password {
+  fp_Id int [pk, increment]
+  otp int
+  expiration_time datetime
+  user_id int [ref: > users.id]
+}
+
+table tasks {
+  task_id int [pk, increment]
+  course_id int [ref: > courses.course_id]
+  instructor_id int [ref: > instructors.instructor_id]
+  title varchar
+  description text
+  due_date datetime
+  max_grade int
+  created_at timestamp
+  updated_at timestamp
+}
+
+table task_submissions {
+  submission_id int [pk, increment]
+  task_id int [ref: > tasks.task_id]
+  student_id int [ref: > students.student_id]
+  file_path varchar
+  submission_date timestamp
+  grade int
+  feedback text
+  status status [default: 'SUBMITTED']
+}
+
+table quizzes {
+  quiz_id bigint [pk, increment]
+  title varchar
+  description text
+  course_id int [ref: > courses.course_id]
+  duration int
+  total_degree int
+  created_at timestamp
+}
+
+table quiz_questions {
+  question_id bigint [pk, increment]
+  question_text text
+  question_type question_type [default: 'MCQ']
+  answer varchar
+  points int
+  quiz_id bigint [ref: > quizzes.quiz_id]
+}
+
+table question_options {
+  option_id bigint [pk, increment]
+  question_id bigint [ref: > quiz_questions.question_id]
+  option_text varchar
+}
+
+table quiz_submissions {
+  submission_id bigint [pk, increment]
+  student_id int [ref: > students.student_id]
+  quiz_id bigint [ref: > quizzes.quiz_id]
+  submitted_at timestamp
+  total_score int
+}
+
+table student_answers {
+  answer_id bigint [pk, increment]
+  submission_id bigint [ref: > quiz_submissions.submission_id]
+  question_id bigint [ref: > quiz_questions.question_id]
+  selected_option varchar
+  short_answer text
+  is_correct boolean
+  score_awarded int
+}
+
+table materials {
+  material_id bigint [pk]
+  course_id bigint [ref: > courses.course_id]
+  title varchar
+  description text
+  file_url text
+  upload_date timestamp
+  is_deleted boolean [default: false]
+} 

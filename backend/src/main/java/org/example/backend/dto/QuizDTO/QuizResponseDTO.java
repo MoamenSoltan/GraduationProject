@@ -21,4 +21,6 @@ public class QuizResponseDTO {
     @JsonProperty("totalDegree")
     private int totalDegree;
     private String status;
+    @JsonProperty("showResults")
+    private boolean showResults;
 }
