@@ -72,7 +72,7 @@ const InstructorTasks = () => {
         // TODO: dont forget tostring() , and ?
         setTasks(response.data)
       } catch (error) {
-        toast.error(`An error occurred: ${error}`)
+        
       }
     }
     
@@ -161,6 +161,7 @@ const navigate = useNavigate()
       <div className='w-full flex justify-between'>
       <h2 className="text-2xl font-semibold mb-4 text-gray-800">Tasks</h2>
 
+
       <div className='flex gap-2'>
         <select value={selectedCourse} onChange={(e)=>handleFilterChange("courseId",e.target.value)}  className=' border-2 rounded-md outline-none' name="courseId">
           <option value="">All Courses</option>
@@ -176,7 +177,12 @@ const navigate = useNavigate()
           <option value="desc">Descending</option>
         </select>
       </div>
+      
       </div>
+      {
+        tasks.length===0&&
+        <h1 className='text-gray-400 text-xl  text-center'>no tasks added yet.</h1>
+      }
       <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mt-8">
   {currentTasks.map((task) => (
     <div onClick={()=>navigate(`/instructorDashboard/Tasks/${task.id}`)} key={task.id} className="p-4 bg-white rounded-xl shadow-md border hover:shadow-lg transition">
@@ -229,9 +235,10 @@ const navigate = useNavigate()
             </div>
      }
 
-      <button
+<button
         onClick={() => setModal(true)}
-        className="fixed bottom-5 right-5 p-4 w-28 h-28 rounded-full bg-blue-600 text-white hover:scale-105 transition-all text-2xl"
+        className="block mx-auto mt-8 p-4 w-20 h-20 rounded-full bg-blue-600 text-white text-3xl shadow-lg hover:scale-110 transition-all"
+        title="Add Material"
       >
         +
       </button>

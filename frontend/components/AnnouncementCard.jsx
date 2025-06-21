@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { trimText } from "../utils/trim";
 import Modal from "./Modal";
+import dayjs from "dayjs";
 
 const AnnouncementCard = ({ title, description, date, instructor, course, type }) => {
   const [open, setOpen] = useState(false)
@@ -12,7 +13,7 @@ const AnnouncementCard = ({ title, description, date, instructor, course, type }
       <p className="text-gray-500 text-sm">{trimText(description, 50)}</p>
       <p className="text-gray-700 text-sm">Instructor: {instructor}</p>
       <p className="text-gray-700 text-sm">Course: {course}</p>
-      <p className="text-gray-700 text-sm">Date: {date} </p>
+      <p className="text-gray-700 text-sm">Date: {dayjs(date).format('MMMM D, YYYY')} </p>
 
       <div className="flex flex-row justify-between mt-2">
        
@@ -31,7 +32,7 @@ const AnnouncementCard = ({ title, description, date, instructor, course, type }
       <p className="text-gray-500 text-sm">{description}</p>
       <p className="text-gray-700 text-sm">Instructor: {instructor}</p>
       <p className="text-gray-700 text-sm">Course: {course}</p>
-      <p className="text-gray-700 text-sm">Date: {date} </p>
+      <p className="text-gray-700 text-sm">Date: {dayjs(date).format('MMMM D, YYYY')} </p>
 
       <div className="flex flex-row justify-between mt-2">
        

@@ -26,6 +26,7 @@ const QuizSummary = () => {
         setQuiz(response.data)
 
         
+       console.log("quiz info :",response.data);
        
 
         

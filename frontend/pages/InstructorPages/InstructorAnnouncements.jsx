@@ -33,9 +33,7 @@ const InstructorAnnouncements = () => {
   const handleFormSubmit = async (e) => {
     e.preventDefault()
     try {
-      const response = await axiosPrivate.post(`/instructor/announcement`,announcementData)
-      
-      
+      await axiosPrivate.post(`/instructor/announcement`,announcementData)
       setModal(false)
       setreFetch(!reFetch)
       toast.success("announcement created successfully!")
@@ -78,13 +76,11 @@ const InstructorAnnouncements = () => {
   return (
     <div className='md:w-[80%] w-full m-auto mt-10'>
       <h2 className="text-2xl font-semibold mb-4 text-gray-800">Announcements</h2>
+      {announcements.length === 0 && (
+        <h1 className="text-gray-400 text-center text-lg w-full mb-6">No announcements yet.</h1>
+      )}
 
-      <button
-        onClick={() => setModal(true) }
-        className="fixed bottom-5 right-5 p-4 w-28 h-28 rounded-full bg-blue-600 text-white hover:scale-105 transition-all text-2xl"
-      >
-        +
-      </button>
+
 
       <div className="flex flex-wrap gap-4 justify-start">
   {announcements.map((announcement) => (
@@ -108,7 +104,15 @@ const InstructorAnnouncements = () => {
       </div>
     </div>
   ))}
+  
 </div>
+<button
+        onClick={() => setModal(true)}
+        className="block mx-auto mt-8 p-4 w-20 h-20 rounded-full bg-blue-600 text-white text-3xl shadow-lg hover:scale-110 transition-all"
+        title="Add Material"
+      >
+        +
+      </button>
 
 
 

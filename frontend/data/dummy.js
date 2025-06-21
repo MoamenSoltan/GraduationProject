@@ -74,7 +74,7 @@ export const sideBarLinks = {
 
   },
   {
-    name : "About us",
+    name : "Material",
     icon : RiUserCommunityLine
   },
   {
@@ -118,6 +118,10 @@ export const sideBarLinks = {
     {
       name : "Tasks",
       icon : AiOutlineFileDone
+    },
+    {
+      name : "Material",
+      icon : RiUserCommunityLine
     }
   ]
 }

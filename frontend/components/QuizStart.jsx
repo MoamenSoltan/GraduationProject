@@ -112,7 +112,9 @@ Let me know if you want code examples for a specific use case!
       toast.success("Quiz submitted successfully!");
       console.log(response.data); // Optional: see what backend returns
       // After successful submit, maybe navigate to summary
-      navigate(`/studentDashboard/Quizzes/${quizId}/${courseId}/summary`, { state: { answers, quiz } });
+      quiz.showResults ?
+      navigate(`/studentDashboard/Quizzes/${quizId}/${courseId}/summary`, { state: { answers, quiz } })
+      :navigate(`/studentDashboard/Quizzes/all/${courseId}`)
     } catch (error) {
       console.error("Submission Error:", error);
       toast.error(`An error occurred: ${error.response?.data?.detail || error.message}`);

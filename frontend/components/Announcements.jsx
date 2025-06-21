@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import AnnouncementCard from './AnnouncementCard';
 import { IoIosNotificationsOff } from "react-icons/io";
 import useAxiosPrivate from '../hooks/useAxiosPrivate';
+import dayjs from 'dayjs'
+
 import toast from 'react-hot-toast';
 
 const Announcements = ({preview}) => {
@@ -41,13 +43,13 @@ const Announcements = ({preview}) => {
         {announcementsData && announcementsData.length > 0 &&preview ? (
           announcementsData.slice(0,3).map((announcement) => (
             <AnnouncementCard
-              key={announcement.announcementId} title={announcement.title} course={announcement.courseName} date={announcement.announcementDate.toLocaleString()} description={announcement.description} instructor={announcement.instructorName} type={announcement.type}
+              key={announcement.announcementId} title={announcement.title} course={announcement.courseName} date={dayjs(announcement.announcementDate.toLocaleString()).format('MMMM D, YYYY')} description={announcement.description} instructor={announcement.instructorName} type={announcement.type}
             />
           ))
         ) :announcementsData && announcementsData.length > 0 &&preview===false ? (
           announcementsData.map((announcement) => (
             <AnnouncementCard
-            key={announcement.announcementId} title={announcement.title} course={announcement.courseName} date={announcement.announcementDate.toLocaleString()} description={announcement.description} instructor={announcement.instructorName} type={announcement.type}
+            key={announcement.announcementId} title={announcement.title} course={announcement.courseName} date={dayjs(announcement.announcementDate.toLocaleString()).format('MMMM D, YYYY')} description={announcement.description} instructor={announcement.instructorName} type={announcement.type}
             />
           ))
         ) : (

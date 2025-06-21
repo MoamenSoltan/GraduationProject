@@ -19,7 +19,7 @@ const StudentDetailedQuizzes = () => {
       try {
         const res = await axiosPrivate.get(`/student/quiz/${quizId}/course/${courseId}/get`);
         setQuiz(res.data);
-        console.log("fetched quiz :",res.data);
+        console.log(" quiz :",res.data);
         console.log("quiz status :",status);
 
         
@@ -78,12 +78,14 @@ const StudentDetailedQuizzes = () => {
         >
           Start Quiz
         </button>
-        :<button
-          onClick={() => navigate(`/studentDashboard/Quizzes/${quizId}/${courseId}/summary`)}
-          className="px-6 py-2 bg-green-600 text-white rounded hover:bg-green-700"
-        >
-          view result
-        </button>
+        :quiz.showResults 
+        ?<button
+        onClick={() => navigate(`/studentDashboard/Quizzes/${quizId}/${courseId}/summary`)}
+        className="px-6 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+      >
+        view result
+      </button>
+      :<h1>Results not allowed by instructor</h1>
         }
       </div>
 
