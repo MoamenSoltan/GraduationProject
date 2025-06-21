@@ -4,11 +4,15 @@ import useAxiosPrivate from '../../hooks/useAxiosPrivate';
 import { trimText } from '../../utils/trim';
 import toast from 'react-hot-toast';
 import Modal from '../../components/Modal';
+import dayjs from 'dayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
 const QuizzesForaCourse = () => {
   const { courseId } = useParams();
   const [allQuizzes, setAllQuizzes] = useState([]);
-  const [quizInfo, setQuizInfo] = useState({ name: '', description: '', image: null, courseId,time:0,showResults:false });
+  const [quizInfo, setQuizInfo] = useState({ name: '', description: '', image: null, courseId,time:0,showResults:false,startDate:'',endDate:'' });
   const [modal, setModal] = useState(false);
   const [questions, setQuestions] = useState([]);
   const [currentQuestion, setCurrentQuestion] = useState({
@@ -67,9 +71,12 @@ const QuizzesForaCourse = () => {
     const payload = {
       name: quizInfo.name,
       description: quizInfo.description,
-      time: 0,
+      time: quizInfo.time,
       totalDegree: formattedQuestions.length,
       questions: formattedQuestions,
+      startDate: quizInfo.startDate ? dayjs(quizInfo.startDate).format('YYYY-MM-DD') : '',
+      endDate: quizInfo.endDate ? dayjs(quizInfo.endDate).format('YYYY-MM-DD') : '',
+      showResults: quizInfo.showResults,
     };
 
     try {
@@ -135,9 +142,10 @@ const QuizzesForaCourse = () => {
         </div>
       )}
 
-      <button
+<button
         onClick={() => setModal(true)}
-        className="fixed bottom-5 right-5 p-4 w-28 h-28 rounded-full bg-blue-600 text-white hover:scale-105 transition-all text-2xl"
+        className="block mx-auto mt-8 p-4 w-20 h-20 rounded-full bg-blue-600 text-white text-3xl shadow-lg hover:scale-110 transition-all"
+        title="Add Material"
       >
         +
       </button>
@@ -180,6 +188,34 @@ const QuizzesForaCourse = () => {
                            file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 transition"
                 onChange={(e) => setQuizInfo({ ...quizInfo, image: e.target.files[0] })}
               />
+            </div>
+
+            {/* Start Date Picker */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Start Date</label>
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DatePicker
+                  label="Start Date"
+                  value={quizInfo.startDate ? dayjs(quizInfo.startDate) : null}
+                  onChange={newValue => setQuizInfo({ ...quizInfo, startDate: newValue ? newValue.toISOString() : '' })}
+                  format="YYYY-MM-DD"
+                  className="w-full"
+                />
+              </LocalizationProvider>
+            </div>
+
+            {/* End Date Picker */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700">End Date</label>
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DatePicker
+                  label="End Date"
+                  value={quizInfo.endDate ? dayjs(quizInfo.endDate) : null}
+                  onChange={newValue => setQuizInfo({ ...quizInfo, endDate: newValue ? newValue.toISOString() : '' })}
+                  format="YYYY-MM-DD"
+                  className="w-full"
+                />
+              </LocalizationProvider>
             </div>
 
             <div className="flex items-center gap-3 mt-2">
