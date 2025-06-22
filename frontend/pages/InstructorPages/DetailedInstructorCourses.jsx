@@ -58,7 +58,7 @@ const DetailedInstructorCourses = () => {
   const handleDownloadCSV = async () => {
     try {
       const res = await axiosPrivate.get(
-        `/instructor/course/${id}/student/download`,
+        `/instructor/course/${id}/student/result/download`,
         {
           responseType: "blob", // very important!
         }

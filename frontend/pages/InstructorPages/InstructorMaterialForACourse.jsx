@@ -60,7 +60,11 @@ const InstructorMaterialForACourse = () => {
       data.append('filePath', form.file);
       data.append('courseId', courseId);
 
-      await axiosPrivate.post(`/material/course/${courseId}`, data);
+      await axiosPrivate.post(`/material/course/${courseId}`, data, {
+        headers : {
+          "Content-Type ":"multipart/formData"
+        }
+      });
 
       toast.success('Material added successfully!');
       setModal(false);

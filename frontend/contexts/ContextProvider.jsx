@@ -52,7 +52,7 @@ export const ContextProvider = ({children})=>{
  
   const [auth, setAuth] = useState({})
 
-  const Placeholder = "App_Name"
+  const Placeholder = "EDU Mate"
    return (
     <stateContext.Provider value={{
         Placeholder,user,setUser,
