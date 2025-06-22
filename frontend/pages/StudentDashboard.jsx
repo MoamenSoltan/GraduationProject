@@ -32,6 +32,7 @@ import SummarizeVideo from "./StudentPages/Tools/SummarizeVideo";
 import StudentMaterial from "./StudentPages/StudentMaterial";
 import StudentMaterialForACourse from "./StudentPages/StudentMaterialForACourse";
 import DetailedMaterialsForACourse from "./StudentPages/DetailedMaterialsForACourse";
+import StudentResults from "./StudentPages/StudentResults";
 
 // conditional rendering based on route 
 
@@ -98,8 +99,7 @@ const StudentDashboard = () => {
 
 
 
-
-
+        <Route path="/Results"  element={<StudentResults/>}/>
         <Route path="/Instructors"  element={<Instructors/>}/>
         <Route path="/material"  element={<StudentMaterial/>}/>
         <Route path="/material/:courseId"  element={<StudentMaterialForACourse/>}/>
