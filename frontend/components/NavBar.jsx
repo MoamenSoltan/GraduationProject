@@ -36,6 +36,10 @@ const NavBar = () => {
         onClick={() => {
           if(auth.roles[0]==="STUDENT")
           navigate("/studentDashboard/profile");
+          else if(auth.roles[0]==="INSTRUCTOR")
+          navigate("/instructorDashboard/profile");
+
+
           console.log("auth :",auth);
           
           

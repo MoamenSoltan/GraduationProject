@@ -18,6 +18,7 @@ import QuizzesForaCourse from './InstructorPages/QuizzesForaCourse'
 import QuizSubmissions from '../components/QuizSubmissions'
 import InstructorMaterial from './InstructorPages/InstructorMaterial'
 import InstructorMaterialForACourse from './InstructorPages/InstructorMaterialForACourse'
+import InstructorProfile from './InstructorPages/InstructorProfile'
 const InstructorDashboard = () => {
     const {activeMenu}=useStateContext()
   
@@ -67,6 +68,8 @@ const InstructorDashboard = () => {
 <Route path='/tasks/:taskId/submissions/:submissionId/:courseId' element={<ReviewTasks/>}/>
 <Route path='/material' element={<InstructorMaterial/>}/>
 <Route path='/material/:courseId' element={<InstructorMaterialForACourse/>}/>
+<Route path='/profile' element={<InstructorProfile/>}/>
+
 
 
 
