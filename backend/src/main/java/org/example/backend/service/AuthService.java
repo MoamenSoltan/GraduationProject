@@ -23,6 +23,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -41,9 +42,10 @@ public class AuthService {
     private final FileService fileService;
     private final RefreshTokenService refreshTokenService;
     private final RefreshTokenRepository refreshTokenRepository;
+    private final UserDetailsService userDetailsService;
 
 
-    public AuthService(AuthenticationManager manager, JwtService jwtService, UserRepository userRepository, StudentRepository studentRepository, InstructorRepository instructorRepository, FileService fileService, RefreshTokenService refreshTokenService, RefreshTokenRepository refreshTokenRepository, SubmissionReqRepository submissionReqRepository) {
+    public AuthService(AuthenticationManager manager, JwtService jwtService, UserRepository userRepository, StudentRepository studentRepository, InstructorRepository instructorRepository, FileService fileService, RefreshTokenService refreshTokenService, RefreshTokenRepository refreshTokenRepository, SubmissionReqRepository submissionReqRepository, UserDetailsService userDetailsService) {
         this.manager = manager;
         this.jwtService = jwtService;
         this.userRepository = userRepository;
@@ -53,6 +55,7 @@ public class AuthService {
         this.refreshTokenService = refreshTokenService;
         this.refreshTokenRepository = refreshTokenRepository;
         this.submissionReqRepository = submissionReqRepository;
+        this.userDetailsService = userDetailsService;
     }
 
     public boolean isAdmin(UserDetails userDetails)
@@ -147,6 +150,68 @@ public class AuthService {
         return response;
     }
 
+    public AuthResponse checkAuth(String email, HttpServletResponse servletResponse) {
+        Optional<SubmissionRequest> request = submissionReqRepository.getByEmail(email);
+
+        AuthResponse response = new AuthResponse();
+
+        // Case 1: User has a pending or rejected submission request
+        if (request.isPresent()) {
+            SubmissionRequest req = request.get();
+            if (!AdmissionStatus.ACCEPTED.equals(req.getAdmissionStatus())) {
+                response.setEmail(email);
+                response.setFirstName(req.getFirstName());
+                response.setLastName(req.getLastName());
+                response.setStatus(req.getAdmissionStatus().toString());
+                return response;
+            }
+        }
+
+        // Case 2: Authenticated system user
+        User user = userRepository.getUserByEmail(email)
+                .orElseThrow(() -> new BadCredentialsException("Invalid email or password."));
+
+        UserDetails userDetails = userDetailsService.loadUserByUsername(user.getEmail());
+
+        // Manually create authentication and set it into the security context
+        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+                userDetails, null, userDetails.getAuthorities());
+        SecurityContextHolder.getContext().setAuthentication(authToken);
+
+        // Generate tokens
+        String accessToken = jwtService.generateAccessToken(userDetails);
+        String refreshToken = jwtService.generateRefreshToken(userDetails);
+
+        setAccessTokenCookie(servletResponse, accessToken);
+        setRefreshTokenCookie(servletResponse, refreshToken);
+
+        // Build base auth response
+        response.setAccessToken(accessToken);
+        response.setRefreshToken(refreshToken);
+        response.setEmail(user.getEmail());
+        response.setFirstName(user.getFirstName());
+        response.setLastName(user.getLastName());
+        response.setMessage("User login successful");
+        response.setRoles(getUserRoles(userDetails));
+
+        // Add role-specific data
+        Student student = studentRepository.findByUser(user).orElse(null);
+        Instructor instructor = instructorRepository.findByUser(user).orElse(null);
+
+        if (student != null) {
+            populateStudentResponse(response, student);
+        } else if (instructor != null) {
+            populateInstructorResponse(response, instructor);
+        } else if (isAdmin(userDetails)) {
+            // Nothing to add, already handled by roles
+        } else {
+            throw new RuntimeException("User type not recognized");
+        }
+
+        return response;
+    }
+
+
 
     public ResponseEntity<?> refreshToken(HttpServletRequest request, HttpServletResponse response) {
         String refreshToken = extractRefreshTokenFromCookie(request);
@@ -233,11 +298,11 @@ public class AuthService {
         response.addHeader("Set-Cookie", refreshCookie.toString());
     }
 
-    private  void setAccessTokenCookie(HttpServletResponse response, String accessToken) {
+    public   void setAccessTokenCookie(HttpServletResponse response, String accessToken) {
         ResponseCookie refreshCookie = ResponseCookie.from("accessToken", accessToken)
                 .httpOnly(true) // Secure against XSS
-                .secure(true) // Use HTTPS in production
-                .sameSite("Strict") // Prevent CSRF attacks
+                .secure(false) // Use HTTPS in production
+                .sameSite("lax") // Prevent CSRF attacks
                 .path("/") // Only used for refresh endpoint
                 .maxAge(15*60) // 7 days
                 .build();

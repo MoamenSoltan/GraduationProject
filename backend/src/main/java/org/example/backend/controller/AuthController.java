@@ -5,21 +5,28 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.example.backend.config.CustomUserDetails;
+import org.example.backend.config.JWt.JwtService;
 import org.example.backend.dto.RefreshTokenRequest;
 import org.example.backend.dto.submissionDto.SubmissionImages;
 import org.example.backend.dto.submissionDto.SubmissionInfoRequestDTO;
 import org.example.backend.service.AuthService;
 import org.example.backend.util.AuthResponse;
+import org.example.backend.util.FileResponse;
 import org.example.backend.util.LoginRequest;
 import org.example.backend.service.SubmissionRequestService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/auth")
@@ -27,11 +34,15 @@ import java.util.Map;
 public class AuthController {
     private final SubmissionRequestService requestService;
    private final AuthService authService;
+    private final JwtService jwtService;
+    private final UserDetailsService userDetailsService;
 
 
-    public AuthController( SubmissionRequestService requestService, AuthService authService) {
+    public AuthController(SubmissionRequestService requestService, AuthService authService, JwtService jwtService, UserDetailsService userDetailsService) {
         this.requestService = requestService;
         this.authService = authService;
+        this.jwtService = jwtService;
+        this.userDetailsService = userDetailsService;
     }
 
 
@@ -93,12 +104,21 @@ public class AuthController {
         return "data";
     }
 
-//    @GetMapping("/checkAuth")
-//    public ResponseEntity<?> checkAuth()
-//    {
-//        Authentication authentication= SecurityContextHolder.getContext().getAuthentication();
-//        String email = authentication.getName();
-//    }
+    @GetMapping("/me")
+    public ResponseEntity<?> getCurrentUser(HttpServletRequest request, HttpServletResponse response) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+        // Check if the user is authenticated
+        if (auth == null || !auth.isAuthenticated() || "anonymousUser".equals(auth.getPrincipal())) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Not authenticated");
+        }
+
+        // Call the service to process authentication
+        AuthResponse authResponse = authService.checkAuth(auth.getName(), response);
+        return ResponseEntity.ok(authResponse);
+    }
+
+
 
 
 }
