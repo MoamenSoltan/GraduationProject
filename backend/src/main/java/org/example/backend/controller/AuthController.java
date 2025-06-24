@@ -15,9 +15,11 @@ import org.example.backend.service.SubmissionRequestService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/auth")
@@ -47,6 +49,7 @@ public class AuthController {
 
         return ResponseEntity.ok(response);
     }
+
 
     @Operation(
             summary = "User registration",

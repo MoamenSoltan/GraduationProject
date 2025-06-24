@@ -91,7 +91,7 @@ public class AuthService {
 
                 response.setEmail(email);
                 response.setFirstName(request1.getFirstName());
-                response.setFirstName(request1.getLastName());
+                response.setLastName(request1.getLastName());
                 response.setStatus(request1.getAdmissionStatus().toString());
                 return response;
             }
@@ -116,6 +116,7 @@ public class AuthService {
 
         String refreshToken = jwtService.generateRefreshToken(userDetails);
         setRefreshTokenCookie(servletResponse,refreshToken);
+        setAccessTokenCookie(servletResponse,accessToken);
 
 
         response.setAccessToken(accessToken);

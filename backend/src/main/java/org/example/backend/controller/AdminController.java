@@ -268,6 +268,11 @@ public class AdminController {
             @PathVariable String semesterName) {
         return semesterService.getSemesterById(yearLevel, semesterName);
     }
+    @GetMapping("/student/{id}")
+    public ResponseEntity<StudentResponseDTO> getStudentById(@PathVariable Long id) {
+        StudentResponseDTO student = studentService.getStudentById(id);
+        return ResponseEntity.ok(student);
+    }
 
     @PostMapping("/{yearLevel}/{semesterName}/{courseId}")
     public ResponseEntity<?> assignCoursesToSemester(
