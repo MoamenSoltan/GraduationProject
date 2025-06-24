@@ -43,13 +43,13 @@ const StudentDetailedQuizzes = () => {
       <p className="text-gray-600 mt-2">{quiz.description}</p>
       <p className="text-sm text-gray-500 mt-1">Total Questions: {quiz.questions.length}</p>
       <p className="text-sm text-gray-500 mt-1">Total Marks: {quiz.totalDegree}</p>
-      <p className='text-sm text-gray-500 mt-1'>Time :</p>
+      <p className='text-sm text-gray-500 mt-1'>Time :{quiz.time} minutes</p>
       {/* TODO:ADD time */}
 
       <div className="mt-6">
         <h2 className="text-2xl font-semibold text-gray-800">Questions</h2>
         <ul className="space-y-4 mt-4">
-          {quiz.questions.map((question) => (
+          {/* {quiz.questions.map((question) => (
             <li key={question.id} className="p-4 bg-gray-100 rounded-lg shadow-sm">
               <h3 className="text-lg font-semibold text-gray-800">{question.question}</h3>
               <p className="text-sm text-gray-600 mt-2">Score: {question.score}</p>
@@ -65,7 +65,8 @@ const StudentDetailedQuizzes = () => {
               </div>
               
             </li>
-          ))}
+          ))} */}
+          <li className='p-4 bg-gray-100 rounded-lg shadow-sm'>start quiz to view questions</li>
         </ul>
       </div>
 

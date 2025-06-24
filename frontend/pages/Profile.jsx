@@ -234,7 +234,7 @@ const Profile = () => {
                 disabled
                 type="text"
                 name="grade"
-                value={profileData?.grade || ""}
+                value={profileData?.grade?.toLowerCase().replace("_"," ") || ""}
                 className="my-3 textField w-full disabled:bg-white"
               />
 

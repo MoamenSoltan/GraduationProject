@@ -47,10 +47,10 @@ export const sideBarLinks = {
       icon : AiOutlineFileDone 
 
   },
-  {
-      name : "Payment",
-      icon : FaMoneyCheckDollar 
-  },
+  // {
+  //     name : "Payment",
+  //     icon : FaMoneyCheckDollar 
+  // },
   {
       name : "Quizzes",
       icon :  MdQuiz
@@ -77,11 +77,11 @@ export const sideBarLinks = {
     name : "Material",
     icon : RiUserCommunityLine
   },
-  {
-      name : "Help",
-      icon : FaHandsHelping 
+  // {
+  //     name : "Help",
+  //     icon : FaHandsHelping 
 
-  },
+  // },
   ],
   admin : [
     {

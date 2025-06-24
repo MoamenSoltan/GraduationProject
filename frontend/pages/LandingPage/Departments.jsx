@@ -10,6 +10,17 @@ const Departments = () => {
             <div className='flex flex-row w-full justify-start items-center border-t-2 lg:pl-44 py-10'>
                 <h1 className='text-[64px] font-bold tracking-[-1.9px] text-white text-stroke mr-28'>01</h1>
                 <div className='flex flex-col gap-3 '>
+                <h1 className='font-semibold text-[32px] leading-[41px]'>Faculty of Computers and Information</h1>
+<p className='text-[#666666]'>Committed to developing cutting-edge computing skills and empowering students to innovate in technology and information systems.</p>
+
+                </div>
+            </div>
+        </div>
+
+        <div className='flex flex-col w-[85%] justify-center items-center'>
+            <div className='flex flex-row w-full justify-start items-center border-t-2 lg:pl-44 py-10'>
+                <h1 className='text-[64px] font-bold tracking-[-1.9px] text-white text-stroke mr-28'>02</h1>
+                <div className='flex flex-col gap-3 '>
                     <h1 className='font-semibold text-[32px] leading-[41px]'>College of Medicine</h1>
                     <p className='text-[#666666]'>Dedicated to advancing medical knowledge and training healthcare professionals to serve communities with excellence.</p>
                 </div>
@@ -18,7 +29,7 @@ const Departments = () => {
 
         <div className='flex flex-col w-[85%] justify-center items-center'>
             <div className='flex flex-row w-full justify-start items-center border-t-2 lg:pl-44 py-10'>
-                <h1 className='text-[64px] font-bold tracking-[-1.9px] text-white text-stroke mr-28'>02</h1>
+                <h1 className='text-[64px] font-bold tracking-[-1.9px] text-white text-stroke mr-28'>03</h1>
                 <div className='flex flex-col gap-3 '>
                     <h1 className='font-semibold text-[32px] leading-[41px]'>Faculty of Engineering</h1>
                     <p className='text-[#666666]'>Focusing on innovative engineering solutions and technological advancements to drive development.</p>
@@ -28,7 +39,7 @@ const Departments = () => {
 
         <div className='flex flex-col w-[85%] justify-center items-center'>
             <div className='flex flex-row w-full justify-start items-center border-t-2 lg:pl-44 py-10'>
-                <h1 className='text-[64px] font-bold tracking-[-1.9px] text-white text-stroke mr-28'>03</h1>
+                <h1 className='text-[64px] font-bold tracking-[-1.9px] text-white text-stroke mr-28'>04</h1>
                 <div className='flex flex-col gap-3 '>
                     <h1 className='font-semibold text-[32px] leading-[41px]'>Faculty of Science</h1>
                     <p className='text-[#666666]'>Enhancing scientific research and discoveries across multiple disciplines to contribute to global knowledge.</p>
@@ -38,7 +49,7 @@ const Departments = () => {
 
         <div className='flex flex-col w-[85%] justify-center items-center'>
             <div className='flex flex-row w-full justify-start items-center border-t-2 lg:pl-44 py-10'>
-                <h1 className='text-[64px] font-bold tracking-[-1.9px] text-white text-stroke mr-28'>04</h1>
+                <h1 className='text-[64px] font-bold tracking-[-1.9px] text-white text-stroke mr-28'>05</h1>
                 <div className='flex flex-col gap-3 '>
                     <h1 className='font-semibold text-[32px] leading-[41px]'> Faculty of Agriculture</h1>
                     <p className='text-[#666666]'>Promoting sustainable agricultural practices and food security through research and education.</p>
@@ -48,7 +59,7 @@ const Departments = () => {
 
         <div className='flex flex-col w-[85%] justify-center items-center'>
             <div className='flex flex-row w-full justify-start items-center border-t-2 lg:pl-44 py-10'>
-                <h1 className='text-[64px] font-bold tracking-[-1.9px] text-white text-stroke mr-28'>05</h1>
+                <h1 className='text-[64px] font-bold tracking-[-1.9px] text-white text-stroke mr-28'>06</h1>
                 <div className='flex flex-col gap-3 '>
                     <h1 className='font-semibold text-[32px] leading-[41px]'>Faculty of Commerce</h1>
                     <p className='text-[#666666]'>Equipping students with business and financial expertise to excel in the dynamic economic landscape.</p>

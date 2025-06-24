@@ -176,9 +176,10 @@ const CreateInstructor = () => {
                 </button>
             </div>
 
-      <button
+            <button
         onClick={() => setModal(true)}
-        className="fixed bottom-5 right-5 p-4 w-28 h-28 rounded-full bg-blue-600 text-white text-3xl shadow-lg hover:bg-blue-700 transition-all"
+        className="block mx-auto mt-8 p-4 w-20 h-20 rounded-full bg-blue-600 text-white text-3xl shadow-lg hover:scale-110 transition-all"
+        title="Add Material"
       >
         +
       </button>
