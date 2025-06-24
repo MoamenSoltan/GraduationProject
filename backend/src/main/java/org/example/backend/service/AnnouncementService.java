@@ -5,6 +5,7 @@ import org.example.backend.dto.AnnouncementDto.AnnouncementResponseDTO;
 import org.example.backend.entity.Announcement;
 import org.example.backend.entity.Course;
 import org.example.backend.entity.Instructor;
+import org.example.backend.entity.Student;
 import org.example.backend.enums.AnnouncementType;
 import org.example.backend.exception.ResourceNotFound;
 import org.example.backend.mapper.AnnouncementMapper;
@@ -49,6 +50,20 @@ public class AnnouncementService {
 
     public List<AnnouncementResponseDTO> getAnnouncements(Instructor instructor) {
         List<Announcement> announcements = announcementRepository.findByInstructor(instructor);
+        return announcements.stream()
+                .map(AnnouncementMapper::toResponseDTO)
+                .collect(Collectors.toList());
+    }
+
+    public List<AnnouncementResponseDTO> getAnnouncementsForStudent(Student student) {
+        List<Announcement> announcements = announcementRepository.findAnnouncementsForStudent(student);
+        return announcements.stream()
+                .map(AnnouncementMapper::toResponseDTO)
+                .collect(Collectors.toList());
+    }
+
+    public List<AnnouncementResponseDTO> getAnnouncementsForStudentByType(Student student, AnnouncementType type) {
+        List<Announcement> announcements = announcementRepository.findAnnouncementsForStudentByType(student, type);
         return announcements.stream()
                 .map(AnnouncementMapper::toResponseDTO)
                 .collect(Collectors.toList());

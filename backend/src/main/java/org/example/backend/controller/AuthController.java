@@ -34,15 +34,13 @@ import java.util.stream.Collectors;
 public class AuthController {
     private final SubmissionRequestService requestService;
    private final AuthService authService;
-    private final JwtService jwtService;
-    private final UserDetailsService userDetailsService;
 
 
-    public AuthController(SubmissionRequestService requestService, AuthService authService, JwtService jwtService, UserDetailsService userDetailsService) {
+
+    public AuthController(SubmissionRequestService requestService, AuthService authService) {
         this.requestService = requestService;
         this.authService = authService;
-        this.jwtService = jwtService;
-        this.userDetailsService = userDetailsService;
+
     }
 
 
