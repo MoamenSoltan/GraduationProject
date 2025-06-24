@@ -87,7 +87,7 @@ function AppContent() {
       }
     };
     checkAuth();
-  }, [setAuth, navigate, auth]);
+  }, [setAuth, navigate]);
 
   if (loading) return null; // or a spinner
 
