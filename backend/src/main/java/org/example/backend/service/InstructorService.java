@@ -195,6 +195,7 @@ public class InstructorService {
         }
         List<CourseDTO> courseDTOList = new ArrayList<>();
         for (var course : instructor.get().getCourses()) {
+            System.out.println("Course: " + course.getCourseCode() + ", Instructor: " + instructor.get().getUser().getEmail());
             CourseDTO courseDTO = new CourseDTO();
             courseDTO.setCourseCode(course.getCourseCode());
             courseDTO.setCourseName(course.getCourseName());
@@ -218,6 +219,7 @@ public class InstructorService {
 
         Optional<List<StudentCourseDTO>> students = studentRepository.getStudentInCourse(courseId, instructorId);
 
+        System.out.println("Students in course: " + students.isPresent() + ", Instructor ID: " + instructorId + ", Course ID: " + courseId);
         return students.get();
     }
 

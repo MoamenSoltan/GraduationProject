@@ -90,7 +90,16 @@ public class StudentController {
     public ResponseEntity<List<AnnouncementResponseDTO>> getAnnouncements(
             @RequestParam(name = "type", required = false) AnnouncementType type)
     {
-        List<AnnouncementResponseDTO> announcements = announcementService.getAnnouncementsByType(type);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Student student = studentRepository.findStudentByEmail(authentication.getName())
+                .orElseThrow(() -> new ResourceNotFound("Student", "email", authentication.getName()));
+        
+        List<AnnouncementResponseDTO> announcements;
+        if (type != null) {
+            announcements = announcementService.getAnnouncementsForStudentByType(student, type);
+        } else {
+            announcements = announcementService.getAnnouncementsForStudent(student);
+        }
         return ResponseEntity.ok(announcements);
     }
     @GetMapping("/instructors")

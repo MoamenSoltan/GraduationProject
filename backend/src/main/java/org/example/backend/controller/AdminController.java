@@ -33,6 +33,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.io.ByteArrayInputStream;
 import java.io.InputStreamReader;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/admin")
@@ -46,13 +47,12 @@ public class AdminController {
     private final AdminService adminService;
     private final SubmissionRequestService submissionRequestService;
     private final InstructorRepository instructorRepository;
-    private final CourseRepository courseRepository;
-    private final DepartmentRepository departmentRepository;
+    private final PromotionService promotionService;
     private final UserRepository userRepository;
     private final StudentRepository studentRepository;
     private final FileService fileService;
 
-    public AdminController(StudentService studentService, InstructorService instructorService, PasswordEncoder passwordEncoder, SemesterService service, CourseService courseService, AdminService adminService, SubmissionRequestService submissionRequestService, InstructorRepository instructorRepository, CourseRepository courseRepository, DepartmentRepository departmentRepository, UserRepository userRepository, StudentRepository studentRepository, FileService fileService) {
+    public AdminController(StudentService studentService, InstructorService instructorService, PasswordEncoder passwordEncoder, SemesterService service, CourseService courseService, AdminService adminService, SubmissionRequestService submissionRequestService, InstructorRepository instructorRepository, PromotionService promotionService, UserRepository userRepository, StudentRepository studentRepository, FileService fileService) {
         this.studentService = studentService;
         this.instructorService = instructorService;
         this.passwordEncoder = passwordEncoder;
@@ -62,8 +62,8 @@ public class AdminController {
         this.adminService = adminService;
         this.submissionRequestService = submissionRequestService;
         this.instructorRepository = instructorRepository;
-        this.courseRepository = courseRepository;
-        this.departmentRepository = departmentRepository;
+        this.promotionService = promotionService;
+
         this.userRepository = userRepository;
         this.studentRepository = studentRepository;
         this.fileService = fileService;
@@ -312,5 +312,16 @@ public class AdminController {
                 .contentType(MediaType.parseMediaType("text/csv"))
                 .body(new InputStreamResource(csvData));
 //        return ResponseEntity.ok(students);
+    }
+
+    @PostMapping("/promote-students")
+    public ResponseEntity<?> promoteAllStudents() {
+        List<Student> allStudents = studentRepository.findAll();
+        List<Long> studentIds = allStudents.stream()
+                .map(Student::getStudentId)
+                .collect(Collectors.toList());
+        promotionService.checkAndPromoteMultipleStudents(studentIds);
+
+        return ResponseEntity.ok("Student promotion process completed successfully");
     }
 }
