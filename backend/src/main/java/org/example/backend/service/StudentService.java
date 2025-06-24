@@ -89,6 +89,12 @@ public class StudentService {
         return responseDTOS;
     }
 
+    public StudentResponseDTO getStudentById(Long id) {
+        Student student = studentRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Student not found with id: " + id));
+        return StudentMapper.toStudentResponseDTO(student);
+    }
+
 
 //    public List<Student> getAllStudents() {
 //        return studentRepository.findAll();

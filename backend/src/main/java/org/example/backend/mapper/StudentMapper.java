@@ -17,6 +17,7 @@ public class StudentMapper {
 
     public static StudentResponseDTO toStudentResponseDTO(Student entity)
     {
+        FileResponse response=new FileResponse();
         StudentResponseDTO dto =new StudentResponseDTO();
         dto.setStudentId(entity.getStudentId());
         dto.setAcademicYear(entity.getAcademicYear());
@@ -46,10 +47,10 @@ public class StudentMapper {
             reqDto.setHighSchoolName(entity.getSubmissionRequest().getHighSchoolName());
             reqDto.setGraduationYear(entity.getSubmissionRequest().getGraduationYear());
             reqDto.setHighSchoolGpa(entity.getSubmissionRequest().getHighSchoolGpa());
-            reqDto.setHighSchoolCertificate(entity.getSubmissionRequest().getHighSchoolCertificate());
+            reqDto.setHighSchoolCertificate(response.getFileName(entity.getSubmissionRequest().getHighSchoolCertificate()));
             reqDto.setPhoneNumber(entity.getSubmissionRequest().getPhoneNumber());
-            reqDto.setIdPhoto(entity.getSubmissionRequest().getIdPhoto());
-            reqDto.setPersonalPhoto(entity.getSubmissionRequest().getPersonalPhoto());
+            reqDto.setIdPhoto(response.getFileName(entity.getSubmissionRequest().getIdPhoto()));
+            reqDto.setPersonalPhoto(response.getFileName(entity.getSubmissionRequest().getPersonalPhoto()));
             reqDto.setCountry(entity.getSubmissionRequest().getCountry());
             reqDto.setCity(entity.getSubmissionRequest().getCity());
             reqDto.setAddress(entity.getSubmissionRequest().getAddress());

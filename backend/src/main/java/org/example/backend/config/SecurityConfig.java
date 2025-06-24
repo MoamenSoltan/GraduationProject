@@ -58,11 +58,12 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity security,JwtService jwtService) throws Exception {
         security
+                .cors(Customizer.withDefaults())
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(PUBLIC_URLS).permitAll()
-                        .requestMatchers("/admin/**").permitAll()
+                        .requestMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
                         .requestMatchers("/auth/data").hasAuthority("ROLE_INSTRUCTOR")
                         .requestMatchers("/instructor/**","/task/create").hasAuthority("ROLE_INSTRUCTOR")
                         .requestMatchers("/student/**").hasAuthority("ROLE_STUDENT")
