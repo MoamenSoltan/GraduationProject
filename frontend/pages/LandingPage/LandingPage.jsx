@@ -20,7 +20,7 @@ const LandingPage = () => {
   <p className="text-gray-300 text-sm sm:text-base">
     Welcome to <span className="text-white">Menofia University</span>
   </p>
-  <p className="text-white text-sm sm:text-lg">contactInfo@gmail.com</p>
+  <p className="text-white text-sm sm:text-lg">edumate@gmail.com</p>
 </nav>
 
 <nav className="w-full h-auto flex flex-col sm:flex-row justify-between items-center px-6 sm:px-10 md:px-20 p-4 bg-white gap-4">
@@ -74,7 +74,7 @@ const LandingPage = () => {
           <h1 className="text-[#06625f] font-bold text-3xl">GET IN TOUCH</h1>
 
           <div className="flex flex-col">
-            <p className="text-[#06625f] font-bold text-xl">+201011851347</p>
+            <p className="text-[#06625f] font-bold text-xl">+201006156131</p>
             <p className="text-[#06625f] font-bold text-lg">Phone number</p>
           </div>
 

@@ -14,7 +14,7 @@ const Tools = () => {
     <div className="mt-10 w-[80%] m-auto">
 
       <div className="flex flex-row w-fit m-auto ">
-      {["Text-summarization", "Image-to-text","Summarize-video"].map((link) => (
+      {["Text-summarization", "Image-to-text"].map((link) => (
         <NavLink
           to={`/studentDashboard/Tools/${link}`}
           key={link}

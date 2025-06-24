@@ -46,9 +46,9 @@ const Analytics = () => {
 
           {/* Payment */}
 
-          <div className="">
+          {/* <div className="">
             <Payment/>
-          </div>
+          </div> */}
         </div>
        </div>
       </div>

@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes, useNavigate } from "react-router"
+import { BrowserRouter, Route, Routes } from "react-router"
 import Registration from "../pages/Registration"
 import Splash from "../pages/steps/Splash"
 import Step1 from "../pages/steps/Step1"
@@ -11,15 +11,16 @@ import Status from "../pages/Status"
 import StudentDashboard from "../pages/StudentDashboard"
 import InstructorDashboard from "../pages/InstructorDashboard"
 import AdminDashboard from "../pages/AdminDashboard"
-import { useStateContext } from "../contexts/ContextProvider"
-import { useEffect } from "react"
 import ProtectedRoutes from "../components/ProtectedRoutes"
-import { Toaster } from "react-hot-toast"
+import toast, { Toaster } from "react-hot-toast"
 import axios from "../api/axios"
 import LandingPage from "../pages/LandingPage/LandingPage"
 import Email from "../pages/ForgetPassword/Email"
 import OTP from "../pages/ForgetPassword/OTP"
 import ResetPassword from "../pages/ForgetPassword/ResetPassword"
+import { useStateContext } from "../contexts/ContextProvider"
+import { useEffect, useState } from "react"
+import { useNavigate } from "react-router-dom"
 /**
  * e-commerce app for better understanding of filtering and query parameters
  * 
@@ -61,71 +62,74 @@ note on search params
 
  */
 
-function App() {
-  
+function AppContent() {
+  const { setAuth, auth } = useStateContext();
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(true);
 
-  
+  useEffect(() => {
+    if (auth?.roles) {
+      setLoading(false);
+      return;
+    }
+
+    const checkAuth = async () => {
+      try {
+        const res = await axios.get("/auth/me", { withCredentials: true });
+        setAuth(res.data);
+        console.log("auth data :", res.data);
+      } catch {
+        setAuth({});
+        toast.error("Session expired. Please log in again.");
+        navigate("/registration", { replace: true });
+      } finally {
+        setLoading(false);
+      }
+    };
+    checkAuth();
+  }, [setAuth, navigate, auth]);
+
+  if (loading) return null; // or a spinner
+
+  return (
+    <Routes>
+      {/* public routes */}
+      <Route path="/" element={<LandingPage />} />
+      <Route path="/registration" element={<Registration />} />
+      <Route path="/forget-password" element={<Email />} />
+      <Route path="/OTP" element={<OTP />} />
+      <Route path="/reset-password" element={<ResetPassword />} />
+      <Route path="/registration/splash" element={<Splash />} />
+      <Route path="/registration/step1" element={<Step1 />} />
+      <Route path="/registration/step2" element={<Step2 />} />
+      <Route path="/registration/step3" element={<Step3 />} />
+      <Route path="/registration/step4" element={<Step4 />} />
+      <Route path="/registration/step5" element={<Step5 />} />
+      <Route path="/registration/done" element={<Done />} />
+      <Route path="/status" element={<Status />} />
+      {/* protected routes */}
+      <Route element={<ProtectedRoutes allowedRoles={['student']} />}> 
+        <Route path="/studentDashboard/*" element={<StudentDashboard />} />
+      </Route>
+      <Route element={<ProtectedRoutes allowedRoles={['instructor']} />}> 
+        <Route path="/instructorDashboard/*" element={<InstructorDashboard />} />
+      </Route>
+      <Route element={<ProtectedRoutes allowedRoles={['admin']} />}> 
+        <Route path="/adminDashboard/*" element={<AdminDashboard />} />
+      </Route>
+    </Routes>
+  );
+}
+
+function App() {
   return (
     <div>
-
-      
-     
       <BrowserRouter>
-     
-        <Routes>
-         
-         {/* public routes */}
-
-          <Route path="/" element={<LandingPage/>} />
-          <Route path="/registration" element={<Registration />} />
-          <Route path="/forget-password" element={<Email />} />
-          <Route path="/OTP" element={<OTP />} />
-          <Route path="/reset-password" element={<ResetPassword />} />
-          <Route path="/registration/splash" element={<Splash />} />
-          <Route path="/registration/step1" element={<Step1 />} />
-          <Route path="/registration/step2" element={<Step2 />} />
-          <Route path="/registration/step3" element={<Step3 />} />
-          <Route path="/registration/step4" element={<Step4 />} />
-          <Route path="/registration/step5" element={<Step5 />} />
-          <Route path="/registration/done" element={<Done />} />
-          <Route path="/status" element={<Status />} />
-
-          <Route path="/studentDashboard/*" element={<StudentDashboard />} />
-          <Route path="/instructorDashboard/*" element={<InstructorDashboard />} />
-          <Route path="/adminDashboard/*" element={<AdminDashboard />} />
-          
-           {/* protected routes */}
-
-          {/* <Route element={<ProtectedRoutes allowedRoles={['student']}/>}>
-            <Route path="/studentDashboard/*" element={<StudentDashboard />} />
-          </Route>
-          
-
-         <Route element={<ProtectedRoutes allowedRoles={['instructor']}/>}>
-            <Route path="/instructorDashboard/*" element={<InstructorDashboard />} />
-         </Route>
-
-         <Route element={<ProtectedRoutes allowedRoles={['admin']}/>}>
-            <Route path="/adminDashboard/*" element={<AdminDashboard />} />
-         </Route> 
-            */}
-          
-          
-          
-          {/* 
-          /* means that there are nested routes
-           */}
-
-
-
-
-
-        </Routes>
-      
+        <AppContent />
       </BrowserRouter>
-      <Toaster/>
+      <Toaster />
     </div>
-  )
+  );
 }
 
 export default App
