@@ -68,26 +68,28 @@ function AppContent() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (auth?.roles) {
+    // Only check auth if it hasn't been checked yet
+    if (auth === null) {
+      const checkAuth = async () => {
+        try {
+          const res = await axios.get("/auth/me", { withCredentials: true });
+          setAuth(res.data);
+          console.log("auth data :", res.data);
+        } catch {
+          setAuth({});
+          toast.error("Session expired. Please log in again.");
+          if (window.location.pathname !== "/registration") {
+            navigate("/registration", { replace: true });
+          }
+        } finally {
+          setLoading(false);
+        }
+      };
+      checkAuth();
+    } else {
       setLoading(false);
-      return;
     }
-
-    const checkAuth = async () => {
-      try {
-        const res = await axios.get("/auth/me", { withCredentials: true });
-        setAuth(res.data);
-        console.log("auth data :", res.data);
-      } catch {
-        setAuth({});
-        toast.error("Session expired. Please log in again.");
-        navigate("/registration", { replace: true });
-      } finally {
-        setLoading(false);
-      }
-    };
-    checkAuth();
-  }, [setAuth, navigate]);
+  }, []);
 
   if (loading) return null; // or a spinner
 

@@ -50,7 +50,7 @@ export const ContextProvider = ({children})=>{
     setMeter((prev)=>prev-1)
   }
  
-  const [auth, setAuth] = useState({})
+  const [auth, setAuth] = useState(null)
 
   const Placeholder = "EDU Mate"
    return (
