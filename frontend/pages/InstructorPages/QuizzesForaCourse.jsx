@@ -7,7 +7,7 @@ import Modal from '../../components/Modal';
 import dayjs from 'dayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 
 const QuizzesForaCourse = () => {
   const { courseId } = useParams();
@@ -74,8 +74,8 @@ const QuizzesForaCourse = () => {
       time: quizInfo.time,
       totalDegree: formattedQuestions.length,
       questions: formattedQuestions,
-      startDate: quizInfo.startDate ? dayjs(quizInfo.startDate).format('YYYY-MM-DD') : '',
-      endDate: quizInfo.endDate ? dayjs(quizInfo.endDate).format('YYYY-MM-DD') : '',
+      startDate: quizInfo.startDate ? dayjs(quizInfo.startDate).format('YYYY-MM-DDTHH:mm:ss') : '',
+      endDate: quizInfo.endDate ? dayjs(quizInfo.endDate).format('YYYY-MM-DDTHH:mm:ss') : '',
       showResults: quizInfo.showResults,
     };
 
@@ -83,6 +83,8 @@ const QuizzesForaCourse = () => {
       setLoading(true);
       await axiosPrivate.post(`/instructor/quiz/course/${courseId}/create`, payload);
       toast.success('Quiz created successfully');
+      console.log("QUIZ DATA :",payload);
+      
       setModal(false);
       setRefetch(prev => !prev);
       setQuestions([]);
@@ -194,11 +196,15 @@ const QuizzesForaCourse = () => {
             <div>
               <label className="block text-sm font-medium text-gray-700">Start Date</label>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DatePicker
+                <DateTimePicker
                   label="Start Date"
                   value={quizInfo.startDate ? dayjs(quizInfo.startDate) : null}
-                  onChange={newValue => setQuizInfo({ ...quizInfo, startDate: newValue ? newValue.toISOString() : '' })}
-                  format="YYYY-MM-DD"
+                  onChange={newValue =>
+                    setQuizInfo({
+                      ...quizInfo,
+                      startDate: newValue ? newValue.format('YYYY-MM-DDTHH:mm:ss') : '',
+                    })
+                  }
                   className="w-full"
                 />
               </LocalizationProvider>
@@ -208,11 +214,15 @@ const QuizzesForaCourse = () => {
             <div>
               <label className="block text-sm font-medium text-gray-700">End Date</label>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DatePicker
+                <DateTimePicker
                   label="End Date"
                   value={quizInfo.endDate ? dayjs(quizInfo.endDate) : null}
-                  onChange={newValue => setQuizInfo({ ...quizInfo, endDate: newValue ? newValue.toISOString() : '' })}
-                  format="YYYY-MM-DD"
+                  onChange={newValue =>
+                    setQuizInfo({
+                      ...quizInfo,
+                      endDate: newValue ? newValue.format('YYYY-MM-DDTHH:mm:ss') : '',
+                    })
+                  }
                   className="w-full"
                 />
               </LocalizationProvider>
