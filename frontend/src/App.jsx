@@ -75,11 +75,13 @@ function AppContent() {
           const res = await axios.get("/auth/me", { withCredentials: true });
           setAuth(res.data);
           console.log("auth data :", res.data);
-        } catch {
+        } catch (error) {
           setAuth({});
-          toast.error("Session expired. Please log in again.");
+          console.log("An error occurred in checkAuth ",error);
+          
+          // toast.error("Session expired. Please log in again.");
           if (window.location.pathname !== "/registration") {
-            navigate("/registration", { replace: true });
+            navigate("/", { replace: true });
           }
         } finally {
           setLoading(false);
