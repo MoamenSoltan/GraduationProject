@@ -58,14 +58,6 @@ const InstructorProfile = () => {
     // Handle image logic
     if (updatedProfileData.personalImage instanceof File) {
       formdata.append("personalImage", updatedProfileData.personalImage);
-    } else if (profileData.personalImage && typeof profileData.personalImage === "string") {
-      try {
-        const imageResponse = await fetch(profileData.personalImage);
-        const imageBlob = await imageResponse.blob();
-        formdata.append("personalImage", imageBlob, "profile.jpg");
-      } catch {
-        toast.error("Could not include existing image");
-      }
     }
 
     try {
