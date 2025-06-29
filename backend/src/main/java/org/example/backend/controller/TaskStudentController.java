@@ -108,9 +108,17 @@ public class TaskStudentController {
 
     }
 
-    @GetMapping("/task/{taskId}")
+    @GetMapping("/course/{courseId}/task/{taskId}")
     public ResponseEntity<ResponseTaskDTO> getTaskById(@PathVariable int courseId, @PathVariable int taskId )
     {
+        ResponseTaskDTO task = taskService.getTaskById(taskId,courseId);
+        return ResponseEntity.ok(task);
+    }
+
+    @GetMapping("/task/{taskId}")
+    public ResponseEntity<ResponseTaskDTO> getTaskById(@PathVariable int taskId) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
         ResponseTaskDTO task = taskService.getTaskById(taskId);
         return ResponseEntity.ok(task);
     }

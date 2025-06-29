@@ -1,5 +1,6 @@
 package org.example.backend.repository;
 
+import org.example.backend.entity.Course;
 import org.example.backend.entity.Instructor;
 import org.example.backend.entity.Task;
 import org.springframework.data.domain.Sort;
@@ -10,6 +11,7 @@ import org.springframework.data.repository.query.Param;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 public interface TaskRepository extends JpaRepository<Task,Integer> {
     @Query("select t from Task t where t.course.courseId =:courseId")
@@ -74,4 +76,8 @@ public interface TaskRepository extends JpaRepository<Task,Integer> {
             " t.deadline <:currentDate and sc.student.user.email=:email")
     List<Task> findPastDeadlinesForStudent(@Param("email") String email, @Param("currentDate") LocalDate currentDate, @Param("courseId") Long courseId);
 
+
+    @Query("select t from Task t where t.course=?1 and t.id" +
+            " =?2")
+    Optional<Task> findTaskByCourseIdAndTaskId(Course course, int taskId);
 }

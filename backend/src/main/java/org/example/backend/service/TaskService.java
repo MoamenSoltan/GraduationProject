@@ -6,7 +6,6 @@ import org.example.backend.dto.taskDTO.ResponseTaskDTO;
 import org.example.backend.entity.*;
 import org.example.backend.mapper.TaskMapper;
 import org.example.backend.repository.*;
-import org.springframework.data.domain.Sort;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
@@ -163,7 +162,20 @@ public class TaskService {
         }
     }
 
+    public ResponseTaskDTO getTaskById(int taskId,int courseId) {
+       Course course=courseRepository.findById((long) courseId).
+                orElseThrow(() -> new IllegalArgumentException("Course not found with ID: " + courseId));
+        Optional<Task> taskOptional = taskRepository.findTaskByCourseIdAndTaskId(course, taskId);
+        if (taskOptional.isPresent()) {
+            Task task = taskOptional.get();
+            TaskMapper mapper=new TaskMapper();
+            return mapper.toResponseDTO(task);
+        } else {
+            throw new IllegalArgumentException("Task with ID " + taskId + " not found.");
+        }
+    }
     public ResponseTaskDTO getTaskById(int taskId) {
+
         Optional<Task> taskOptional = taskRepository.findById(taskId);
         if (taskOptional.isPresent()) {
             Task task = taskOptional.get();

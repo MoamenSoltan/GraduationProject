@@ -248,8 +248,11 @@ public class QuizSubmissionService {
     public QuizSubmissionInstructor getQuizSubmission(Long courseId, String instructorEmail, Long quizId, Long studentId) {
         Course course=courseRepository.findById(courseId)
                 .orElseThrow(()->new RuntimeException("Course not found"));
-        boolean isInstructor=courseRepository.isInstructorOfCourse(instructorEmail,courseId);
-        if(!isInstructor)
+//        boolean isInstructor=courseRepository.isInstructorOfCourse(instructorEmail,courseId);
+        System.out.println("Is instructor: " + course.getInstructor().getInstructorId());
+        System.out.println("Is instructor: " + course.getInstructor().getUser().getEmail());
+        boolean isInstructor2 = course.getInstructor().getUser().getEmail().equals(instructorEmail);
+        if(!isInstructor2)
         {
             throw new RuntimeException("Instructor is not enrolled in this course");
         }
@@ -293,8 +296,13 @@ public class QuizSubmissionService {
     public List<?> getAllStudentSubmission(Long quizId, Long courseId, String instructorEmail) {
         Course course=courseRepository.findById(courseId)
                 .orElseThrow(()->new RuntimeException("Course not found"));
-        boolean isInstructor=courseRepository.isInstructorOfCourse(instructorEmail,courseId);
-        if(!isInstructor)
+       // boolean isInstructor=courseRepository.isInstructorOfCourse(instructorEmail,courseId);
+        System.out.println("Is instructor: " + course.getInstructor().getInstructorId());
+        System.out.println("Is instructor: " + course.getInstructor().getUser().getEmail());
+        boolean isInstructor2 = course.getInstructor().getUser().getEmail().equals(instructorEmail);
+        System.out.println("email " + instructorEmail);
+        System.out.println("Is instructor2: " + isInstructor2);
+        if(!isInstructor2)
         {
             throw new RuntimeException("Instructor is not enrolled in this course");
         }

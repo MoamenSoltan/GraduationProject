@@ -114,8 +114,10 @@ public class StudentMapper {
             profile.setDepartment(student.getDepartment().getDepartmentName());
         }
 
+        System.out.println("profile image MAPPER : " + profile.getProfileImage());
         profile.setProfileImage(new FileResponse().getFileName(student.getSubmissionRequest().getPersonalPhoto()));
 
+        System.out.println("profile image: " + profile.getProfileImage());
         if(student.getStudentCourse()!=null &&!student.getStudentCourse().isEmpty())
         {
             List<CourseDTO>  courseDTOS = new ArrayList<>();

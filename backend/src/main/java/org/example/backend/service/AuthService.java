@@ -122,7 +122,7 @@ public class AuthService {
         setAccessTokenCookie(servletResponse,accessToken);
 
 
-        response.setAccessToken(accessToken);
+
         response.setRefreshToken(refreshToken);
         response.setEmail(user.getEmail());
         response.setFirstName(user.getFirstName());
@@ -186,7 +186,7 @@ public class AuthService {
         setRefreshTokenCookie(servletResponse, refreshToken);
 
         // Build base auth response
-        response.setAccessToken(accessToken);
+
         response.setRefreshToken(refreshToken);
         response.setEmail(user.getEmail());
         response.setFirstName(user.getFirstName());

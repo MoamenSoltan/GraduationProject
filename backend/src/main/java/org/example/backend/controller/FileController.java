@@ -1,6 +1,7 @@
 package org.example.backend.controller;
 
 import org.example.backend.config.JWt.JwtService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
@@ -19,7 +20,8 @@ import java.nio.file.Paths;
 @CrossOrigin(origins = "http://localhost:3000")
 public class FileController {
 
-    private static final String UPLOAD_DIR = "uploads/images"; // Use a correct relative path
+    @Value("${file.upload}")
+    private  String UPLOAD_DIR ; // Use a correct relative path
     private final JwtService jwtService;
 
     public FileController(JwtService jwtService) {

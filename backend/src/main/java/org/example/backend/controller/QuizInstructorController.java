@@ -92,6 +92,10 @@ public class QuizInstructorController {
             @CurrentUser String instructorEmail
     )
     {
+        Authentication authentication= SecurityContextHolder.getContext().getAuthentication();
+        String instructorEmail2 = authentication.getName();
+        System.out.println("Current instructor email: " + instructorEmail2);
+        System.out.println("instructorEmail = " + instructorEmail);
         List<?> submissionInstructors=quizSubmissionService.getAllStudentSubmission(quizId,courseId,instructorEmail);
         return ResponseEntity.ok( submissionInstructors);
     }

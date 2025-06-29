@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 @Setter
 @Getter
@@ -21,8 +23,8 @@ public class QuizRequestDTO {
     @JsonProperty("showResults")
     private Boolean showResults = false;
     @JsonProperty("startDate")
-    private String startDate;
+    private LocalDateTime startDate;
     @JsonProperty("endDate")
-    private String endDate;
+    private LocalDateTime endDate;
 
 }
