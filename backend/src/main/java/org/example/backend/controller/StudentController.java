@@ -71,6 +71,7 @@ public class StudentController {
                 .orElseThrow(() -> new RuntimeException("Student not found"));
       //  System.out.println("course code " +student.getStudentCourse().get(0).getCourse().getCourseCode());
 
+        System.out.println("profile image :  dhbd: "+student.getSubmissionRequest().getPersonalPhoto());
         return ResponseEntity.ok(StudentMapper.toStudentProfile(student));
     }
 

@@ -14,6 +14,7 @@ import org.example.backend.repository.DepartmentRepository;
 import org.example.backend.repository.RoleRepository;
 import org.example.backend.repository.StudentRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -48,6 +49,7 @@ public class StudentService {
        return studentRepository.save(student);
     }
 
+    @Transactional
     public StudentProfile updateStudent(UpdateStudent updateStudent, Student student) throws IOException {
         if (updateStudent.getFirstName() != null) {
             student.getUser().setFirstName(updateStudent.getFirstName());

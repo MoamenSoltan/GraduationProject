@@ -14,7 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 public class AuthResponse {
 
-    private String accessToken;
+
     private String message;
     @JsonIgnore
     private Object user;

@@ -136,7 +136,18 @@
 
     <build>
         <plugins>
-
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>3.4.3</version> <!-- Or whatever version you're using -->
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal> <!-- This creates an executable JAR -->
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 

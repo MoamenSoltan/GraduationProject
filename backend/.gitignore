@@ -71,3 +71,5 @@ docker-compose.override.yaml
 draft
 tasks_todo.txt
 docker_commands
+set-env.ps1
+.env

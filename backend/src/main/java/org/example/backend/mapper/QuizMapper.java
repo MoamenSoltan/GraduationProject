@@ -24,10 +24,10 @@ public class QuizMapper {
         quiz.setDuration(quizRequestDTO.getQuizTime());
         quiz.setTotalDegree(quizRequestDTO.getTotalDegree());
         quiz.setShowResults(quizRequestDTO.getShowResults());
-        LocalDate startDate = LocalDate.parse(quizRequestDTO.getStartDate(), formatter);
-        LocalDate endDate = LocalDate.parse(quizRequestDTO.getEndDate(), formatter);
-        quiz.setStartDate(startDate.atStartOfDay());
-        quiz.setEndDate(endDate.atStartOfDay());
+//        LocalDate startDate = LocalDate.parse(quizRequestDTO.getStartDate(), formatter);
+//        LocalDate endDate = LocalDate.parse(quizRequestDTO.getEndDate(), formatter);
+        quiz.setStartDate(quizRequestDTO.getStartDate());
+        quiz.setEndDate(quizRequestDTO.getEndDate());
 
         return quiz;
     }

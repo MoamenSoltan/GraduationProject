@@ -281,7 +281,7 @@ public class InstructorService {
     }
 
     public List<StudentCourseGradeDTO> getStudentsWithFinalDegree(Long courseId, String email) {
-        boolean isInstructorOfCourse=courseRepository.isInstructorOfCourse(email,courseId);
+//        boolean isInstructorOfCourse=courseRepository.isInstructorOfCourse(email,courseId);
 
        List<StudentCourseGradeDTO> studentCourses=studentCourseRepository.getStudentCourseGrades(courseId);
 
